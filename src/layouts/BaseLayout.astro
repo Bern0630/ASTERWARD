@@ -1,0 +1,59 @@
+---
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import { SITE, type Lang } from "@/data/site";
+import { withBase } from "@/lib/paths";
+import "@/styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  lang?: Lang;
+  alternateUrl?: string;
+}
+
+const {
+  title = SITE.name,
+  description = SITE.description,
+  image = SITE.socialImage,
+  lang = "zh",
+  alternateUrl
+} = Astro.props;
+
+const pageTitle = title === SITE.name ? SITE.name + " | " + SITE.tagline : title + " | " + SITE.name;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
+const imageUrl = new URL(withBase(image), Astro.site ?? Astro.url.origin);
+---
+
+<!doctype html>
+<html lang={lang === "zh" ? "zh-Hant" : "en"}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {alternateUrl && <link rel="alternate" hreflang={lang === "zh" ? "en" : "zh-Hant"} href={new URL(withBase(alternateUrl), Astro.site ?? Astro.url.origin)} />}
+    <link rel="icon" href={withBase("/favicon.svg")} type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title="SECURRENT RSS" href={withBase("/rss.xml")} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={imageUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header lang={lang} alternateUrl={alternateUrl} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

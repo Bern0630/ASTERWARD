@@ -1,0 +1,20 @@
+---
+import { getCollection } from "astro:content";
+import ContentList from "@/components/ContentList.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { byLang, sortByDateDesc } from "@/lib/content";
+
+let lang: "zh" | "en" = "en";
+const entries = sortByDateDesc(byLang(await getCollection("second-order"), lang));
+---
+
+<BaseLayout title="Second Order" description="Research on what happens after the obvious market move." lang={lang} alternateUrl="/second-order/">
+  <section class="site-shell archive-header">
+    <p class="eyebrow">Second Order</p>
+    <h1>Second Order</h1>
+    <p>Research on what happens after the obvious market move.</p>
+  </section>
+  <section class="site-shell archive-list">
+    <ContentList entries={entries} collectionPath="second-order" />
+  </section>
+</BaseLayout>

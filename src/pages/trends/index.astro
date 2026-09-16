@@ -1,0 +1,20 @@
+---
+import { getCollection } from "astro:content";
+import ContentList from "@/components/ContentList.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { byLang, sortByDateDesc } from "@/lib/content";
+
+let lang: "zh" | "en" = "zh";
+const entries = sortByDateDesc(byLang(await getCollection("trends"), lang));
+---
+
+<BaseLayout title="Trend Explorer" description="研究正在形成、加速或尚未被充分定價的產業主線、資本週期與信用結構。" lang={lang} alternateUrl="/en/trends/">
+  <section class="site-shell archive-header">
+    <p class="eyebrow">Trends</p>
+    <h1>Trend Explorer</h1>
+    <p>研究正在形成、加速或尚未被充分定價的產業主線、資本週期與信用結構。</p>
+  </section>
+  <section class="site-shell archive-list">
+    <ContentList entries={entries} collectionPath="trends" />
+  </section>
+</BaseLayout>

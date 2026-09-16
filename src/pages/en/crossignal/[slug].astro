@@ -1,0 +1,29 @@
+---
+import { getCollection, render } from "astro:content";
+import ArticleLayout from "@/layouts/ArticleLayout.astro";
+import { baseSlugFromId, byLang, findTranslation } from "@/lib/content";
+
+export async function getStaticPaths() {
+  const allEntries = await getCollection("crossignal");
+  const entries = byLang(allEntries, "en");
+  return entries.map((entry) => ({
+    params: { slug: baseSlugFromId(entry.id) },
+    props: { entry, alternateUrl: findTranslation(allEntries, entry, "zh", "crossignal") }
+  }));
+}
+
+const { entry, alternateUrl } = Astro.props;
+const { Content, headings } = await render(entry);
+---
+
+<ArticleLayout
+  title={entry.data.title}
+  date={entry.data.date}
+  summary={entry.data.summary}
+  tags={entry.data.tags}
+  headings={headings}
+  lang="en"
+  alternateUrl={alternateUrl}
+>
+  <Content />
+</ArticleLayout>

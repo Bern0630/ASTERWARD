@@ -1,0 +1,20 @@
+---
+import { getCollection } from "astro:content";
+import ContentList from "@/components/ContentList.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { byLang, sortByDateDesc } from "@/lib/content";
+
+let lang: "zh" | "en" = "zh";
+const entries = sortByDateDesc(byLang(await getCollection("crossignal"), lang));
+---
+
+<BaseLayout title="Crossignal" description="追蹤一個事件或價格訊號如何透過傳導機制從一個市場進入另一個市場。" lang={lang} alternateUrl="/en/crossignal/">
+  <section class="site-shell archive-header">
+    <p class="eyebrow">Crossignal</p>
+    <h1>Crossignal</h1>
+    <p>追蹤一個事件或價格訊號如何透過傳導機制從一個市場進入另一個市場。</p>
+  </section>
+  <section class="site-shell archive-list">
+    <ContentList entries={entries} collectionPath="crossignal" />
+  </section>
+</BaseLayout>

@@ -1,0 +1,76 @@
+---
+import type { MarkdownHeading } from "astro";
+import Tags from "@/components/Tags.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { type Lang } from "@/data/site";
+import { formatDate } from "@/lib/content";
+
+interface Props {
+  title: string;
+  date: Date;
+  summary: string;
+  tags: string[];
+  headings: MarkdownHeading[];
+  lang?: Lang;
+  alternateUrl?: string;
+}
+
+const { title, date, summary, tags, headings, lang = "zh", alternateUrl } = Astro.props;
+const toc = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+const labels = lang === "zh"
+  ? { toc: "目錄", contents: "Contents", fact: "Fact", pricing: "Market Pricing", scenario: "Scenario", risk: "Risk" }
+  : { toc: "Table of contents", contents: "Contents", fact: "Fact", pricing: "Market Pricing", scenario: "Scenario", risk: "Risk" };
+---
+
+<BaseLayout title={title} description={summary} lang={lang} alternateUrl={alternateUrl}>
+  <article class="article-grid">
+    <div>
+      <header class="article-header">
+        <p class="meta-line">{formatDate(date, "long", lang)}</p>
+        <h1>{title}</h1>
+        <p class="article-summary">{summary}</p>
+        <Tags tags={tags} />
+        <div class="label-row" aria-label="Research labels">
+          <span class="research-label">{labels.fact}</span>
+          <span class="research-label">{labels.pricing}</span>
+          <span class="research-label">{labels.scenario}</span>
+          <span class="research-label">{labels.risk}</span>
+        </div>
+      </header>
+
+      {
+        toc.length > 0 && (
+          <details class="mobile-toc">
+            <summary>{labels.toc}</summary>
+            <ol class="toc-list">
+              {toc.map((heading) => (
+                <li class={"depth-" + heading.depth}>
+                  <a href={"#" + heading.slug}>{heading.text}</a>
+                </li>
+              ))}
+            </ol>
+          </details>
+        )
+      }
+
+      <div class="article-body">
+        <slot />
+      </div>
+    </div>
+
+    {
+      toc.length > 0 && (
+        <aside class="desktop-toc" aria-label="Table of contents">
+          <h2>{labels.contents}</h2>
+          <ol class="toc-list">
+            {toc.map((heading) => (
+              <li class={"depth-" + heading.depth}>
+                <a href={"#" + heading.slug}>{heading.text}</a>
+              </li>
+            ))}
+          </ol>
+        </aside>
+      )
+    }
+  </article>
+</BaseLayout>

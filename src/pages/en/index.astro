@@ -1,0 +1,118 @@
+---
+import { getCollection } from "astro:content";
+import ContentList from "@/components/ContentList.astro";
+import Tags from "@/components/Tags.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { SITE } from "@/data/site";
+import { byLang, entryUrl, formatDate, latest } from "@/lib/content";
+import { withBase } from "@/lib/paths";
+
+let lang: "zh" | "en" = "en";
+const briefs = latest(byLang(await getCollection("briefs"), lang), 1);
+const trends = latest(byLang(await getCollection("trends"), lang), 3);
+const crossignal = latest(byLang(await getCollection("crossignal"), lang), 3);
+const secondOrder = latest(byLang(await getCollection("second-order"), lang), 3);
+const deepDives = latest(byLang(await getCollection("deep-dives"), lang), 5);
+
+const latestBrief = briefs[0];
+const copy = {"latestBrief":"Latest Brief","daily":"Daily Market Intelligence","allBriefs":"All briefs →","readLatest":"Read latest brief →","readFull":"Read full brief →","signals":"Signals / Research","signalTitle":"Transmission, cycles, and second-order effects","trend":"Trend Explorer","crossignal":"Crossignal","secondOrder":"Second Order","view":"View →","deep":"Deep Dives","deepTitle":"Long-form research","allDeep":"All deep dives →","lede":"Independent market intelligence focused on how macro, rates, credit, capital flows and industry fundamentals interact across global markets."};
+---
+
+<BaseLayout lang={lang} alternateUrl="/">
+  <section class="site-shell hero">
+    <div>
+      <p class="eyebrow">{SITE.eyebrow}</p>
+      <h1>{SITE.name}</h1>
+    </div>
+    <p class="tagline">{SITE.tagline}</p>
+    <p class="lede">{copy.lede}</p>
+    <div class="topic-strip" aria-label="Coverage areas">
+      <span>US</span>
+      <span>Taiwan</span>
+      <span>Malaysia</span>
+      <span>Rates</span>
+      <span>Credit</span>
+      <span>AI</span>
+      <span>Infrastructure</span>
+    </div>
+    {
+      latestBrief && (
+        <a class="text-link" href={withBase(entryUrl("briefs", latestBrief.id, lang))}>
+          {copy.readLatest}
+        </a>
+      )
+    }
+  </section>
+
+  {
+    latestBrief && (
+      <section class="site-shell section">
+        <div class="section-header">
+          <div>
+            <p class="eyebrow">{copy.latestBrief}</p>
+            <h2>{copy.daily}</h2>
+          </div>
+          <a class="text-link" href={withBase("/en/briefs/")}>{copy.allBriefs}</a>
+        </div>
+        <article class="feature-brief">
+          <time class="meta-line" datetime={latestBrief.data.date.toISOString()}>
+            {formatDate(latestBrief.data.date, "short", lang)}
+          </time>
+          <h3>
+            <a href={withBase(entryUrl("briefs", latestBrief.id, lang))}>
+              {latestBrief.data.title}
+            </a>
+          </h3>
+          <p>{latestBrief.data.summary}</p>
+          <Tags tags={latestBrief.data.tags} />
+          <a class="text-link" href={withBase(entryUrl("briefs", latestBrief.id, lang))}>
+            {copy.readFull}
+          </a>
+        </article>
+      </section>
+    )
+  }
+
+  <section class="site-shell section">
+    <div class="section-header">
+      <div>
+        <p class="eyebrow">{copy.signals}</p>
+        <h2>{copy.signalTitle}</h2>
+      </div>
+    </div>
+    <div class="editorial-grid">
+      <div class="research-column">
+        <div class="section-header">
+          <h3>{copy.trend}</h3>
+          <a class="text-link" href={withBase("/en/trends/")}>{copy.view}</a>
+        </div>
+        <ContentList entries={trends} collectionPath="trends" />
+      </div>
+      <div class="research-column">
+        <div class="section-header">
+          <h3>{copy.crossignal}</h3>
+          <a class="text-link" href={withBase("/en/crossignal/")}>{copy.view}</a>
+        </div>
+        <ContentList entries={crossignal} collectionPath="crossignal" />
+      </div>
+      <div class="research-column">
+        <div class="section-header">
+          <h3>{copy.secondOrder}</h3>
+          <a class="text-link" href={withBase("/en/second-order/")}>{copy.view}</a>
+        </div>
+        <ContentList entries={secondOrder} collectionPath="second-order" />
+      </div>
+    </div>
+  </section>
+
+  <section class="site-shell section">
+    <div class="section-header">
+      <div>
+        <p class="eyebrow">{copy.deep}</p>
+        <h2>{copy.deepTitle}</h2>
+      </div>
+      <a class="text-link" href={withBase("/en/deep-dives/")}>{copy.allDeep}</a>
+    </div>
+    <ContentList entries={deepDives} collectionPath="deep-dives" />
+  </section>
+</BaseLayout>

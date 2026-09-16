@@ -1,0 +1,61 @@
+---
+import { NAV_ITEMS, SITE, type Lang } from "@/data/site";
+import { localizedPath } from "@/lib/content";
+import { withBase } from "@/lib/paths";
+
+interface Props {
+  lang?: Lang;
+  alternateUrl?: string;
+}
+
+const { lang = "zh", alternateUrl } = Astro.props;
+const basePath = import.meta.env.BASE_URL.endsWith("/") ? import.meta.env.BASE_URL.slice(0, -1) : import.meta.env.BASE_URL;
+const currentPath = basePath && Astro.url.pathname.startsWith(basePath)
+  ? Astro.url.pathname.slice(basePath.length) || "/"
+  : Astro.url.pathname;
+const navItems = NAV_ITEMS[lang];
+const currentWithoutEnglishPrefix = currentPath.startsWith("/en") ? currentPath.slice(3) || "/" : currentPath;
+const languageTarget = alternateUrl ?? localizedPath(currentWithoutEnglishPrefix, lang === "zh" ? "en" : "zh");
+---
+
+<header class="site-header">
+  <div class="site-shell header-inner">
+    <a class="brand" href={withBase(localizedPath("/", lang))} aria-label="SECURRENT home">
+      <span class="brand-mark">{SITE.name}</span>
+      <span class="brand-kicker">{SITE.eyebrow}</span>
+    </a>
+
+    <nav class="desktop-nav" aria-label="Primary navigation">
+      {
+        navItems.map((item) => {
+          const href = localizedPath(item.href, lang);
+          return (
+            <a
+              href={withBase(href)}
+              aria-current={currentPath === href || currentPath.startsWith(href) ? "page" : undefined}
+            >
+              {item.label}
+            </a>
+          );
+        })
+      }
+      <a class="language-link" href={withBase(languageTarget)} aria-label="Switch language">
+        {lang === "zh" ? "EN" : "中文"}
+      </a>
+    </nav>
+
+    <details class="mobile-nav">
+      <summary aria-label="Open navigation">Menu</summary>
+      <nav class="mobile-nav-panel" aria-label="Mobile navigation">
+        {
+          navItems.map((item) => (
+            <a href={withBase(localizedPath(item.href, lang))}>{item.label}</a>
+          ))
+        }
+        <a class="language-link" href={withBase(languageTarget)}>
+          {lang === "zh" ? "EN" : "中文"}
+        </a>
+      </nav>
+    </details>
+  </div>
+</header>

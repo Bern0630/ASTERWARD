@@ -1,0 +1,45 @@
+---
+import Tags from "@/components/Tags.astro";
+import { entryLang, entryUrl, formatDate } from "@/lib/content";
+import { withBase } from "@/lib/paths";
+
+interface EntryLike {
+  id: string;
+  collection: string;
+  data: {
+    title: string;
+    date: Date;
+    summary: string;
+    tags: string[];
+    lang?: "zh" | "en";
+  };
+}
+
+interface Props {
+  entries: EntryLike[];
+  collectionPath?: string;
+}
+
+const { entries, collectionPath } = Astro.props;
+---
+
+<div class="content-list">
+  {
+    entries.map((entry) => {
+      const path = collectionPath ?? entry.collection;
+      const lang = entryLang(entry);
+      return (
+        <article class="content-item">
+          <time datetime={entry.data.date.toISOString()}>
+            {formatDate(entry.data.date, "short", lang)}
+          </time>
+          <h3>
+            <a href={withBase(entryUrl(path, entry.id, lang))}>{entry.data.title}</a>
+          </h3>
+          <p>{entry.data.summary}</p>
+          <Tags tags={entry.data.tags} />
+        </article>
+      );
+    })
+  }
+</div>

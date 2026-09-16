@@ -1,0 +1,20 @@
+---
+import { getCollection } from "astro:content";
+import ContentList from "@/components/ContentList.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { byLang, sortByDateDesc } from "@/lib/content";
+
+let lang: "zh" | "en" = "zh";
+const entries = sortByDateDesc(byLang(await getCollection("briefs"), lang));
+---
+
+<BaseLayout title="Briefs" description="每日全球市場情報：事實、預期、定價、傳導、第二層影響、風險與確認點。" lang={lang} alternateUrl="/en/briefs/">
+  <section class="site-shell archive-header">
+    <p class="eyebrow">Daily Brief</p>
+    <h1>Briefs</h1>
+    <p>每日全球市場情報：事實、預期、定價、傳導、第二層影響、風險與確認點。</p>
+  </section>
+  <section class="site-shell archive-list">
+    <ContentList entries={entries} collectionPath="briefs" />
+  </section>
+</BaseLayout>

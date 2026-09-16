@@ -1,0 +1,20 @@
+---
+import { getCollection } from "astro:content";
+import ContentList from "@/components/ContentList.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { byLang, sortByDateDesc } from "@/lib/content";
+
+let lang: "zh" | "en" = "zh";
+const entries = sortByDateDesc(byLang(await getCollection("deep-dives"), lang));
+---
+
+<BaseLayout title="Deep Dives" description="較完整的長篇研究，聚焦市場、產業、融資結構與跨市場後果。" lang={lang} alternateUrl="/en/deep-dives/">
+  <section class="site-shell archive-header">
+    <p class="eyebrow">Deep Dives</p>
+    <h1>Deep Dives</h1>
+    <p>較完整的長篇研究，聚焦市場、產業、融資結構與跨市場後果。</p>
+  </section>
+  <section class="site-shell archive-list">
+    <ContentList entries={entries} collectionPath="deep-dives" />
+  </section>
+</BaseLayout>
