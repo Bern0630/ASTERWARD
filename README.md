@@ -21,22 +21,37 @@ Positioning:
 
 No database, CMS, authentication, analytics, trackers or market-data API is included in v1.
 
+## Prerequisites
+
+Install Node.js 20 or newer, then enable pnpm:
+
+```bash
+corepack enable
+corepack prepare pnpm@10 --activate
+```
+
+If `corepack` is unavailable, install pnpm with:
+
+```bash
+npm install -g pnpm
+```
+
 ## Install
 
 ```bash
-npm install
+pnpm install
 ```
 
 ## Local
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 ## Build
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 ## Content folders
@@ -156,8 +171,8 @@ The workflow is:
 It runs on every push to `main`:
 
 1. Checkout
-2. Install dependencies with `npm ci`
-3. Build with `npm run build`
+2. Install dependencies with `pnpm install --frozen-lockfile`
+3. Build with `pnpm run build`
 4. Upload `dist`
 5. Deploy to GitHub Pages
 
