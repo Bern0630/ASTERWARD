@@ -46,7 +46,14 @@ const languageTarget = alternateUrl ?? localizedPath(currentWithoutEnglishPrefix
     </nav>
 
     <details class="mobile-nav">
-      <summary aria-label="Open navigation">Menu</summary>
+      <summary aria-label={lang === "zh" ? "開啟導覽" : "Open navigation"}>
+        <span class="hamburger-icon" aria-hidden="true">
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+          <span class="hamburger-line"></span>
+        </span>
+        <span class="visually-hidden">{lang === "zh" ? "開啟導覽" : "Open navigation"}</span>
+      </summary>
       <nav class="mobile-nav-panel" aria-label="Mobile navigation">
         {
           navItems.map((item) => (

@@ -8,11 +8,11 @@ let lang: "zh" | "en" = "zh";
 const entries = sortByDateDesc(byLang(await getCollection("deep-dives"), lang));
 ---
 
-<BaseLayout title="深度研究" description="較完整的長篇研究，聚焦市場、產業、融資結構與跨市場後果。" lang={lang} alternateUrl="/en/deep-dives/">
+<BaseLayout title="深度研究" description="完整研究，聚焦市場、產業、融資結構與跨市場後果。" lang={lang} alternateUrl="/en/deep-dives/">
   <section class="site-shell archive-header">
-    <p class="eyebrow">長篇研究</p>
+    <p class="eyebrow">深度研究</p>
     <h1>深度研究</h1>
-    <p>較完整的長篇研究，聚焦市場、產業、融資結構與跨市場後果。</p>
+    <p>完整研究，聚焦市場、產業、融資結構與跨市場後果。</p>
   </section>
   <section class="site-shell archive-list">
     <ContentList entries={entries} collectionPath="deep-dives" />

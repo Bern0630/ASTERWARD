@@ -1,25 +1,140 @@
 ---
-title: "Malaysia Data Center Economics: From MW Growth to MW Economics"
+title: "馬來西亞資料中心經濟：從 MW 成長轉向單位報酬"
 date: 2026-09-16
+updated: 2026-09-17
 type: "deep-dive"
+summary: "馬來西亞資料中心的核心問題不再是宣布多少 MW，而是電力、租戶、建設成本、利用率與融資條件能否共同產生高於資金成本的資本報酬。"
+tags:
+  - 馬來西亞
+  - 資料中心
+  - 單位經濟
+  - 電力基礎建設
+  - 專案融資
 lang: "zh"
 translationKey: "deep-dive-malaysia-data-center-economics"
-summary: "一個 placeholder deep dive framework，用來區分 Malaysia data center announced capacity、financed capacity、energized capacity 與 utilized capacity。"
-tags: ["Malaysia", "Data Center", "Power", "Credit"]
 ---
 
-## Thesis
+> 資料更新至 2026 年 9 月 17 日 15:00（Asia/Taipei）。不同來源對容量的定義不同，本文將規劃、興建、已簽供電、已通電、已預租與實際使用分開處理。
 
-Malaysia data center research 應從 headline MW growth 轉向 power、financing、utilization 與 tenant quality 的經濟分析。
+## 投資命題
 
-## Context
+馬來西亞已成為東南亞資料中心擴張的重要節點，但「容量成長」不等於「資本報酬成長」。真正可持續的投資命題是：資料中心取得可靠且具競爭力的電力，準時完成建設，以高品質租戶長約提高可融資性，並在利用率提升後產生高於加權平均資金成本的投資資本報酬率。
 
-Malaysia 之所以與 regional AI infrastructure 有關，是因為 location、power planning、policy attention 與 global technology customers 的潛在需求。
+MIDA 表示，2021 年至 2026 年上半年資料中心相關投資累計馬幣 3,857 億元，2035 年用電需求預計超過 5,000 MW；並援引產業估計指出約 4.6 GW 容量處於規劃或興建階段。另有 49 份資料中心供電協議，最大需求合計 7.1 GW，預計分五至十年使用；2025 年 9 月可確認的實際負載約 710 MW。
 
-## Credit
+這些數字可以同時為真，卻對近期現金流有完全不同的意義。規劃中的 4.6 GW 不是已融資容量，7.1 GW 最大簽約需求不是同時上線負載，710 MW 也不等於全國所有已營運 IT 負載。研究必須從 headline MW 轉向每個階段的轉換率與單位經濟。
 
-Credit analysis 應優先看 debt service coverage、tenant credit、contract duration、collateral value 與 refinancing risk。
+## 容量階梯
 
-## Conclusion
+| 階段 | 核心問題 | 財務意義 |
+| --- | --- | --- |
+| 已宣布／規劃 | 是否取得土地、許可與可行的電力方案 | 尚未形成可融資現金流 |
+| 已取得電力 | 接入時間、最大需求、電價與成本轉嫁 | 降低交付風險，但不代表已融資 |
+| 已取得融資 | 貸款價值比、利率、期限、擔保與完工條件 | 決定能否動工及股東資本需求 |
+| 興建中 | 工期、成本超支、設備交期與承包商風險 | 建設期利息持續累積 |
+| 已預租 | 租戶信用、租期、最低付款與起租條件 | 提高債務承作能力 |
+| 已通電 | 電網、變電站、冷卻與網路可以交付 | 才開始具備營收條件 |
+| 實際使用 | IT 負載、機櫃密度與利用率 | 決定收入、毛利與現金回收 |
 
-核心問題不是 announced MW 有多少，而是多少能變成 financed、energized、contracted 且 economically utilized 的 capacity。
+市場最常犯的錯，是把前一階段的 MW 直接當成最後一階段。真正應該追蹤的是宣布轉成電力、融資、預租、通電與使用的比例，以及每一階段需要多少額外資本。
+
+## 收入模型
+
+資料中心收入可以來自整棟出租、共置機櫃、電力容量、交叉連線、網路服務、雲端服務與 GPU 即服務。越接近不動產模式，收入通常更穩定，主要取決於已通電容量、租金、租期與使用率；越接近算力服務，成長與毛利可能更高，但設備折舊、軟體競爭與技術淘汰風險也更大。
+
+基本收入模型可寫成：
+
+```text
+可租用 IT 負載
+× 預租率
+× 實際起租率
+× 使用率
+× 單位租金或算力收入
+= 營業收入
+```
+
+預租率不等於實際起租率。租戶可能在建設期簽約，但租金要等到通電、驗收與設備進駐才開始。若電力接入延後六個月，建設期利息照常增加，收入卻延後，償債覆蓋率會比原模型明顯惡化。
+
+## 成本模型
+
+資本支出包括土地、建築、變電站、輸配電、備援發電、機電、冷卻、水處理、消防、資安、光纖與伺服器空間。若業者同時持有 GPU，還需把設備與不動產分開建模，因兩者經濟壽命與殘值差異很大。
+
+營運成本主要是電力、冷卻、水、維護、人員、網路、保險、租金與稅負。高密度人工智慧機櫃提高單位面積收入，也提高電力與冷卻需求。電力使用效率改善可以降低非 IT 用電，但高溫、濕度與水資源限制仍可能推高成本。
+
+馬來西亞的優勢包括區域位置、工業土地、政策支持與相對具競爭力的成本；限制則包括發電、天然氣、輸電、變電站、再生能源與水資源需要同步擴張。能源監管機構指出，2032 年前需補足約 9 GW 天然氣發電容量缺口。資料中心因此不是單一不動產投資，而是對國家電力系統的長期需求承諾。
+
+## 單位經濟
+
+每 MW 的經濟價值至少需要六組指標：建設成本、穩定後收入、營運毛利、維持性資本支出、加權平均資金成本與資產壽命。市場若只比較每 MW 投資金額，會忽略同一 MW 在租戶品質、功率密度、利用率、電價與融資結構上的巨大差異。
+
+可用下列順序判斷：
+
+1. 每 MW 建設成本是否包含土地、電力接入與融資成本。
+2. 每 MW 收入是依已簽最大需求、已通電容量或實際使用量計算。
+3. 電力成本能否完整轉嫁給租戶，是否有價格或用量上限。
+4. 穩定利用率需要多久達成，起租日是否受設備進駐影響。
+5. 維持性資本支出是否充分反映冷卻、電池、網路與設備更新。
+6. 穩定後投資資本報酬率是否高於加權平均資金成本，並留有延誤緩衝。
+
+若報酬只在滿載、低利率與高終值同時成立時高於資金成本，專案的表面成長不具經濟價值。
+
+## 誰付款
+
+最終付款者包括 AWS、Microsoft、Google 等超大規模雲端業者、企業、人工智慧公司、政府與電信客戶。信用分析要確認實際簽約實體、母公司擔保、最低採購、預付款、照付不議、提前終止與剩餘價值條款。
+
+品牌名稱不能取代合約分析。區域子公司、轉租商或算力平台的信用可能低於母公司；同一批終端需求也可能同時被雲端業者、GPU 平台、資料中心與設備供應商列為承諾訂單。若沒有最終使用量與付款義務，需求可能被重複計算。
+
+## 誰借款與誰承擔信用
+
+借款人可能是資料中心開發商、房地產投資信託、基礎建設基金、公用事業、電信商、專案公司或 GPU 特殊目的公司。資金來源包括銀行建設貸款、公司債、伊斯蘭債券、專案融資、私人信貸、租賃與股權。
+
+信用風險取決於追索權。無追索專案融資讓債權人承擔租戶、利用率與資產殘值；母公司擔保把風險帶回企業資產負債表；公用事業先建電網而需求延後，可能把部分風險轉向電價用戶或政府。研究不能只看資料中心業主，也要找出最終的風險承擔者。
+
+## 資本結構
+
+健康的資本結構具備長天期固定利率、分期投入、保守貸款價值比、足夠償債覆蓋、明確完工支持，以及在動工前取得相當比例的高品質預租。不動產與短壽命設備應分開融資，避免以 15 至 25 年建築壽命替快速折舊的 GPU 提供過長攤還。
+
+脆弱結構則以短期浮動利率債務先買土地與設備，假設未來利用率上升、租金成長、資產升值與降息同時發生。若再加入供應商融資、循環預付款、交叉持股或未合併特殊目的公司，財務報表可能低估經濟槓桿。
+
+聯準會升息後，美國長端殖利率接近 5%；馬來西亞 10 年期政府債券殖利率在 9 月 15 日約 4.17%，而 OPR 為 2.75%。OPR 穩定只能說明國內政策利率沒有同步上升，不能抵銷美元融資、專案利差、進口設備與匯率風險。
+
+## 產業受益與成本承擔
+
+最早受益者通常是輸配電、變壓器、備援發電、天然氣供應、建築、冷卻、光纖與工業地產。銀行可獲得貸款成長與費用收入，但也承擔建設、集中度與再融資風險。房地產投資信託可透過長約增加收入，卻面對資本化率上升與股權融資稀釋。
+
+上游油氣與天然氣基礎建設可能受益於新增發電，電力用戶與政府則需處理電網投資、備援容量、補貼與電價分配。若資料中心享有特殊電價或電網優先權，產業利益與社會成本不一定由同一群體承擔。
+
+## 情境分析
+
+**偏多情境：** 發電、輸電與變電站按期完成，主要租戶簽署長約與最低付款，實際負載由 710 MW 穩定上升；專案使用固定利率或利率避險，馬幣穩定，電力成本可轉嫁。已宣布容量逐步轉成通電、使用與現金流，投資資本報酬率高於資金成本。
+
+**基準情境：** 需求維持，但供電與施工造成分期上線；高品質專案取得融資，邊際專案延後。建築與設備訂單仍成長，但資產報酬分化，市場從投資總額轉向預租、起租、利用率與償債能力。
+
+**偏空情境：** 長端利率與馬幣融資成本維持高檔，電網或天然氣供應延後，租戶推遲進駐；利用率低於承作假設，資產價值與設備殘值下降。開發商被迫增資、出售資產或重組債務，公用事業已投入的電網資本則面臨回收問題。
+
+## 領先指標
+
+1. 規劃、已取得電力、已融資、興建中、已預租、已通電與實際使用 MW。
+2. 實際負載相對 710 MW 基準的變化，而不是只看 7.1 GW 最大簽約需求。
+3. 預租率、實際起租率、加權平均租期與前五大租戶集中度。
+4. 每 MW 建設成本、成本超支、工期與建設期利息。
+5. 電力使用效率、水資源使用效率、電價與成本轉嫁條款。
+6. 淨營業收入、自由現金流、投資資本報酬率與加權平均資金成本。
+7. 貸款價值比、償債覆蓋率、利息保障倍數、固定利率比例與債務到期牆。
+8. 馬來西亞政府債券殖利率、馬幣、銀行放款標準與專案融資利差。
+
+## 結論
+
+馬來西亞資料中心的成長命題成立，但投資報酬不會平均分配。市場下一步應從「宣布多少 MW」轉向「每 MW 需要多少資本、何時開始付款、誰承擔電力與融資風險，以及穩定後報酬是否高於資金成本」。
+
+最有價值的公司不是公布最大投資額的公司，而是能把土地、電力、租戶與長期資金鎖定在同一時間表上，並透明揭露容量階段、利用率、現金流與信用指標的公司。容量是物理單位；只有經過融資、通電、使用與收款後，才是經濟資產。
+
+## 資料來源
+
+- Malaysian Investment Development Authority, "MIDA Charts Next Phase for Malaysia's Data Centre Sector", 2026-09-14, https://www.mida.gov.my/media-release/mida-charts-next-phase-for-malaysias-data-centre-sector-from-attracting-investment-to-building-value-for-smes-and-malaysians/
+- Malaysian Investment Development Authority, "Malaysia's Digital Backbone", 2026-03, https://www.mida.gov.my/wp-content/uploads/2026/03/MIDA_IPR.2025.pdf
+- Energy Commission of Malaysia, "ST Highlights Resilient Energy Sector in 2025 and Challenging Outlook in 2026", 2026-04-01, https://www.st.gov.my/energy-commission-malaysia-st-highlights-resilient-energy-sector-2025-and-challenging-outlook-2026
+- Reuters, "Malaysia's data centres guzzling more power as temperatures soar, officials say", 2026-09-08, https://www.marketscreener.com/news/malaysia-s-data-centres-guzzling-more-power-as-temperatures-soar-officials-say-ce785bd8d880f027
+- Bank Negara Malaysia, "Monetary Policy Statement", 2026-09-03, https://www.bnm.gov.my/-/monetary-policy-statement-03092026
+- Bank Negara Malaysia Financial Markets, "Market Rates", 2026-09-15, https://financialmarkets.bnm.gov.my/data-download-opr
+- Department of Statistics Malaysia, "Gross Domestic Product Second Quarter 2026", 2026-08-14, https://www.dosm.gov.my/portal-main/release-content/gross-domestic-product-q22026

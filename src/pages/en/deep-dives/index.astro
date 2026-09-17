@@ -8,11 +8,11 @@ let lang: "zh" | "en" = "en";
 const entries = sortByDateDesc(byLang(await getCollection("deep-dives"), lang));
 ---
 
-<BaseLayout title="Deep Dives" description="Long-form research on markets, industries, financing structures and cross-market consequences." lang={lang} alternateUrl="/deep-dives/">
+<BaseLayout title="Deep Dives" description="In-depth research on markets, industries, financing structures and cross-market consequences." lang={lang} alternateUrl="/deep-dives/">
   <section class="site-shell archive-header">
     <p class="eyebrow">Deep Dives</p>
     <h1>Deep Dives</h1>
-    <p>Long-form research on markets, industries, financing structures and cross-market consequences.</p>
+    <p>In-depth research on markets, industries, financing structures and cross-market consequences.</p>
   </section>
   <section class="site-shell archive-list">
     <ContentList entries={entries} collectionPath="deep-dives" />
