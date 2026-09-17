@@ -9,9 +9,9 @@ import { withBase } from "@/lib/paths";
 
 let lang: "zh" | "en" = "zh";
 const briefs = latest(byLang(await getCollection("briefs"), lang), 1);
-const trends = latest(byLang(await getCollection("trends"), lang), 3);
-const crossignal = latest(byLang(await getCollection("crossignal"), lang), 3);
-const secondOrder = latest(byLang(await getCollection("second-order"), lang), 3);
+const trends = latest(byLang(await getCollection("trends"), lang), 1);
+const crossignal = latest(byLang(await getCollection("crossignal"), lang), 1);
+const secondOrder = latest(byLang(await getCollection("second-order"), lang), 1);
 const deepDives = latest(byLang(await getCollection("deep-dives"), lang), 5);
 
 const latestBrief = briefs[0];
