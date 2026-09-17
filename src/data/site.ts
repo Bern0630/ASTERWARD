@@ -14,7 +14,7 @@ export type Lang = "zh" | "en";
 export const SITE_COPY = {
   zh: {
     eyebrow: "全球市場情報",
-    tagline: "跨市場訊號。第二層效應。",
+    tagline: "跨市場訊號。二階效應。",
     coverageLabel: "研究範圍",
     topics: ["美國", "台灣", "馬來西亞", "利率", "信用", "AI", "基礎建設"]
   },
@@ -36,7 +36,7 @@ export const NAV_ITEMS = {
     { label: "每日簡報", href: "/briefs/" },
     { label: "趨勢探索", href: "/trends/" },
     { label: "跨市場訊號", href: "/crossignal/" },
-    { label: "第二層效應", href: "/second-order/" },
+    { label: "二階效應", href: "/second-order/" },
     { label: "深度研究", href: "/deep-dives/" },
     { label: "關於", href: "/about/" }
   ],
