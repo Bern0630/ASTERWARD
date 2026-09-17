@@ -1,5 +1,5 @@
 ---
-import { NAV_ITEMS, SITE, type Lang } from "@/data/site";
+import { NAV_ITEMS, SITE, SITE_COPY, type Lang } from "@/data/site";
 import { localizedPath } from "@/lib/content";
 import { withBase } from "@/lib/paths";
 
@@ -14,6 +14,7 @@ const currentPath = basePath && Astro.url.pathname.startsWith(basePath)
   ? Astro.url.pathname.slice(basePath.length) || "/"
   : Astro.url.pathname;
 const navItems = NAV_ITEMS[lang];
+const copy = SITE_COPY[lang];
 const currentWithoutEnglishPrefix = currentPath.startsWith("/en") ? currentPath.slice(3) || "/" : currentPath;
 const languageTarget = alternateUrl ?? localizedPath(currentWithoutEnglishPrefix, lang === "zh" ? "en" : "zh");
 ---
@@ -22,7 +23,7 @@ const languageTarget = alternateUrl ?? localizedPath(currentWithoutEnglishPrefix
   <div class="site-shell header-inner">
     <a class="brand" href={withBase(localizedPath("/", lang))} aria-label="SECURRENT home">
       <span class="brand-mark">{SITE.name}</span>
-      <span class="brand-kicker">{SITE.eyebrow}</span>
+      <span class="brand-kicker">{copy.eyebrow}</span>
     </a>
 
     <nav class="desktop-nav" aria-label="Primary navigation">

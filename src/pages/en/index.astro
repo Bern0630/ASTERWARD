@@ -3,7 +3,7 @@ import { getCollection } from "astro:content";
 import ContentList from "@/components/ContentList.astro";
 import Tags from "@/components/Tags.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { SITE } from "@/data/site";
+import { SITE, SITE_COPY } from "@/data/site";
 import { byLang, entryUrl, formatDate, latest } from "@/lib/content";
 import { withBase } from "@/lib/paths";
 
@@ -15,25 +15,20 @@ const secondOrder = latest(byLang(await getCollection("second-order"), lang), 3)
 const deepDives = latest(byLang(await getCollection("deep-dives"), lang), 5);
 
 const latestBrief = briefs[0];
+const siteCopy = SITE_COPY[lang];
 const copy = {"latestBrief":"Latest Brief","daily":"Daily Market Intelligence","allBriefs":"All briefs →","readLatest":"Read latest brief →","readFull":"Read full brief →","signals":"Signals / Research","signalTitle":"Transmission, cycles, and second-order effects","trend":"Trend Explorer","crossignal":"Crossignal","secondOrder":"Second Order","view":"View →","deep":"Deep Dives","deepTitle":"Long-form research","allDeep":"All deep dives →","lede":"Independent market intelligence focused on how macro, rates, credit, capital flows and industry fundamentals interact across global markets."};
 ---
 
 <BaseLayout lang={lang} alternateUrl="/">
   <section class="site-shell hero">
     <div>
-      <p class="eyebrow">{SITE.eyebrow}</p>
+      <p class="eyebrow">{siteCopy.eyebrow}</p>
       <h1>{SITE.name}</h1>
     </div>
-    <p class="tagline">{SITE.tagline}</p>
+    <p class="tagline">{siteCopy.tagline}</p>
     <p class="lede">{copy.lede}</p>
-    <div class="topic-strip" aria-label="Coverage areas">
-      <span>US</span>
-      <span>Taiwan</span>
-      <span>Malaysia</span>
-      <span>Rates</span>
-      <span>Credit</span>
-      <span>AI</span>
-      <span>Infrastructure</span>
+    <div class="topic-strip" aria-label={siteCopy.coverageLabel}>
+      {siteCopy.topics.map((topic) => <span>{topic}</span>)}
     </div>
     {
       latestBrief && (

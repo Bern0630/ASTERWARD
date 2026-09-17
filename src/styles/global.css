@@ -151,6 +151,37 @@ svg {
   color: var(--text);
 }
 
+.desktop-nav > a:not(.language-link) {
+  position: relative;
+  font-weight: 600;
+  transition: color 160ms ease;
+}
+
+.desktop-nav > a:not(.language-link)::after {
+  position: absolute;
+  right: 0;
+  bottom: -9px;
+  left: 0;
+  height: 1px;
+  background: var(--accent);
+  content: "";
+  opacity: 0;
+  transform: scaleX(0.35);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.desktop-nav > a:not(.language-link):hover,
+.desktop-nav > a:not(.language-link):focus-visible {
+  color: var(--text);
+}
+
+.desktop-nav > a:not(.language-link):hover::after,
+.desktop-nav > a:not(.language-link):focus-visible::after,
+.desktop-nav > a[aria-current="page"]::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
 .language-link {
   border: 1px solid var(--border);
   border-radius: 999px;
@@ -267,11 +298,22 @@ p {
 .topic-strip {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 0;
   color: var(--muted);
   font-size: 0.82rem;
   letter-spacing: 0.06em;
-  text-transform: uppercase;
+}
+
+.topic-strip span {
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.topic-strip span:not(:last-child)::after {
+  margin: 0 9px;
+  color: var(--muted-2);
+  content: "·";
 }
 
 .text-link {
