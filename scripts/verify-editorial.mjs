@@ -7,6 +7,7 @@ const fail = (message) => {
 };
 
 const pairedContent = [
+  ["src/content/briefs/2026-09-18.md", "src/content/briefs/en/2026-09-18.md"],
   ["src/content/briefs/2026-09-16.md", "src/content/briefs/en/2026-09-16.md"],
   ["src/content/briefs/2026-09-17.md", "src/content/briefs/en/2026-09-17.md"],
   ["src/content/trends/ai-infrastructure-capital-cycle.md", "src/content/trends/en/ai-infrastructure-capital-cycle.md"],
@@ -35,6 +36,24 @@ if (/placeholder/i.test(allContent)) {
   fail("Placeholder text remains in published content.");
 }
 
+const productionCutoffLanguage = [
+  /資料更新至/,
+  /資料截點/,
+  /截點/,
+  /\bcutoff\b/i,
+  /data updated through/i,
+  /(?:15:00|15:10|21:10)\s*(?:（|\()?Asia.Taipei/i,
+];
+
+for (const path of pairedContent.flat()) {
+  const content = read(path);
+  for (const pattern of productionCutoffLanguage) {
+    if (pattern.test(content)) {
+      fail("Internal cutoff language remains in published content: " + path + " (" + pattern + ")");
+    }
+  }
+}
+
 const expectedChineseTitles = new Map([
   ["src/content/crossignal/us-yields-to-taiwan-tech.md", "美國公債殖利率如何傳導至台灣科技股估值"],
   ["src/content/second-order/higher-rates-data-center-financing.md", "高利率如何先於晶片需求衝擊資料中心融資"],
@@ -50,6 +69,23 @@ for (const [path, title] of expectedChineseTitles) {
 for (const date of ["2026-09-16", "2026-09-17"]) {
   const zh = read(`src/content/briefs/${date}.md`);
   const en = read(`src/content/briefs/en/${date}.md`);
+  const zhPreMarket = zh.indexOf("## 台股盤前");
+  const zhPostMarket = zh.indexOf("## 台股盤後・美股盤前");
+  const enPreMarket = en.indexOf("## Taiwan Pre-Market");
+  const enPostMarket = en.indexOf("## Taiwan Post-Market and US Pre-Market");
+
+  if (zhPreMarket === -1 || zhPostMarket === -1 || zhPreMarket >= zhPostMarket) {
+    fail(`Chinese dual-session structure is missing or out of order in brief ${date}`);
+  }
+  if (enPreMarket === -1 || enPostMarket === -1 || enPreMarket >= enPostMarket) {
+    fail(`English dual-session structure is missing or out of order in brief ${date}`);
+  }
+  if (!zh.slice(zhPostMarket).includes("### 盤前判斷回顧")) {
+    fail(`Chinese pre-market scorecard is missing from the post-market section in brief ${date}`);
+  }
+  if (!en.slice(enPostMarket).includes("### Pre-Market Scorecard")) {
+    fail(`English pre-market scorecard is missing from the post-market section in brief ${date}`);
+  }
   for (const heading of ["### 已確認發展", "### 市場定價", "### 今晚美股情境", "### 市場影響", "### 下一驗證", "### 籌碼與資金流"]) {
     if (!zh.includes(heading)) fail(`Fixed Chinese section heading missing from brief ${date}: ${heading}`);
   }
@@ -72,7 +108,21 @@ for (const date of ["2026-09-16", "2026-09-17"]) {
 }
 
 
+const currentZh = read("src/content/briefs/2026-09-18.md");
+const currentEn = read("src/content/briefs/en/2026-09-18.md");
+if (!currentZh.includes("## 台股盤前") || currentZh.includes("## 台股盤後・美股盤前")) {
+  fail("September 18 Chinese brief must contain only the pre-market session before the evening update.");
+}
+if (!currentEn.includes("## Taiwan Pre-Market") || currentEn.includes("## Taiwan Post-Market and US Pre-Market")) {
+  fail("September 18 English brief must contain only the pre-market session before the evening update.");
+}
+
+
 const datedBriefs = new Map([
+  ["2026-09-18", {
+    zh: ["S&P 500 上漲 1.14%", "費城半導體指數上漲 3.12%", "台積電 ADR 上漲 2.81%", "外資台指期淨空單 78,674 口"],
+    en: ["S&P 500 rose 1.14%", "Philadelphia Semiconductor Index rose 3.12%", "TSMC ADR gained 2.81%", "foreign investors held a net short of 78,674 Taiwan index futures contracts"],
+  }],
   ["2026-09-16", {
     zh: ["零售與餐飲銷售月增 1.2%", "進口價格月增 0.7%"],
     en: ["retail and food services sales rose 1.2%", "Import prices rose 0.7%"],

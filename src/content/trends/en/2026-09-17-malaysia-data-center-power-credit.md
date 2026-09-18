@@ -13,7 +13,7 @@ lang: "en"
 translationKey: "trend-2026-09-17-malaysia-data-center-power-credit"
 ---
 
-> Data cutoff: September 17, 2026, 15:00 Asia/Taipei. Capacity figures retain their source definitions; announced, contracted, under-construction, energized and utilized capacity are not treated as interchangeable.
+> Capacity methodology: figures retain their source definitions; announced, contracted, under-construction, energized and utilized capacity are not treated as interchangeable.
 
 ## What Is Changing
 

@@ -14,7 +14,7 @@ lang: "en"
 translationKey: "second-order-higher-rates-data-center-financing"
 ---
 
-> Data updated through September 17, 2026, 15:00 Asia/Taipei. This article examines second-order transmission and does not claim that AI end demand has reversed.
+> Analytical scope: this article examines second-order transmission and does not claim that AI end demand has reversed.
 
 ## First-Order Effect
 

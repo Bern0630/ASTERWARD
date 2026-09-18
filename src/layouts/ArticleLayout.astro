@@ -17,13 +17,50 @@ interface Props {
 
 const { title, date, summary, tags, headings, lang = "zh", alternateUrl } = Astro.props;
 const toc = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+const sessionTitles = lang === "zh"
+  ? ["台股盤前", "台股盤後・美股盤前"]
+  : ["Taiwan Pre-Market", "Taiwan Post-Market and US Pre-Market"];
+const sessions = headings.filter(
+  (heading) => heading.depth === 2 && sessionTitles.includes(heading.text),
+);
+const globalTitle = lang === "zh" ? "其他重要市場" : "Other Key Markets";
+const globalHeading = headings.find(
+  (heading) => heading.depth === 2 && heading.text === globalTitle,
+);
+const hasBriefTabs = sessions.length === 2 && Boolean(globalHeading);
 const labels = lang === "zh"
-  ? { toc: "目錄", contents: "Contents", fact: "Fact", pricing: "Market Pricing", scenario: "Scenario", risk: "Risk" }
-  : { toc: "Table of contents", contents: "Contents", fact: "Fact", pricing: "Market Pricing", scenario: "Scenario", risk: "Risk" };
+  ? { toc: "章節導覽", contents: "Contents", sessions: "每日情報時段", global: "全球市場與研究", fact: "Fact", pricing: "Market Pricing", scenario: "Scenario", risk: "Risk" }
+  : { toc: "Section navigation", contents: "Contents", sessions: "Daily brief sessions", global: "Global Markets and Research", fact: "Fact", pricing: "Market Pricing", scenario: "Scenario", risk: "Risk" };
+const briefTabs = hasBriefTabs
+  ? [
+      { key: "pre", text: sessions[0].text, compact: lang === "zh" ? "盤前" : "TW Pre", slug: sessions[0].slug },
+      { key: "post", text: sessions[1].text, compact: lang === "zh" ? "盤後・美股前" : "TW Post / US Pre", slug: sessions[1].slug },
+      { key: "global", text: labels.global, compact: lang === "zh" ? "全球研究" : "Global Research", slug: globalHeading!.slug },
+    ]
+  : [];
+const headingIndexes = new Map(headings.map((heading, index) => [heading.slug, index]));
+const panelStarts = hasBriefTabs
+  ? {
+      pre: headingIndexes.get(sessions[0].slug) ?? 0,
+      post: headingIndexes.get(sessions[1].slug) ?? 0,
+      global: headingIndexes.get(globalHeading!.slug) ?? 0,
+    }
+  : null;
+const tocEntries = toc.map((heading) => {
+  const index = headingIndexes.get(heading.slug) ?? -1;
+  const panel = !panelStarts
+    ? undefined
+    : index >= panelStarts.global
+      ? "global"
+      : index >= panelStarts.post
+        ? "post"
+        : "pre";
+  return { ...heading, panel };
+});
 ---
 
 <BaseLayout title={title} description={summary} lang={lang} alternateUrl={alternateUrl}>
-  <article class="article-grid">
+  <article class="article-grid" data-brief-tabs={hasBriefTabs ? "" : undefined}>
     <div>
       <header class="article-header">
         <p class="meta-line">{formatDate(date, "long", lang)}</p>
@@ -39,12 +76,35 @@ const labels = lang === "zh"
       </header>
 
       {
+        hasBriefTabs && (
+          <nav class="session-switcher" aria-label={labels.sessions} role="tablist">
+            {briefTabs.map((tab, index) => (
+              <button
+                type="button"
+                id={"brief-tab-" + tab.key}
+                role="tab"
+                aria-controls={"brief-panel-" + tab.key}
+                aria-selected={index === 0 ? "true" : "false"}
+                aria-label={tab.text}
+                tabindex={index === 0 ? "0" : "-1"}
+                data-session-key={tab.key}
+                data-heading-id={tab.slug}
+              >
+                <span class="tab-label-full">{tab.text}</span>
+                <span class="tab-label-compact" aria-hidden="true">{tab.compact}</span>
+              </button>
+            ))}
+          </nav>
+        )
+      }
+
+      {
         toc.length > 0 && (
           <details class="mobile-toc">
             <summary>{labels.toc}</summary>
             <ol class="toc-list">
-              {toc.map((heading) => (
-                <li class={"depth-" + heading.depth}>
+              {tocEntries.map((heading) => (
+                <li class={"depth-" + heading.depth} data-session-panel={heading.panel}>
                   <a href={"#" + heading.slug}>{heading.text}</a>
                 </li>
               ))}
@@ -53,7 +113,7 @@ const labels = lang === "zh"
         )
       }
 
-      <div class="article-body">
+      <div class="article-body" data-brief-body>
         <slot />
       </div>
     </div>
@@ -63,8 +123,8 @@ const labels = lang === "zh"
         <aside class="desktop-toc" aria-label="Table of contents">
           <h2>{labels.contents}</h2>
           <ol class="toc-list">
-            {toc.map((heading) => (
-              <li class={"depth-" + heading.depth}>
+            {tocEntries.map((heading) => (
+              <li class={"depth-" + heading.depth} data-session-panel={heading.panel}>
                 <a href={"#" + heading.slug}>{heading.text}</a>
               </li>
             ))}
@@ -73,4 +133,120 @@ const labels = lang === "zh"
       )
     }
   </article>
+
+  {
+    hasBriefTabs && (
+      <script is:inline>
+        (() => {
+          const initializeBriefTabs = (root) => {
+            const body = root.querySelector("[data-brief-body]");
+            const tabs = Array.from(root.querySelectorAll('[role="tab"][data-session-key]'));
+            if (!body || tabs.length !== 3) return;
+
+            const boundaries = tabs.map((tab) => document.getElementById(tab.dataset.headingId));
+            if (boundaries.some((heading) => !heading)) return;
+
+            const nodes = Array.from(body.childNodes);
+            const panels = tabs.map((tab, index) => {
+              const start = nodes.indexOf(boundaries[index]);
+              const end = index + 1 < boundaries.length
+                ? nodes.indexOf(boundaries[index + 1])
+                : nodes.length;
+              const panel = document.createElement("section");
+              panel.id = tab.getAttribute("aria-controls");
+              panel.className = "brief-session-panel";
+              panel.setAttribute("role", "tabpanel");
+              panel.setAttribute("aria-labelledby", tab.id);
+              panel.dataset.sessionKey = tab.dataset.sessionKey;
+              boundaries[index].before(panel);
+              nodes.slice(start, end).forEach((node) => panel.append(node));
+              return panel;
+            });
+
+            const tocItems = Array.from(root.querySelectorAll("[data-session-panel]"));
+            const panelForTarget = (target) =>
+              panels.find((panel) => panel.contains(target))?.dataset.sessionKey;
+
+            const activate = (key, { focus = false, updateUrl = true } = {}) => {
+              const activeIndex = tabs.findIndex((tab) => tab.dataset.sessionKey === key);
+              if (activeIndex < 0) return;
+
+              tabs.forEach((tab, index) => {
+                const active = index === activeIndex;
+                tab.setAttribute("aria-selected", String(active));
+                tab.tabIndex = active ? 0 : -1;
+                panels[index].hidden = !active;
+              });
+              tocItems.forEach((item) => {
+                item.hidden = item.dataset.sessionPanel !== key;
+              });
+
+              if (focus) tabs[activeIndex].focus();
+              if (updateUrl) {
+                const headingId = tabs[activeIndex].dataset.headingId;
+                history.replaceState(null, "", `#${headingId}`);
+              }
+            };
+
+            tabs.forEach((tab, index) => {
+              tab.addEventListener("click", () => activate(tab.dataset.sessionKey));
+              tab.addEventListener("keydown", (event) => {
+                let nextIndex;
+                if (event.key === "ArrowRight") nextIndex = (index + 1) % tabs.length;
+                if (event.key === "ArrowLeft") nextIndex = (index - 1 + tabs.length) % tabs.length;
+                if (event.key === "Home") nextIndex = 0;
+                if (event.key === "End") nextIndex = tabs.length - 1;
+                if (nextIndex === undefined) return;
+                event.preventDefault();
+                activate(tabs[nextIndex].dataset.sessionKey, { focus: true });
+              });
+            });
+
+            const activateFromHash = () => {
+              const rawHash = window.location.hash.slice(1);
+              if (!rawHash) {
+                activate("pre", { updateUrl: false });
+                return;
+              }
+              let targetId = rawHash;
+              try {
+                targetId = decodeURIComponent(rawHash);
+              } catch {}
+              const target = document.getElementById(targetId);
+              activate(target ? panelForTarget(target) ?? "pre" : "pre", { updateUrl: false });
+            };
+
+            window.addEventListener("hashchange", activateFromHash);
+            activateFromHash();
+            root.classList.add("brief-tabs-ready");
+          };
+
+          document.querySelectorAll("[data-brief-tabs]").forEach(initializeBriefTabs);
+        })();
+      </script>
+    )
+  }
+
+  <script is:inline>
+    document.querySelectorAll(".mobile-toc").forEach((toc) => {
+      const summary = toc.querySelector("summary");
+
+      toc.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => toc.removeAttribute("open"));
+      });
+
+      document.addEventListener("pointerdown", (event) => {
+        if (toc.hasAttribute("open") && !toc.contains(event.target)) {
+          toc.removeAttribute("open");
+        }
+      });
+
+      toc.addEventListener("keydown", (event) => {
+        if (event.key !== "Escape" || !toc.hasAttribute("open")) return;
+        event.preventDefault();
+        toc.removeAttribute("open");
+        summary?.focus();
+      });
+    });
+  </script>
 </BaseLayout>

@@ -13,7 +13,7 @@ lang: "zh"
 translationKey: "trend-ai-infrastructure-capital-cycle"
 ---
 
-> 資料截點：2026 年 9 月 16 日 15:00（Asia/Taipei）。本文建立資本週期框架，不把已宣布投資視為已交付供給或已實現需求。
+> 分析口徑：本文建立資本週期框架，不把已宣布投資視為已交付供給或已實現需求。
 
 ## 正在改變什麼
 

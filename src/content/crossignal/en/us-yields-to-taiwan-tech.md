@@ -14,7 +14,7 @@ lang: "en"
 translationKey: "crossignal-us-yields-to-taiwan-tech"
 ---
 
-> Data updated through September 17, 2026, 15:10 Asia/Taipei. September 16 margin data released that evening are identified separately. Institutional categories aggregate many investors and should not be interpreted as the directional strategy of a single institution.
+> Interpretation note: this article describes transmission mechanisms. Margin data use official releases, and aggregate institutional categories should not be interpreted as the directional strategy of a single institution.
 
 ## Initial Signal
 

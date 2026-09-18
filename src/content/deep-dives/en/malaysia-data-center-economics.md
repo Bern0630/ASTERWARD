@@ -14,7 +14,7 @@ lang: "en"
 translationKey: "deep-dive-malaysia-data-center-economics"
 ---
 
-> Data updated through September 17, 2026, 15:00 Asia/Taipei. Sources use different capacity definitions; this report separates planned, under-construction, power-contracted, energized, pre-leased and utilized capacity.
+> Capacity methodology: sources use different definitions, so this report separates planned, under-construction, power-contracted, energized, pre-leased and utilized capacity.
 
 ## Investment Thesis
 

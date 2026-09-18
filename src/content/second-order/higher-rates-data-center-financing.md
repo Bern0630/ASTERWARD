@@ -14,7 +14,7 @@ lang: "zh"
 translationKey: "second-order-higher-rates-data-center-financing"
 ---
 
-> 資料更新至 2026 年 9 月 17 日 15:00（Asia/Taipei）。本文討論第二層傳導，不主張人工智慧終端需求已經反轉。
+> 分析範圍：本文討論第二層傳導，不主張人工智慧終端需求已經反轉。
 
 ## 第一層效應
 

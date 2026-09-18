@@ -13,7 +13,7 @@ lang: "en"
 translationKey: "trend-ai-infrastructure-capital-cycle"
 ---
 
-> Data cutoff: September 16, 2026, 15:00 Asia/Taipei. This report establishes a capital-cycle framework and does not treat announced investment as delivered supply or realized demand.
+> Analytical scope: this report establishes a capital-cycle framework and does not treat announced investment as delivered supply or realized demand.
 
 ## What Is Changing
 

@@ -13,7 +13,7 @@ lang: "en"
 translationKey: "trend-2026-09-16-ai-capex-financing-test"
 ---
 
-> Data cutoff: September 16, 2026, 15:00 Asia/Taipei. This report uses only information available before the cutoff and excludes that evening's US retail sales, Federal Reserve decision and subsequent market reaction.
+> Analytical starting point: this report uses pre-decision market pricing to examine capex and financing pressure, then tests the framework against subsequent moves in rates, the dollar and credit.
 
 ## What Is Changing
 
@@ -23,7 +23,7 @@ Demand and rates are not mutually exclusive. AI orders can keep growing while eq
 
 ## Why Now
 
-At the cutoff, markets assigned an approximately 92.4% probability to a 25-basis-point Fed hike. Two-, ten- and thirty-year Treasury yields ended the prior session near 4.671%, 5.002% and 5.367%, respectively. Projects that depended on distant terminal values must now be recalculated with a higher risk-free rate, credit spread and equity risk premium.
+Ahead of the Fed decision, markets assigned an approximately 92.4% probability to a 25-basis-point hike. Two-, ten- and thirty-year Treasury yields ended the prior session near 4.671%, 5.002% and 5.367%, respectively. Projects that depended on distant terminal values must now be recalculated with a higher risk-free rate, credit spread and equity risk premium.
 
 The AI capital chain is also expanding rapidly. Wafers, advanced packaging, servers, networking, cooling, power, land and data centers all require capital before end revenue arrives, and each monetizes on a different schedule. Higher rates amplify the maturity mismatch between paying first and validating demand later.
 
@@ -61,7 +61,7 @@ A weak structure finances long construction or rapidly depreciating equipment wi
 
 The credit chain is: higher rates increase construction and equipment funding costs; project delays defer rent commencement or compute revenue; utilization below underwriting reduces cash flow; lower equipment residual values and asset valuations raise loan-to-value; and the borrower must add collateral, raise equity, refinance or default.
 
-At the cutoff, VIX was only 17.20 and did not indicate broad market panic. The current pressure was therefore primarily a risk-free-rate and valuation shock, not a confirmed systemic credit event. A simultaneous deterioration in high-yield spreads, private-credit terms and project-loan conditions would show that stress was moving from equity into credit.
+Ahead of the Fed decision, VIX was only 17.20 and did not indicate broad market panic. The current pressure was therefore primarily a risk-free-rate and valuation shock, not a confirmed systemic credit event. A simultaneous deterioration in high-yield spreads, private-credit terms and project-loan conditions would show that stress was moving from equity into credit.
 
 ## Bull Case
 
@@ -100,7 +100,7 @@ The second blind spot is that credit risk may not remain inside technology compa
 
 ## Next Confirmation
 
-The first tests are post-cutoff US retail sales and the Fed decision: whether two- and ten-year yields rise together, whether the dollar strengthens, and whether credit spreads follow. The second is whether subsequent monthly revenue growth remains broad across TSMC, servers and advanced packaging.
+The first validation stage follows the US retail-sales release and Fed decision: whether two- and ten-year yields rise together, whether the dollar strengthens, and whether credit spreads follow. The second is whether subsequent monthly revenue growth remains broad across TSMC, servers and advanced packaging.
 
 The third is the next round of hyperscaler capex, cloud growth and free-cash-flow guidance. Rising capex and utilization alongside stable credit conditions would validate the trend. Capex growth accompanied by weaker free cash flow, utilization and funding terms would require markets to price overbuilding.
 
