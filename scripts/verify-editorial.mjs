@@ -16,6 +16,10 @@ const pairedContent = [
   ["src/content/crossignal/us-yields-to-taiwan-tech.md", "src/content/crossignal/en/us-yields-to-taiwan-tech.md"],
   ["src/content/second-order/higher-rates-data-center-financing.md", "src/content/second-order/en/higher-rates-data-center-financing.md"],
   ["src/content/deep-dives/malaysia-data-center-economics.md", "src/content/deep-dives/en/malaysia-data-center-economics.md"],
+  ["src/content/trends/2026-09-18-ai-leadership-under-tightening.md", "src/content/trends/en/2026-09-18-ai-leadership-under-tightening.md"],
+  ["src/content/crossignal/2026-09-18-yen-taiwan-flows.md", "src/content/crossignal/en/2026-09-18-yen-taiwan-flows.md"],
+  ["src/content/second-order/2026-09-18-cash-futures-hedge.md", "src/content/second-order/en/2026-09-18-cash-futures-hedge.md"],
+  ["src/content/deep-dives/2026-09-18-asia-ai-capital-structure.md", "src/content/deep-dives/en/2026-09-18-asia-ai-capital-structure.md"],
 ];
 
 const translationKey = (content) => content.match(/^translationKey:\s*["']?([^"'\n]+)["']?/m)?.[1];
@@ -110,11 +114,11 @@ for (const date of ["2026-09-16", "2026-09-17"]) {
 
 const currentZh = read("src/content/briefs/2026-09-18.md");
 const currentEn = read("src/content/briefs/en/2026-09-18.md");
-if (!currentZh.includes("## 台股盤前") || currentZh.includes("## 台股盤後・美股盤前")) {
-  fail("September 18 Chinese brief must contain only the pre-market session before the evening update.");
+if (!currentZh.includes("## 台股盤前") || !currentZh.includes("## 台股盤後・美股盤前") || !currentZh.includes("### 盤前判斷回顧")) {
+  fail("September 18 Chinese brief must contain the completed dual-session structure.");
 }
-if (!currentEn.includes("## Taiwan Pre-Market") || currentEn.includes("## Taiwan Post-Market and US Pre-Market")) {
-  fail("September 18 English brief must contain only the pre-market session before the evening update.");
+if (!currentEn.includes("## Taiwan Pre-Market") || !currentEn.includes("## Taiwan Post-Market and US Pre-Market") || !currentEn.includes("### Pre-Market Scorecard")) {
+  fail("September 18 English brief must contain the completed dual-session structure.");
 }
 
 
@@ -175,6 +179,14 @@ const minimumLengths = new Map([
   ["src/content/second-order/en/higher-rates-data-center-financing.md", 3000],
   ["src/content/deep-dives/malaysia-data-center-economics.md", 5000],
   ["src/content/deep-dives/en/malaysia-data-center-economics.md", 5000],
+  ["src/content/trends/2026-09-18-ai-leadership-under-tightening.md", 3000],
+  ["src/content/trends/en/2026-09-18-ai-leadership-under-tightening.md", 3500],
+  ["src/content/crossignal/2026-09-18-yen-taiwan-flows.md", 3000],
+  ["src/content/crossignal/en/2026-09-18-yen-taiwan-flows.md", 3500],
+  ["src/content/second-order/2026-09-18-cash-futures-hedge.md", 3000],
+  ["src/content/second-order/en/2026-09-18-cash-futures-hedge.md", 3500],
+  ["src/content/deep-dives/2026-09-18-asia-ai-capital-structure.md", 5000],
+  ["src/content/deep-dives/en/2026-09-18-asia-ai-capital-structure.md", 5500],
 ]);
 
 for (const [path, minimum] of minimumLengths) {
