@@ -1,51 +1,54 @@
 ---
-title: "Global Market Intelligence"
+title: "全球市場情報"
 date:
 type: "daily"
+edition: "trading-day"
 lang: "zh"
 translationKey:
 summary:
 tags: []
 ---
 
-## United States
+## 台股盤前
 
-### A. What is happening / confirmed
+### 已確認發展
 
-### B. What the market is pricing
+### 籌碼與資金流
 
-### US Market Setup Tonight
+### 市場定價
 
-### C. Market impact
+### 今晚美股情境
 
-### D. Next confirmation
+### 市場影響
 
-## Taiwan
+### 下一驗證
 
-### A. What is happening / confirmed
+## 台股盤後・美股盤前
 
-### B. What the market is pricing
+### 盤前判斷回顧
 
-### C. Market impact
+### 已確認發展
 
-### D. Next confirmation
+### 籌碼與資金流
 
-## Malaysia
+### 市場定價
 
-### A. What is happening / confirmed
+### 今晚美股情境
 
-### B. What the market is pricing
+### 市場影響
 
-### C. Market impact
+### 下一驗證
 
-### D. Next confirmation
+## 其他重要市場
 
-## Other Key Markets
+## 全球跨市場傳導
 
-## Cross-Market Transmission
+## 今日五大市場風險
 
-## Top Five Market Risks
+## 未來七天重要事件
 
-## 7-Day Event Calendar
+## 市場可能尚未充分注意的情報
 
-## Underpriced Intelligence
+## 延伸研究
+
+## 資料來源

@@ -16,7 +16,8 @@ const baseSchema = z.object({
 const briefs = defineCollection({
   type: "content",
   schema: baseSchema.extend({
-    type: z.literal("daily")
+    type: z.literal("daily"),
+    edition: z.enum(["trading-day", "weekend", "market-closed"]).default("trading-day")
   })
 });
 

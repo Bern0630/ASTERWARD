@@ -31,106 +31,65 @@ Tagline：Cross-market signals. Second-order effects.
 6. Markdown 必須可以直接貼入檔案，不要包在多餘說明文字中。
 7. tags 使用英文短標籤，例如 Fed, US10Y, Taiwan, Malaysia, AI, Data Center, Credit, Energy。
 
-Daily Brief frontmatter：
+Daily Brief 分為交易日版與週末／休市版。兩種版本都必須輸出中文與英文 Markdown，並使用相同 translationKey。
+
+交易日版 frontmatter：
 ---
-title: "Global Market Intelligence"
+title: "全球市場情報"
 date: YYYY-MM-DD
 type: "daily"
+edition: "trading-day"
 lang: "zh"
 translationKey: "brief-YYYY-MM-DD"
-summary: "用 1 到 2 句話摘要今天最重要的跨市場訊號。"
+summary: "用 1 到 2 句話摘要當日最重要的跨市場訊號。"
 tags: []
 ---
 
-Daily Brief 結構：
-## United States
+交易日版必須依序使用以下 H2，讓網站自動建立三個分頁：
+## 台股盤前
+## 台股盤後・美股盤前
+## 其他重要市場
+## 全球跨市場傳導
+## 今日五大市場風險
+## 未來七天重要事件
+## 市場可能尚未充分注意的情報
+## 延伸研究
+## 資料來源
 
-### A. What is happening / confirmed
+盤前與盤後段落可使用：已確認發展、籌碼與資金流、市場定價、今晚美股情境、市場影響、下一驗證。今晚美股情境必須包含基準、偏多、偏空三種情境。
 
-### B. What the market is pricing
+週末或休市版不得使用盤前／盤後分頁。中文標題固定為「週末情報更新」，英文標題固定為 "Weekend Intelligence Update"。
 
-### US Market Setup Tonight
+週末版 frontmatter：
+---
+title: "週末情報更新"
+date: YYYY-MM-DD
+type: "daily"
+edition: "weekend"
+lang: "zh"
+translationKey: "brief-YYYY-MM-DD"
+summary: "用 1 到 2 句話摘要本週確認與下週最重要的跨市場訊號。"
+tags: []
+---
 
-必須包含：
-- S&P 500 futures
-- Nasdaq futures
-- Dow futures
-- US2Y
-- US10Y
-- US30Y
-- Yield curve
-- DXY
-- VIX
-- WTI
-- Brent
-- credit spreads
-- Fed Funds futures
-- SOFR
-- economic data
-- company news
-- AI / semiconductor news
-- Europe session
-- Asia close
+週末版使用以下結構：
+## 本週市場總結
+## 已確認發展
+## 市場如何定價
+## 全球跨市場傳導
+## 二階效應
+## 下週基準情境
+## 下週偏多情境
+## 下週偏空情境
+## 下週重要事件
+## 主要風險
+## 確認與失效條件
+## 延伸研究
+## 資料來源
 
-並形成：
-- Base Case
-- Bull Case
-- Bear Case
+若是平日國定假日或臨時休市，edition 使用 "market-closed"，同樣不建立盤前／盤後分頁；標題應明確寫出休市原因與情報更新。
 
-### C. Market impact
-
-### D. Next confirmation
-
-## Taiwan
-
-### A. What is happening / confirmed
-
-### B. What the market is pricing
-
-### C. Market impact
-
-### D. Next confirmation
-
-## Malaysia
-
-### A. What is happening / confirmed
-
-### B. What the market is pricing
-
-### C. Market impact
-
-### D. Next confirmation
-
-## Other Key Markets
-
-## Cross-Market Transmission
-
-請用文字或 code block 顯示 transmission chain，例如：
-Fed pricing
-↓
-US10Y
-↓
-USD
-↓
-Asia FX
-↓
-Capital flows
-↓
-Equity valuation
-
-## Top Five Market Risks
-
-## 7-Day Event Calendar
-
-## Underpriced Intelligence
-
-寫作哲學：
-Fact → Expectation → Surprise → Pricing → Transmission → Second-order effect → Risk → Next confirmation
-
-語氣：
-- 中文為主，清楚、克制、研究感。
-- 英文版本不是逐字翻譯，而是保持相同研究結構與判斷。
-- 可以保留金融市場常用英文術語，例如 rates, credit spreads, foreign flows, valuation, WACC, DSCR。
+寫作哲學：Fact → Expectation → Surprise → Pricing → Transmission → Second-order effect → Risk → Next confirmation。
 
 如果我要 Trend Explorer，請使用 type: "trend"，路徑：
 - src/content/trends/topic-slug.md

@@ -11,11 +11,12 @@ interface Props {
   summary: string;
   tags: string[];
   headings: MarkdownHeading[];
+  edition?: "trading-day" | "weekend" | "market-closed";
   lang?: Lang;
   alternateUrl?: string;
 }
 
-const { title, date, summary, tags, headings, lang = "zh", alternateUrl } = Astro.props;
+const { title, date, summary, tags, headings, edition = "trading-day", lang = "zh", alternateUrl } = Astro.props;
 const toc = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
 const sessionTitles = lang === "zh"
   ? ["台股盤前", "台股盤後・美股盤前"]
@@ -24,10 +25,17 @@ const sessions = headings.filter(
   (heading) => heading.depth === 2 && sessionTitles.includes(heading.text),
 );
 const globalTitle = lang === "zh" ? "其他重要市場" : "Other Key Markets";
-const globalHeading = headings.find(
+const explicitGlobalHeading = headings.find(
   (heading) => heading.depth === 2 && heading.text === globalTitle,
 );
-const hasBriefTabs = sessions.length === 2 && Boolean(globalHeading);
+const postSessionIndex = sessions[1]
+  ? headings.findIndex((heading) => heading.slug === sessions[1].slug)
+  : -1;
+const fallbackGlobalHeading = postSessionIndex >= 0
+  ? headings.slice(postSessionIndex + 1).find((heading) => heading.depth === 2)
+  : undefined;
+const globalHeading = explicitGlobalHeading ?? fallbackGlobalHeading;
+const hasBriefTabs = edition === "trading-day" && sessions.length === 2 && Boolean(globalHeading);
 const labels = lang === "zh"
   ? { toc: "章節導覽", contents: "Contents", sessions: "每日情報時段", global: "全球市場與研究", fact: "Fact", pricing: "Market Pricing", scenario: "Scenario", risk: "Risk" }
   : { toc: "Section navigation", contents: "Contents", sessions: "Daily brief sessions", global: "Global Markets and Research", fact: "Fact", pricing: "Market Pricing", scenario: "Scenario", risk: "Risk" };

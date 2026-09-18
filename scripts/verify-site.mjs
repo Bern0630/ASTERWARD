@@ -4,7 +4,9 @@ const requiredFiles = [
   "dist/index.html",
   "dist/en/index.html",
   "dist/briefs/2026-09-16/index.html",
-  "dist/en/briefs/2026-09-16/index.html"
+  "dist/en/briefs/2026-09-16/index.html",
+  "dist/briefs/2026-09-18/index.html",
+  "dist/en/briefs/2026-09-18/index.html"
 ];
 
 const missing = requiredFiles.filter((file) => !existsSync(file));
@@ -145,6 +147,39 @@ if (!/\.mobile-nav-panel\s*\{[^}]*background:\s*var\(--surface\);/s.test(globalC
 
 if (!/\.mobile-nav\[open\] \.mobile-nav-panel\s*\{[^}]*opacity:\s*1;[^}]*transform:\s*translateY\(0\) scale\(1\);/s.test(globalCss)) {
   console.error("Mobile navigation panel does not animate into place.");
+  process.exit(1);
+}
+
+const zhFallbackArticle = readFileSync("dist/briefs/2026-09-18/index.html", "utf8");
+const enFallbackArticle = readFileSync("dist/en/briefs/2026-09-18/index.html", "utf8");
+const articleLayout = readFileSync("src/layouts/ArticleLayout.astro", "utf8");
+
+if (!/class="session-switcher"[^>]*role="tablist"[\s\S]*台股盤前[\s\S]*台股盤後・美股盤前[\s\S]*全球市場與研究/.test(zhFallbackArticle)) {
+  console.error("Chinese 9/18 brief does not use the fallback three-session tabs.");
+  process.exit(1);
+}
+
+if (!/class="session-switcher"[^>]*role="tablist"[\s\S]*Taiwan Pre-Market[\s\S]*Taiwan Post-Market and US Pre-Market[\s\S]*Global Markets and Research/.test(enFallbackArticle)) {
+  console.error("English 9/18 brief does not use the fallback three-session tabs.");
+  process.exit(1);
+}
+
+if (!existsSync("templates/weekend-brief.md")) {
+  console.error("Weekend brief template is missing.");
+  process.exit(1);
+}
+
+const weekendTemplate = existsSync("templates/weekend-brief.md")
+  ? readFileSync("templates/weekend-brief.md", "utf8")
+  : "";
+
+if (!weekendTemplate.includes("title: \"週末情報更新\"") || !weekendTemplate.includes("edition: \"weekend\"")) {
+  console.error("Weekend brief template does not declare the weekend title and edition.");
+  process.exit(1);
+}
+
+if (!articleLayout.includes("\"trading-day\"") || !articleLayout.includes("edition === \"trading-day\"")) {
+  console.error("Article layout does not guard session tabs with the brief edition.");
   process.exit(1);
 }
 
