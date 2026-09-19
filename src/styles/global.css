@@ -798,6 +798,14 @@ p {
   font-size: 1.55rem;
 }
 
+.brief-session-panel[data-session-key="post"] > h2:not(:first-child) {
+  margin-top: 3.1em;
+  padding-top: 1em;
+  border-top: 2px solid var(--border-strong);
+  color: var(--text);
+  font-size: 1.65rem;
+}
+
 .article-body h3 {
   margin-top: 1.9em;
   padding: 0 0 0.58em;

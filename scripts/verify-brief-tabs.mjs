@@ -24,17 +24,19 @@ try {
   await tabs.nth(1).click();
   assert.equal(await panels.nth(0).isVisible(), false, "Pre-market panel should hide after switching tabs");
   assert.equal(await panels.nth(1).isVisible(), true, "Post-market panel should become visible");
-  assert.equal(await page.locator(".desktop-toc li:not([hidden]) a", { hasText: "籌碼與資金流" }).count(), 1);
-  assert.equal(await page.locator(".desktop-toc li:not([hidden]) a", { hasText: "其他重要市場" }).count(), 0);
+  for (const country of ["台灣市場", "馬來西亞市場", "美國市場"]) {
+    assert.equal(await page.locator(".desktop-toc li:not([hidden]) a", { hasText: country }).count(), 1, `Evening navigation should expose ${country}`);
+  }
+  assert.equal(await page.locator(".desktop-toc li:not([hidden]) a", { hasText: "全球市場與研究" }).count(), 0);
 
-  await page.locator(".desktop-toc li:not([hidden]) a", { hasText: "籌碼與資金流" }).click();
-  const headingTop = await page.locator("#籌碼與資金流").evaluate((heading) => heading.getBoundingClientRect().top);
-  assert.ok(headingTop >= 88, `TOC target should remain visible below the sticky header; received ${headingTop}px`);
+  await page.locator(".desktop-toc li:not([hidden]) a", { hasText: "馬來西亞市場" }).click();
+  const headingTop = await page.locator("#馬來西亞市場").evaluate((heading) => heading.getBoundingClientRect().top);
+  assert.ok(headingTop >= 88, `Market navigation target should remain visible below the sticky header; received ${headingTop}px`);
 
   await tabs.nth(2).click();
   assert.equal(await panels.nth(1).isVisible(), false, "Post-market panel should hide after switching tabs");
   assert.equal(await panels.nth(2).isVisible(), true, "Global research panel should become visible");
-  assert.equal(await page.locator(".desktop-toc li:not([hidden]) a", { hasText: "其他重要市場" }).count(), 1);
+  assert.equal(await page.locator(".desktop-toc li:not([hidden]) a", { hasText: "全球市場與研究" }).count(), 1);
 
   await tabs.nth(2).press("ArrowLeft");
   assert.equal(await tabs.nth(1).getAttribute("aria-selected"), "true", "Arrow keys should switch tabs");
@@ -91,12 +93,12 @@ try {
   assert.ok(mobileTabHeight <= 56, `Mobile tab control should stay slim; received ${mobileTabHeight}px`);
   assert.deepEqual(
     await page.locator(".tab-label-compact").allTextContents(),
-    ["盤前", "盤後・美股前", "全球研究"],
+    ["盤前", "主要市場", "全球研究"],
     "Mobile tabs should use compact labels",
   );
   assert.deepEqual(
     await page.getByRole("tab").evaluateAll((elements) => elements.map((element) => element.getAttribute("aria-label"))),
-    ["台股盤前", "台股盤後・美股盤前", "全球市場與研究"],
+    ["台股盤前", "主要市場晚間更新", "全球市場與研究"],
     "Compact mobile tabs should keep their complete accessible names",
   );
 

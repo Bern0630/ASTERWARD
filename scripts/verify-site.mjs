@@ -18,12 +18,12 @@ if (missing.length > 0) {
 const zhArticle = readFileSync("dist/briefs/2026-09-16/index.html", "utf8");
 const enArticle = readFileSync("dist/en/briefs/2026-09-16/index.html", "utf8");
 
-if (!/class="session-switcher"[^>]*role="tablist"[\s\S]*role="tab"[\s\S]*台股盤前[\s\S]*台股盤後・美股盤前[\s\S]*全球市場與研究/.test(zhArticle)) {
+if (!/class="session-switcher"[^>]*role="tablist"[\s\S]*role="tab"[\s\S]*台股盤前[\s\S]*主要市場晚間更新[\s\S]*全球市場與研究/.test(zhArticle)) {
   console.error("Chinese Daily Brief is missing the three-session tab list.");
   process.exit(1);
 }
 
-if (!/class="session-switcher"[^>]*role="tablist"[\s\S]*role="tab"[\s\S]*Taiwan Pre-Market[\s\S]*Taiwan Post-Market and US Pre-Market[\s\S]*Global Markets and Research/.test(enArticle)) {
+if (!/class="session-switcher"[^>]*role="tablist"[\s\S]*role="tab"[\s\S]*Taiwan Pre-Market[\s\S]*Core Markets Evening Update[\s\S]*Global Markets and Research/.test(enArticle)) {
   console.error("English Daily Brief is missing the three-session tab list.");
   process.exit(1);
 }
@@ -154,12 +154,12 @@ const zhFallbackArticle = readFileSync("dist/briefs/2026-09-18/index.html", "utf
 const enFallbackArticle = readFileSync("dist/en/briefs/2026-09-18/index.html", "utf8");
 const articleLayout = readFileSync("src/layouts/ArticleLayout.astro", "utf8");
 
-if (!/class="session-switcher"[^>]*role="tablist"[\s\S]*台股盤前[\s\S]*台股盤後・美股盤前[\s\S]*全球市場與研究/.test(zhFallbackArticle)) {
+if (!/class="session-switcher"[^>]*role="tablist"[\s\S]*台股盤前[\s\S]*主要市場晚間更新[\s\S]*全球市場與研究/.test(zhFallbackArticle)) {
   console.error("Chinese 9/18 brief does not use the fallback three-session tabs.");
   process.exit(1);
 }
 
-if (!/class="session-switcher"[^>]*role="tablist"[\s\S]*Taiwan Pre-Market[\s\S]*Taiwan Post-Market and US Pre-Market[\s\S]*Global Markets and Research/.test(enFallbackArticle)) {
+if (!/class="session-switcher"[^>]*role="tablist"[\s\S]*Taiwan Pre-Market[\s\S]*Core Markets Evening Update[\s\S]*Global Markets and Research/.test(enFallbackArticle)) {
   console.error("English 9/18 brief does not use the fallback three-session tabs.");
   process.exit(1);
 }

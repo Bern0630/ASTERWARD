@@ -73,8 +73,8 @@ for (const [path, title] of expectedChineseTitles) {
 const requiredBriefH2 = {
   zh: [
     "台股盤前",
-    "台股盤後・美股盤前",
-    "其他重要市場",
+    "主要市場晚間更新",
+    "全球市場與研究",
     "全球跨市場傳導",
     "今日五大市場風險",
     "未來七天重要事件",
@@ -84,8 +84,8 @@ const requiredBriefH2 = {
   ],
   en: [
     "Taiwan Pre-Market",
-    "Taiwan Post-Market and US Pre-Market",
-    "Other Key Markets",
+    "Core Markets Evening Update",
+    "Global Markets and Research",
     "Cross-Market Transmission",
     "Top Five Market Risks",
     "Seven-Day Event Calendar",
@@ -107,28 +107,61 @@ const assertHeadingOrder = (content, headings, path) => {
   }
 };
 
+const assertGlobalMarketDepth = (content, globalHeading, transmissionHeading, labels, path) => {
+  const start = content.indexOf(`## ${globalHeading}`);
+  const end = content.indexOf(`## ${transmissionHeading}`, start);
+  const globalSection = content.slice(start, end);
+  const marketHeadings = [...globalSection.matchAll(/^### (.+)$/gm)];
+  if (marketHeadings.length === 0) {
+    fail(`Global markets section has no country or market entries in ${path}`);
+    return;
+  }
+  marketHeadings.forEach((match, index) => {
+    const bodyStart = match.index + match[0].length;
+    const bodyEnd = index + 1 < marketHeadings.length ? marketHeadings[index + 1].index : globalSection.length;
+    const body = globalSection.slice(bodyStart, bodyEnd).trim();
+    const paragraphs = body.split(/\n\s*\n/).filter((paragraph) => paragraph.trim() && !paragraph.startsWith("#"));
+    if (paragraphs.length < 3) fail(`Global market entry needs at least three substantive paragraphs in ${path}: ${match[1]}`);
+    for (const label of labels) {
+      if (!body.includes(label)) fail(`Global market entry is missing ${label} in ${path}: ${match[1]}`);
+    }
+  });
+};
+
 for (const date of ["2026-09-16", "2026-09-17", "2026-09-18"]) {
   const zh = read(`src/content/briefs/${date}.md`);
   const en = read(`src/content/briefs/en/${date}.md`);
   const zhPreMarket = zh.indexOf("## 台股盤前");
-  const zhPostMarket = zh.indexOf("## 台股盤後・美股盤前");
+  const zhPostMarket = zh.indexOf("## 主要市場晚間更新");
+  const zhGlobal = zh.indexOf("## 全球市場與研究");
   const enPreMarket = en.indexOf("## Taiwan Pre-Market");
-  const enPostMarket = en.indexOf("## Taiwan Post-Market and US Pre-Market");
+  const enPostMarket = en.indexOf("## Core Markets Evening Update");
+  const enGlobal = en.indexOf("## Global Markets and Research");
 
-  if (zhPreMarket === -1 || zhPostMarket === -1 || zhPreMarket >= zhPostMarket) {
-    fail(`Chinese dual-session structure is missing or out of order in brief ${date}`);
+  if (zhPreMarket === -1 || zhPostMarket === -1 || zhGlobal === -1 || zhPreMarket >= zhPostMarket || zhPostMarket >= zhGlobal) {
+    fail(`Chinese three-panel structure is missing or out of order in brief ${date}`);
   }
-  if (enPreMarket === -1 || enPostMarket === -1 || enPreMarket >= enPostMarket) {
-    fail(`English dual-session structure is missing or out of order in brief ${date}`);
+  if (enPreMarket === -1 || enPostMarket === -1 || enGlobal === -1 || enPreMarket >= enPostMarket || enPostMarket >= enGlobal) {
+    fail(`English three-panel structure is missing or out of order in brief ${date}`);
   }
-  if (!zh.slice(zhPostMarket).includes("### 盤前判斷回顧")) {
+  const zhEvening = zh.slice(zhPostMarket, zhGlobal);
+  const enEvening = en.slice(enPostMarket, enGlobal);
+  if (!zhEvening.includes("### 盤前判斷回顧")) {
     fail(`Chinese pre-market scorecard is missing from the post-market section in brief ${date}`);
   }
-  if (!en.slice(enPostMarket).includes("### Pre-Market Scorecard")) {
+  if (!enEvening.includes("### Pre-Market Scorecard")) {
     fail(`English pre-market scorecard is missing from the post-market section in brief ${date}`);
+  }
+  for (const heading of ["## 台灣市場", "## 馬來西亞市場", "## 美國市場"]) {
+    if (!zhEvening.includes(heading)) fail(`Core-market navigation heading missing from Chinese brief ${date}: ${heading}`);
+  }
+  for (const heading of ["## Taiwan Market", "## Malaysia Market", "## United States Market"]) {
+    if (!enEvening.includes(heading)) fail(`Core-market navigation heading missing from English brief ${date}: ${heading}`);
   }
   assertHeadingOrder(zh, requiredBriefH2.zh, `src/content/briefs/${date}.md`);
   assertHeadingOrder(en, requiredBriefH2.en, `src/content/briefs/en/${date}.md`);
+  assertGlobalMarketDepth(zh, "全球市場與研究", "全球跨市場傳導", ["**事件與事實：**", "**市場如何定價：**", "**跨市場傳導與下一驗證：**"], `src/content/briefs/${date}.md`);
+  assertGlobalMarketDepth(en, "Global Markets and Research", "Cross-Market Transmission", ["**Event and Facts:**", "**Market Pricing:**", "**Transmission and Next Confirmation:**"], `src/content/briefs/en/${date}.md`);
   for (const heading of ["### 已確認發展", "### 市場定價", "### 今晚美股情境", "### 市場影響", "### 下一驗證", "### 籌碼與資金流"]) {
     if (!zh.includes(heading)) fail(`Fixed Chinese section heading missing from brief ${date}: ${heading}`);
   }
@@ -155,11 +188,11 @@ for (const date of ["2026-09-16", "2026-09-17", "2026-09-18"]) {
 
 const currentZh = read("src/content/briefs/2026-09-18.md");
 const currentEn = read("src/content/briefs/en/2026-09-18.md");
-if (!currentZh.includes("## 台股盤前") || !currentZh.includes("## 台股盤後・美股盤前") || !currentZh.includes("### 盤前判斷回顧")) {
-  fail("September 18 Chinese brief must contain the completed dual-session structure.");
+if (!currentZh.includes("## 台股盤前") || !currentZh.includes("## 主要市場晚間更新") || !currentZh.includes("## 全球市場與研究") || !currentZh.includes("### 盤前判斷回顧")) {
+  fail("September 18 Chinese brief must contain the completed three-panel structure.");
 }
-if (!currentEn.includes("## Taiwan Pre-Market") || !currentEn.includes("## Taiwan Post-Market and US Pre-Market") || !currentEn.includes("### Pre-Market Scorecard")) {
-  fail("September 18 English brief must contain the completed dual-session structure.");
+if (!currentEn.includes("## Taiwan Pre-Market") || !currentEn.includes("## Core Markets Evening Update") || !currentEn.includes("## Global Markets and Research") || !currentEn.includes("### Pre-Market Scorecard")) {
+  fail("September 18 English brief must contain the completed three-panel structure.");
 }
 
 

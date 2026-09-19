@@ -19,12 +19,12 @@ interface Props {
 const { title, date, summary, tags, headings, edition = "trading-day", lang = "zh", alternateUrl } = Astro.props;
 const toc = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
 const sessionTitles = lang === "zh"
-  ? ["台股盤前", "台股盤後・美股盤前"]
-  : ["Taiwan Pre-Market", "Taiwan Post-Market and US Pre-Market"];
+  ? ["台股盤前", "主要市場晚間更新"]
+  : ["Taiwan Pre-Market", "Core Markets Evening Update"];
 const sessions = headings.filter(
   (heading) => heading.depth === 2 && sessionTitles.includes(heading.text),
 );
-const globalTitle = lang === "zh" ? "其他重要市場" : "Other Key Markets";
+const globalTitle = lang === "zh" ? "全球市場與研究" : "Global Markets and Research";
 const explicitGlobalHeading = headings.find(
   (heading) => heading.depth === 2 && heading.text === globalTitle,
 );
@@ -42,7 +42,7 @@ const labels = lang === "zh"
 const briefTabs = hasBriefTabs
   ? [
       { key: "pre", text: sessions[0].text, compact: lang === "zh" ? "盤前" : "TW Pre", slug: sessions[0].slug },
-      { key: "post", text: sessions[1].text, compact: lang === "zh" ? "盤後・美股前" : "TW Post / US Pre", slug: sessions[1].slug },
+      { key: "post", text: sessions[1].text, compact: lang === "zh" ? "主要市場" : "Core Markets", slug: sessions[1].slug },
       { key: "global", text: labels.global, compact: lang === "zh" ? "全球研究" : "Global Research", slug: globalHeading!.slug },
     ]
   : [];
