@@ -13,11 +13,15 @@ lang: "en"
 translationKey: "deep-dive-2026-09-18-asia-ai-capital-structure"
 ---
 
-## Investment Thesis
+## Research Thesis
 
 Asia contains the world's densest concentration of foundries, packaging, memory, servers, networking, power equipment and data-center investment. Order growth does not automatically produce sustainable shareholder returns. The Federal Reserve lifted its policy range to 3.75%-4.00%, the Bank of Japan raised its rate to 1.25%, and the US ten-year Treasury yield briefly exceeded 5% this week. With the risk-free rate, energy cost and currency volatility rising together, research must progress from who receives orders to who pays, who advances capital, who borrows and when assets begin producing cash.
 
 TSMC's August revenue grew 53.3% from a year earlier. Taiwan's TAIEX and OTC market rose together on September 18. Malaysia's August exports increased 45.5% and imports 41.1%. These data show that Asian technology and capital-goods activity remains strong, but they do not establish returns on capital. **The purpose of this deep dive is not to deny AI growth. It is to separate one unit of growth into revenue, working capital, capital expenditure, debt and ultimate cash recovery.**
+
+## Evidence and Market Pricing
+
+Markets confirmed demand and funding pressure at the same time this week. Taiwan large-cap technology, the OTC market and foreign cash buying strengthened, while Malaysia's technology and capital-goods trade remained robust. Yet the US long yield stayed near 5% as the Fed and BOJ tightened together. Equities rewarded visible revenue first, while credit and project finance continued to demand cash conversion, collateral and maturity discipline.
 
 ## Supply-Chain Capital Map
 
@@ -71,7 +75,7 @@ The supply chain must pass three cash-conversion tests. First, revenue must be c
 
 Manufacturers can be assessed through operating cash flow relative to earnings, free-cash-flow margin and the cash-conversion cycle. Data centers require energized capacity, pre-leasing, rent commencement, utilization, unit rent, net operating income and debt-service coverage. Utilities require regulated recovery, rate base, debt maturity and pass-through of power costs.
 
-## Credit Transmission
+## Transmission Mechanism
 
 Credit risk does not need to begin with canceled orders. The more common sequence is delayed equipment delivery or grid connection, delayed customer acceptance, rising receivables, operating cash flow below earnings, higher short-term borrowing and lower interest coverage. Capital expenditure cuts or canceled orders appear later. Equity may still reward revenue growth while credit markets begin demanding a higher spread.
 

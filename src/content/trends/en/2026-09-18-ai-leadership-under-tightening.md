@@ -13,13 +13,13 @@ lang: "en"
 translationKey: "trend-2026-09-18-ai-leadership-under-tightening"
 ---
 
-## Trend Thesis
+## Research Thesis
 
 Artificial-intelligence equities have not lost their structural demand because global central banks resumed tightening. What has changed is the standard for leadership. The Federal Reserve lifted its target range to 3.75%-4.00% on September 16, and the Bank of Japan raised its policy rate from 1.00% to 1.25% on September 18. The US ten-year Treasury yield briefly exceeded 5% this week, while Brent approached $110. Capital now asks not only whether AI orders are growing, but when revenue becomes cash, who funds the investment, and whether earnings growth can outrun the discount rate.
 
 This is not a binary AI bull-or-bear call. TSMC's August revenue rose 53.3% from a year earlier. On September 17, the Philadelphia Semiconductor Index gained 3.12% and TSMC ADR advanced 2.81%. On September 18, TSMC, MediaTek and ASE rose together while Taiwan's OTC index gained 3.64%. Demand and price action do not confirm an industry reversal. **The real change is that the market is assigning different prices to the same unit of growth, concentrating leadership among companies that can prove demand, execution, margins and cash conversion at once.**
 
-## This Week's Price Evidence
+## Evidence and Market Pricing
 
 The TAIEX gained 995.90 points, or 2.16%, for the week and ended Friday at 47,180.75. Listed-market turnover returned to NT$1.075 trillion, with 759 advancing and 258 declining shares. The post-Fed response suggests investors initially treated the hike as insurance against tail inflation rather than an immediate threat to demand. Technology and smaller companies also rose together on Friday, rejecting the weakest version of the thesis that one large constituent alone drove the rebound.
 
@@ -43,13 +43,17 @@ Global tightening widens the gap between capital structures. Net-cash leaders wi
 
 BOJ tightening matters because the yen has long been a low-cost global funding currency. USD/JPY rose toward 158 after this hike, so there was no immediate carry unwind, but the policy rate has entered the lower end of the BOJ's estimated neutral range. **A weaker yen today does not mean funding remains permanently loose; it moves the risk from an immediate price shock to future funding costs and leveraged-position adjustments.**
 
-## Bull Path
+## Transmission Mechanism
+
+Global tightening first changes valuation through discount rates, then changes corporate decisions through debt costs, working capital and capital-spending hurdles. Demand, execution and capital structure therefore form a sequence rather than a checklist: end demand must become deliverable revenue, revenue must become cash, and cash determines whether a company can sustain investment and shareholder returns under a higher cost of capital.
+
+## Bull Case
 
 The constructive path requires AI workloads and cloud revenue to keep growing while chips, packaging, networking and power equipment arrive on time. Lower oil would keep the US ten-year yield below 5%, and credit spreads would remain contained. Large platforms, foundries, scarce-component suppliers and power-infrastructure companies could absorb the discount rate through earnings growth.
 
 Leadership would broaden with discipline. Suppliers showing simultaneous revenue and cash-flow growth would lead, followed by equipment companies with visible orders and controlled capital expenditure, and only later by distant-duration businesses that still lack free cash flow. Taiwan confirmation would include continued foreign cash buying, persistent OTC relative strength and a decline in the foreign index-futures net short from 76,110 contracts.
 
-## Bear Path
+## Bear Case
 
 The adverse path does not require AI demand to collapse. If renewed oil inflation forces faster Fed and BOJ tightening and US long yields break above this week's highs, customers may first cancel low-priority projects, delay data-center activation or demand longer payment terms. Chip orders can remain strong while downstream project returns and financing capacity deteriorate.
 

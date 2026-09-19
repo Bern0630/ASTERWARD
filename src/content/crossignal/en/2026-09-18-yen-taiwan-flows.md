@@ -13,11 +13,15 @@ lang: "en"
 translationKey: "crossignal-2026-09-18-yen-taiwan-flows"
 ---
 
-## Signal Summary
+## Research Thesis
 
 September 18 produced a cross-market combination that looks contradictory but is internally coherent. The Bank of Japan lifted its policy rate from 1.00% to 1.25%, yet the yen fell to a two-week low. Foreign investors bought NT$86.994 billion of Taiwan cash equities while retaining a 76,110-contract net short in Taiwan index futures. The TAIEX closed at its high and the OTC index gained 3.64%. Any one observation can mislead. Together they show that capital is willing to add Taiwan AI and semiconductor exposure without abandoning protection against global interest-rate, energy and currency risk.
 
 **This is not simply foreign investors turning bullish on Taiwan or bearish through futures. It is a structure that seeks single-stock excess return in cash equities while controlling macro beta with index futures.** A weaker yen prevented an immediate forced carry unwind and gave Asian risk assets room. A Japanese policy rate at the lower end of the estimated neutral range preserves the future deleveraging risk.
+
+## Evidence and Market Pricing
+
+The evidence has three parts: the yen weakened after a BOJ rate increase, foreign investors bought Taiwan cash equities aggressively, and the large index-futures net short declined only modestly. Markets therefore increased exposure to Taiwan stock selection while retaining macro protection, pricing strong relative returns in Asian technology without declaring that global funding risk had disappeared.
 
 ## Initial Signal: The Yen Weakens After a Hike
 
@@ -37,7 +41,7 @@ Foreign investors held 10,323 long and 86,433 short open index-futures contracts
 
 The more reasonable combined reading is that foreign institutions increased Taiwan technology and stock-specific exposure through cash while retaining global-risk protection through index futures. Published investor categories aggregate many institutions, so the cash and futures legs cannot be treated as a precise trade by one account. The aggregate divergence can still show that confidence in single-stock alpha exceeds confidence in global beta.
 
-## Transmission Chain
+## Transmission Mechanism
 
 The BOJ hiked with a divided vote, the yen weakened, and yen-funded positions avoided a forced unwind. Asian risk assets received short-term liquidity room, foreign capital bought Taiwan semiconductor and AI cash equities, and Taiwan turnover, breadth and the OTC market strengthened together. Global rates and energy risk remained elevated, so foreign investors retained a large index-futures net short as macro protection.
 
@@ -49,13 +53,13 @@ A weaker yen has two effects on Taiwan technology. In the short run, it avoids a
 
 If the dollar strengthens as well, foreign investors must consider the currency return on Taiwan assets. A weaker Taiwan dollar can offset part of the equity gain. Foreign institutions can therefore like selected shares and still retain index or currency hedges. Cash buying and a futures net short are not logically inconsistent.
 
-## Bullish Combination
+## Bull Case
 
 The cleanest bullish signal would be a stable USD/JPY rather than a sharp move in either direction, a US ten-year yield below 5%, consecutive foreign cash buying, a futures net short below 70,000 contracts, and continued strength in OTC breadth and advancing issues. That would indicate orderly carry positions, stable dollar funding and an expansion from stock selection into broader risk acceptance.
 
 The signal improves further if TSMC ADR, the Philadelphia Semiconductor Index and smaller Taiwan electronics companies rise together. US technology earnings, Taiwan supply execution and Asian capital flows would then create a reinforcing cycle.
 
-## Bearish Combination
+## Bear Case
 
 The most dangerous combination is not one BOJ hike. It is a rapid yen appreciation together with rising US yields, tighter dollar funding and larger Taiwan index-futures shorts. That would pressure carry leverage, equity discount rates and foreign-exchange returns simultaneously. If a few index heavyweights still hold the TAIEX up while the OTC market and breadth weaken, headline prices may delay recognition of the risk.
 
@@ -88,4 +92,3 @@ Only confirmation across currencies, rates, cash equities, futures and breadth w
 - Central News Agency, "Taiwan shares close up 1.93%", September 18, 2026, https://focustaiwan.tw/business/202609180010
 - Taiwan Stock Exchange, "Institutional Investor Trading", September 18, 2026, https://www.twse.com.tw/en/
 - Taiwan Futures Exchange, "Institutional Futures Positions and Index Options Put/Call Ratio", September 18, 2026, https://www.taifex.com.tw/enl/
-

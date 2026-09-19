@@ -70,7 +70,44 @@ for (const [path, title] of expectedChineseTitles) {
   }
 }
 
-for (const date of ["2026-09-16", "2026-09-17"]) {
+const requiredBriefH2 = {
+  zh: [
+    "台股盤前",
+    "台股盤後・美股盤前",
+    "其他重要市場",
+    "全球跨市場傳導",
+    "今日五大市場風險",
+    "未來七天重要事件",
+    "市場可能尚未充分注意的情報",
+    "延伸研究",
+    "資料來源",
+  ],
+  en: [
+    "Taiwan Pre-Market",
+    "Taiwan Post-Market and US Pre-Market",
+    "Other Key Markets",
+    "Cross-Market Transmission",
+    "Top Five Market Risks",
+    "Seven-Day Event Calendar",
+    "What the Market May Be Missing",
+    "Further Research",
+    "Sources",
+  ],
+};
+
+const assertHeadingOrder = (content, headings, path) => {
+  let cursor = -1;
+  for (const heading of headings) {
+    const index = content.indexOf(`## ${heading}`);
+    if (index === -1 || index <= cursor) {
+      fail(`Required H2 is missing or out of order in ${path}: ${heading}`);
+      return;
+    }
+    cursor = index;
+  }
+};
+
+for (const date of ["2026-09-16", "2026-09-17", "2026-09-18"]) {
   const zh = read(`src/content/briefs/${date}.md`);
   const en = read(`src/content/briefs/en/${date}.md`);
   const zhPreMarket = zh.indexOf("## 台股盤前");
@@ -90,6 +127,8 @@ for (const date of ["2026-09-16", "2026-09-17"]) {
   if (!en.slice(enPostMarket).includes("### Pre-Market Scorecard")) {
     fail(`English pre-market scorecard is missing from the post-market section in brief ${date}`);
   }
+  assertHeadingOrder(zh, requiredBriefH2.zh, `src/content/briefs/${date}.md`);
+  assertHeadingOrder(en, requiredBriefH2.en, `src/content/briefs/en/${date}.md`);
   for (const heading of ["### 已確認發展", "### 市場定價", "### 今晚美股情境", "### 市場影響", "### 下一驗證", "### 籌碼與資金流"]) {
     if (!zh.includes(heading)) fail(`Fixed Chinese section heading missing from brief ${date}: ${heading}`);
   }
@@ -99,14 +138,16 @@ for (const date of ["2026-09-16", "2026-09-17"]) {
   if (/^### .*[/／].*$/m.test(zh) || /^### .*[/／].*$/m.test(en)) {
     fail(`Slash-separated section heading remains in brief ${date}`);
   }
-  const expectedZhEmphasis = date === "2026-09-16"
-    ? "**一碼升息本身已不是主要驚訝**"
-    : "**這是一個「成長未斷、通膨迫使政策再收緊」的組合，而不是衰退式升息**";
-  const expectedEnEmphasis = date === "2026-09-16"
-    ? "**A quarter-point move was therefore no longer the primary surprise**"
-    : "**This is a resilient-growth tightening, not a recessionary rate increase**";
-  if (!zh.includes(expectedZhEmphasis)) fail(`Substantive bold emphasis missing from Chinese brief ${date}`);
-  if (!en.includes(expectedEnEmphasis)) fail(`Substantive bold emphasis missing from English brief ${date}`);
+  if (date !== "2026-09-18") {
+    const expectedZhEmphasis = date === "2026-09-16"
+      ? "**一碼升息本身已不是主要驚訝**"
+      : "**這是一個「成長未斷、通膨迫使政策再收緊」的組合，而不是衰退式升息**";
+    const expectedEnEmphasis = date === "2026-09-16"
+      ? "**A quarter-point move was therefore no longer the primary surprise**"
+      : "**This is a resilient-growth tightening, not a recessionary rate increase**";
+    if (!zh.includes(expectedZhEmphasis)) fail(`Substantive bold emphasis missing from Chinese brief ${date}`);
+    if (!en.includes(expectedEnEmphasis)) fail(`Substantive bold emphasis missing from English brief ${date}`);
+  }
   if (!zh.includes("## 延伸研究")) fail(`Research links missing from Chinese brief ${date}`);
   if (!en.includes("## Further Research")) fail(`Research links missing from English brief ${date}`);
 }
@@ -193,6 +234,22 @@ for (const [path, minimum] of minimumLengths) {
   if (read(path).length < minimum) {
     fail(`Research article is too short (${read(path).length} < ${minimum}): ${path}`);
   }
+}
+
+const fridayResearchPairs = [
+  ["src/content/trends/2026-09-18-ai-leadership-under-tightening.md", "src/content/trends/en/2026-09-18-ai-leadership-under-tightening.md"],
+  ["src/content/crossignal/2026-09-18-yen-taiwan-flows.md", "src/content/crossignal/en/2026-09-18-yen-taiwan-flows.md"],
+  ["src/content/second-order/2026-09-18-cash-futures-hedge.md", "src/content/second-order/en/2026-09-18-cash-futures-hedge.md"],
+  ["src/content/deep-dives/2026-09-18-asia-ai-capital-structure.md", "src/content/deep-dives/en/2026-09-18-asia-ai-capital-structure.md"],
+];
+const fridayResearchSpine = {
+  zh: ["研究命題", "事實與市場定價", "傳導機制", "偏多情境", "偏空情境", "領先指標", "推翻條件", "下一驗證", "資料來源"],
+  en: ["Research Thesis", "Evidence and Market Pricing", "Transmission Mechanism", "Bull Case", "Bear Case", "Leading Indicators", "Falsification", "Next Confirmation", "Sources"],
+};
+
+for (const [zhPath, enPath] of fridayResearchPairs) {
+  assertHeadingOrder(read(zhPath), fridayResearchSpine.zh, zhPath);
+  assertHeadingOrder(read(enPath), fridayResearchSpine.en, enPath);
 }
 
 for (const path of ["src/pages/index.astro", "src/pages/deep-dives/index.astro"]) {

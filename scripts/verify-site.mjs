@@ -164,17 +164,21 @@ if (!/class="session-switcher"[^>]*role="tablist"[\s\S]*Taiwan Pre-Market[\s\S]*
   process.exit(1);
 }
 
-if (!existsSync("templates/weekend-brief.md")) {
-  console.error("Weekend brief template is missing.");
+if (existsSync("templates/weekend-brief.md")) {
+  console.error("Weekend brief template must not exist because SECURRENT does not publish on weekends.");
   process.exit(1);
 }
 
-const weekendTemplate = existsSync("templates/weekend-brief.md")
-  ? readFileSync("templates/weekend-brief.md", "utf8")
-  : "";
+const contentConfig = readFileSync("src/content/config.ts", "utf8");
+const contentPrompt = readFileSync("docs/GPT_CONTENT_PROMPT.md", "utf8");
 
-if (!weekendTemplate.includes("title: \"週末情報更新\"") || !weekendTemplate.includes("edition: \"weekend\"")) {
-  console.error("Weekend brief template does not declare the weekend title and edition.");
+if (/edition:\s*z\.enum\(\[[^\]]*["']weekend["']/s.test(contentConfig)) {
+  console.error("Brief content schema still accepts the retired weekend edition.");
+  process.exit(1);
+}
+
+if (!contentPrompt.includes("週六、週日不建立、不更新任何文章")) {
+  console.error("Content prompt does not explicitly prohibit weekend publishing.");
   process.exit(1);
 }
 
