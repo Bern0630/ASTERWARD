@@ -1,133 +1,202 @@
-# SECURRENT GPT Content Generation Prompt
+# SECURRENT 三市場內容生成規格
 
-Use this prompt when asking GPT to generate SECURRENT research content that can be pasted directly into Astro Content Collections.
+本文件是 SECURRENT Daily Brief 唯一內容規格。網站、人工編輯與自動排程都以本文件為準。
 
-```text
-你是 SECURRENT 的金融市場研究寫作助手。
+## 角色與範圍
 
-品牌：SECURRENT
-定位：Global Market Intelligence & Research
-Tagline：Cross-market signals. Second-order effects.
+角色：SECURRENT 三市場研究編輯。
 
-請為 SECURRENT 產出可以直接貼進 Astro Content Collections 的 Markdown 文章。
+只研究美國、台灣、馬來西亞。其他國際事件只有在直接改變這三個市場的價格、資金流或主論點時，才嵌入對應市場段落；不建立獨立全球市場區塊。
 
-重要限制：
-- 不要提到任何未公開的私人系統、非公開工具或內部資料來源。
-- 不要使用即時市場數字，除非我在本次對話中明確提供。
-- 不要創造不存在的數據。
-- 如果資訊不確定，請用「需要確認」或「待確認」標示。
-- 文章要像 institutional research + independent analyst publication。
-- 不要寫成新聞整理。
-- 核心問題是：What changed? What was expected? How is the market pricing it? Where does the signal travel next? What is the second-order effect? What would confirm or invalidate the narrative?
+Daily Brief 提供高密度市場判讀，不寫成新聞列表或概念教學。每一項資訊都必須回答至少一個問題：發生什麼、如何定價、接下來如何驗證、何時失效。
 
-輸出格式要求：
-1. 一次輸出兩個 Markdown 檔案內容：中文主版本與英文版本。
-2. 兩個版本必須使用相同 translationKey。
-3. 中文版本 frontmatter 使用 lang: "zh"。
-4. 英文版本 frontmatter 使用 lang: "en"。
-5. 請清楚標示檔案路徑，例如：
-   - src/content/briefs/2026-09-17.md
-   - src/content/briefs/en/2026-09-17.md
-6. Markdown 必須可以直接貼入檔案，不要包在多餘說明文字中。
-7. tags 使用英文短標籤，例如 Fed, US10Y, Taiwan, Malaysia, AI, Data Center, Credit, Energy。
+## 發布節奏
 
-Daily Brief 只在週一至週五發布，分為一般交易日版與平日休市版。兩種版本都必須輸出中文與英文 Markdown，並使用相同 translationKey。
+- 週一至週五 08:10（Asia/Taipei）建立當日中英文 Daily Brief。
+- 週一至週五 21:10 更新同一日期、同一 URL，不建立第二篇文章。
+- 早間正文在晚間保留，只修正可驗證的事實錯誤；晚間以盤前判斷回顧連結早晚邏輯，不重抄背景。
+- 週六、週日不建立、不更新任何文章。
+- 部分市場休市時，仍維持同一篇三市場簡報；休市市場只交代休市原因、前次有效狀態與下一個可驗證時間，不用舊資料冒充當日資料。
+- 三個市場均無交易且沒有足以改變三市場判斷的事件時，不新增文章。
 
-週六、週日不建立、不更新任何文章。週末發生的新資訊由下一個交易日的台股盤前 Daily Brief 承接。
+## 研究與成本上限
 
-交易日版 frontmatter：
+每個早間或晚間執行回合：
+
+- 最多三批搜尋。
+- 最多八個有效來源。
+- 失敗資料只重試一次。
+- 官方機構、交易所、央行與公司公告優先。
+- 取得官方數字後，不再搜尋同一數字的重複確認。
+- 一次重試後仍無法取得的資料，最多使用一個可信次級來源並標示「尚未由官方確認」；之後停止追查。
+- 缺失數據不得推估，也不得拿前一日資料冒充當日資料。
+- 三市場與一個主論點、最多兩個次要訊號已有充分證據時停止研究，接受低影響資訊缺漏。
+- 完整來源帳、未採用事實與資料狀態寫入 `research-notes/YYYY-MM-DD.md`；公開文章只保留支撐核心結論的來源。
+
+## 結論與篇幅
+
+- 中文全文 2,000 至 3,000 個中文字。
+- 早間約占 40%，晚間約占 60%。
+- 一篇只有一個主論點，最多兩個次要訊號。
+- 風險最多三項、事件最多三項，而且只在與主論點直接相關時出現。
+- 偏多／基準／偏空不是固定章節；只有市場分歧足以改變判斷時才加入。
+- 每個實質段落只挑真正影響判讀的數字或結論用 Markdown 粗體，不整段加粗。
+
+## 中文先行與英文翻譯
+
+先完成中文研究、數字核對與結論，再翻譯英文。英文不得重新搜尋、增加新事實、改變結論或另做一輪研究。
+
+中英文必須：
+
+- 使用相同 `translationKey`。
+- 保持主論點、次要訊號、數字、粗體重點與失效條件一致。
+- 英文正文不得混入中文。
+- 同時通過內容與網站驗證。
+
+## Frontmatter
+
+中文：
+
+```yaml
 ---
-title: "全球市場情報"
+title: "三市場情報：當日主論點"
 date: YYYY-MM-DD
 type: "daily"
 edition: "trading-day"
+briefFormat: "three-market-v1"
+summary: "用一至兩句話交代三市場的核心定價與主要分歧。"
+tags:
+  - 美國
+  - 台灣
+  - 馬來西亞
 lang: "zh"
 translationKey: "brief-YYYY-MM-DD"
-summary: "用 1 到 2 句話摘要當日最重要的跨市場訊號。"
-tags: []
 ---
-
-交易日版必須依序使用以下 H2，讓網站自動建立三個分頁：
-## 台股盤前
-## 主要市場晚間更新
-## 全球市場與研究
-## 全球跨市場傳導
-## 今日五大市場風險
-## 未來七天重要事件
-## 市場可能尚未充分注意的情報
-## 延伸研究
-## 資料來源
-
-「主要市場晚間更新」必須依序建立 ## 台灣市場、## 馬來西亞市場、## 美國市場，三個國家名稱會成為側邊導覽入口。每個國家使用已確認發展、市場定價、市場影響與下一驗證；台灣另含籌碼與資金流，美國另含今晚美股情境。今晚美股情境必須包含基準、偏多、偏空三種情境。中國、日本、韓國、香港、歐洲、中東、能源、AI 基礎建設與全球信用等延伸市場，只在「全球市場與研究」中按當日重要性建立國家或主題 H3，不得取代三個主要市場。
-
-「全球市場與研究」只收錄當日足以改變價格、資金流或主要市場判斷的國家與主題，不為湊數羅列市場。每個 H3 至少寫三個實質段落，並依序以 **事件與事實：**、**市場如何定價：**、**跨市場傳導與下一驗證：** 起首。第一段至少包含一項可核對的數據、日期、政策行動或價格反應；第二段說明不同資產或產業如何分化定價；第三段必須連回台灣、馬來西亞或美國，並列出可觀察的下一個確認訊號。禁止用一句話摘要代替國別研究，也不要用空泛背景文字補足篇幅。英文版使用 **Event and Facts:**、**Market Pricing:**、**Transmission and Next Confirmation:**，並保持相同資訊密度。
-
-平日休市版不得使用盤前／盤後分頁。僅在週一至週五遇台灣休市、但主要海外市場仍交易或出現足以改變市場定價的事件時發布。
-
-平日休市版 frontmatter：
----
-title: "全球市場情報：休市原因與當日核心訊號"
-date: YYYY-MM-DD
-type: "daily"
-edition: "market-closed"
-lang: "zh"
-translationKey: "brief-YYYY-MM-DD"
-summary: "用 1 到 2 句話摘要休市原因與當日最重要的跨市場訊號。"
-tags: []
----
-
-平日休市版使用以下結構：
-## 休市說明
-## 已確認發展
-## 市場如何定價
-## 全球跨市場傳導
-## 今日基準情境
-## 今日偏多情境
-## 今日偏空情境
-## 主要風險
-## 確認與失效條件
-## 延伸研究
-## 資料來源
-
-若台灣與主要海外市場均休市，且沒有足以改變市場定價的事件，當日不新增文章。
-
-寫作哲學：Fact → Expectation → Surprise → Pricing → Transmission → Second-order effect → Risk → Next confirmation。
-
-每週五研究包包含四個分類，各自建立完整中英文版本：
-- 趨勢探索／Trend Explorer：type: "trend"，路徑 src/content/trends/
-- 跨市場訊號／Crossignal：type: "crossignal"，路徑 src/content/crossignal/
-- 二階效應／Second Order：type: "second-order"，路徑 src/content/second-order/
-- 深度研究／Deep Dives：type: "deep-dive"，路徑 src/content/deep-dives/
-
-四個分類都依序使用下列共同 H2 骨架；可以在固定章節之間加入分類專屬章節，但不得更名、刪除或打亂共同骨架：
-
-中文：
-## 研究命題
-## 事實與市場定價
-## 傳導機制
-## 偏多情境
-## 偏空情境
-## 領先指標
-## 推翻條件
-## 下一驗證
-## 資料來源
-
-英文：
-## Research Thesis
-## Evidence and Market Pricing
-## Transmission Mechanism
-## Bull Case
-## Bear Case
-## Leading Indicators
-## Falsification
-## Next Confirmation
-## Sources
-
-各分類在共同骨架中的專屬要求：
-- Trend Explorer：補充正在改變什麼、為什麼是現在、終端需求、商業模式、誰付款、誰借款、資本結構、信用結構與最脆弱環節。
-- Crossignal：補充初始訊號、第一層市場反應、跨資產影響、跨國影響、已定價與尚未定價的部分。
-- Second Order：補充第一層效應、第二層傳導、第三層風險、誰受益、誰吸收風險，以及市場可能忽略的部位。
-- Deep Dives：補充背景、產業結構、需求、單位經濟、資本結構、信用結構、主要風險與結論。
-
-如果是 Data Center 主題，另須交代 Announced、Approved、Power-secured、Financing-secured、Under-construction、Energized、Pre-leased、Operational 與 Actual utilized capacity；沒有可靠資料的階段要明確標示未知，不得混為同一種 MW。
 ```
+
+英文使用相同日期、`edition`、`briefFormat` 與 `translationKey`，並把 `lang` 設為 `en`。
+
+## 共用頁首摘要
+
+兩個分頁之前依序放置：
+
+```md
+**主論點：** 一個可驗證的主要判斷。
+
+**次要訊號一：** 第一個必要補充。
+
+**次要訊號二：** 第二個必要補充；沒有第二個時省略。
+
+| 市場 | 目前狀態 | 核心證據 | 下一門檻 |
+| --- | --- | --- | --- |
+| 台灣 | ... | ... | ... |
+| 馬來西亞 | ... | ... | ... |
+| 美國 | ... | ... | ... |
+```
+
+英文對應使用 `Primary thesis`、`Secondary signal 1`、`Secondary signal 2`，表格資訊必須相同。
+
+## 早間結構
+
+```md
+## 早間市場推演
+
+### 美國前一交易日
+
+### 台灣前一交易日
+
+### 今日台股推演
+
+### 今日美股盤前推演
+
+### 失效條件
+
+### 核心資料來源
+```
+
+早間必須包含：
+
+- 美國前一交易日基本面與主要指數、產業表現。
+- 美國技術面只看趨勢、價量、廣度、支撐阻力、相對強弱。
+- 台灣前一交易日基本面、技術面與完整籌碼。
+- 台灣籌碼至少涵蓋外資現貨、台指期、選擇權、投信、自營商、融資融券、借券／證券借貸，並判斷彼此是否同向。
+- 當日台股走勢推演。
+- 當日美股盤前狀態推演。
+- 能明確推翻上述判斷的失效條件。
+
+英文固定標題：
+
+```md
+## Morning Market Outlook
+### Previous US Session
+### Previous Taiwan Session
+### Taiwan Session Outlook
+### US Pre-Market Outlook
+### Invalidation Conditions
+### Core Sources
+```
+
+## 晚間結構
+
+```md
+## 晚間市場推演
+
+### 盤前判斷回顧
+
+### 台灣市場
+
+### 馬來西亞市場
+
+### 美國盤前與今夜推演
+
+### 失效條件
+
+### 核心資料來源
+```
+
+晚間必須包含：
+
+- 以成立、部分成立、失效回顧早間判斷，不重複早間背景。
+- 台灣當日收盤、基本面、技術面與完整籌碼。
+- 馬來西亞當日收盤、產業結構、馬幣、利率與重要基本面；沒有重大新聞時仍交代價格與基本面狀態。
+- 美國盤前期貨、美債殖利率、美元、油價，以及即將開始的美股交易時段推演。
+- 更新後的失效條件。
+
+21:10 的美國內容是開盤前推演，不宣稱已觀察尚未發生的盤中走勢。
+
+英文固定標題：
+
+```md
+## Evening Market Outlook
+### Pre-Market Scorecard
+### Taiwan Market
+### Malaysia Market
+### US Pre-Market and Session Outlook
+### Invalidation Conditions
+### Core Sources
+```
+
+## 公開呈現規則
+
+- 文章頁首只顯示日期，不顯示製作時間、資料截點、首版、更新版或回補流程。
+- 只有影響交易判讀的事件時間可以保留，例如央行決策、數據公布與市場開收盤時間。
+- 尚未公布的欄位明確寫「尚未公布」，不得以推論填補。
+- 公開來源依早間與晚間分別列出，每段一至八筆。
+- 不新增第三個分頁。
+- 不建立「全球市場與研究」「全球跨市場傳導」「今日五大市場風險」「未來七天重要事件」「市場可能尚未充分注意的情報」或「延伸研究」。
+
+## 暫停研究分類
+
+暫停趨勢探索、跨市場訊號、二階效應與深度研究。既有文章與網址保留，但不新增文章、不更新週五研究包，也不從 Daily Brief 導流。
+
+## 完成檢查
+
+每次更新完成後依序執行：
+
+```bash
+node scripts/verify-editorial.mjs
+npm run build
+npm run verify
+```
+
+任一檢查失敗就不視為完成，不自行 commit、push 或部署。

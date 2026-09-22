@@ -17,7 +17,8 @@ const briefs = defineCollection({
   type: "content",
   schema: baseSchema.extend({
     type: z.literal("daily"),
-    edition: z.enum(["trading-day", "market-closed"]).default("trading-day")
+    edition: z.enum(["trading-day", "market-closed"]).default("trading-day"),
+    briefFormat: z.enum(["legacy-three-panel", "three-market-v1"]).default("legacy-three-panel")
   })
 });
 

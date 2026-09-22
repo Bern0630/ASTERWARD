@@ -9,22 +9,21 @@ const browser = await chromium.launch({
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
 
 try {
-  await page.goto(`${baseUrl}/briefs/2026-09-17/`, { waitUntil: "networkidle" });
+  await page.goto(`${baseUrl}/briefs/2026-09-22/`, { waitUntil: "networkidle" });
 
   const tabs = page.getByRole("tab");
-  assert.equal(await tabs.count(), 3, "Daily Brief should expose three session tabs");
+  assert.equal(await tabs.count(), 2, "Three-market Daily Brief should expose two session tabs");
   assert.equal(await tabs.nth(0).getAttribute("aria-selected"), "true");
 
   const panels = page.locator('[role="tabpanel"]');
-  assert.equal(await panels.count(), 3, "Daily Brief should expose three session panels");
-  assert.equal(await panels.nth(0).isVisible(), true, "Pre-market panel should be visible by default");
-  assert.equal(await panels.nth(1).isVisible(), false, "Post-market panel should be hidden by default");
-  assert.equal(await panels.nth(2).isVisible(), false, "Global research panel should be hidden by default");
+  assert.equal(await panels.count(), 2, "Three-market Daily Brief should expose two session panels");
+  assert.equal(await panels.nth(0).isVisible(), true, "Morning panel should be visible by default");
+  assert.equal(await panels.nth(1).isVisible(), false, "Evening panel should be hidden by default");
 
   await tabs.nth(1).click();
-  assert.equal(await panels.nth(0).isVisible(), false, "Pre-market panel should hide after switching tabs");
-  assert.equal(await panels.nth(1).isVisible(), true, "Post-market panel should become visible");
-  for (const country of ["台灣市場", "馬來西亞市場", "美國市場"]) {
+  assert.equal(await panels.nth(0).isVisible(), false, "Morning panel should hide after switching tabs");
+  assert.equal(await panels.nth(1).isVisible(), true, "Evening panel should become visible");
+  for (const country of ["台灣市場", "馬來西亞市場", "美國盤前與今夜推演"]) {
     assert.equal(await page.locator(".desktop-toc li:not([hidden]) a", { hasText: country }).count(), 1, `Evening navigation should expose ${country}`);
   }
   assert.equal(await page.locator(".desktop-toc li:not([hidden]) a", { hasText: "全球市場與研究" }).count(), 0);
@@ -33,13 +32,16 @@ try {
   const headingTop = await page.locator("#馬來西亞市場").evaluate((heading) => heading.getBoundingClientRect().top);
   assert.ok(headingTop >= 88, `Market navigation target should remain visible below the sticky header; received ${headingTop}px`);
 
-  await tabs.nth(2).click();
-  assert.equal(await panels.nth(1).isVisible(), false, "Post-market panel should hide after switching tabs");
-  assert.equal(await panels.nth(2).isVisible(), true, "Global research panel should become visible");
-  assert.equal(await page.locator(".desktop-toc li:not([hidden]) a", { hasText: "全球市場與研究" }).count(), 1);
+  await tabs.nth(1).press("ArrowLeft");
+  assert.equal(await tabs.nth(0).getAttribute("aria-selected"), "true", "Arrow keys should switch tabs");
 
-  await tabs.nth(2).press("ArrowLeft");
-  assert.equal(await tabs.nth(1).getAttribute("aria-selected"), "true", "Arrow keys should switch tabs");
+  await page.goto(`${baseUrl}/briefs/2026-09-21/`, { waitUntil: "networkidle" });
+  assert.equal(await page.getByRole("tab").count(), 3, "Legacy Daily Brief should retain three session tabs");
+  assert.deepEqual(
+    await page.getByRole("tab").evaluateAll((elements) => elements.map((element) => element.getAttribute("aria-label"))),
+    ["台股盤前", "主要市場晚間更新", "全球市場與研究"],
+    "Legacy tab labels should remain unchanged",
+  );
 
   const mobileGap = async (route, beforeSelector, afterSelector, minimum, label) => {
     await page.goto(`${baseUrl}${route}`, { waitUntil: "networkidle" });
@@ -72,7 +74,7 @@ try {
     "Research article labels to mobile contents spacing",
   );
   await mobileGap(
-    "/briefs/2026-09-17/",
+    "/briefs/2026-09-22/",
     ".session-switcher",
     ".mobile-toc",
     20,
@@ -86,19 +88,19 @@ try {
     "Mobile contents to article spacing",
   );
 
-  await page.goto(`${baseUrl}/briefs/2026-09-17/`, { waitUntil: "networkidle" });
+  await page.goto(`${baseUrl}/briefs/2026-09-22/`, { waitUntil: "networkidle" });
   const mobileTabHeight = await page.locator(".session-switcher").evaluate((element) =>
     Math.round(element.getBoundingClientRect().height),
   );
   assert.ok(mobileTabHeight <= 56, `Mobile tab control should stay slim; received ${mobileTabHeight}px`);
   assert.deepEqual(
     await page.locator(".tab-label-compact").allTextContents(),
-    ["盤前", "主要市場", "全球研究"],
+    ["早間", "晚間"],
     "Mobile tabs should use compact labels",
   );
   assert.deepEqual(
     await page.getByRole("tab").evaluateAll((elements) => elements.map((element) => element.getAttribute("aria-label"))),
-    ["台股盤前", "主要市場晚間更新", "全球市場與研究"],
+    ["早間市場推演", "晚間市場推演"],
     "Compact mobile tabs should keep their complete accessible names",
   );
 
@@ -123,7 +125,7 @@ try {
 
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });
-    for (const route of ["/", "/briefs/", "/briefs/2026-09-17/", "/trends/ai-infrastructure-capital-cycle/", "/about/"]) {
+    for (const route of ["/", "/briefs/", "/briefs/2026-09-22/", "/trends/ai-infrastructure-capital-cycle/", "/about/"]) {
       await page.goto(`${baseUrl}${route}`, { waitUntil: "networkidle" });
       const dimensions = await page.evaluate(() => ({
         viewport: document.documentElement.clientWidth,

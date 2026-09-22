@@ -1,6 +1,5 @@
 ---
 import { getCollection } from "astro:content";
-import ContentList from "@/components/ContentList.astro";
 import Tags from "@/components/Tags.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { SITE, SITE_COPY } from "@/data/site";
@@ -9,14 +8,16 @@ import { withBase } from "@/lib/paths";
 
 let lang: "zh" | "en" = "zh";
 const briefs = latest(byLang(await getCollection("briefs"), lang), 1);
-const trends = latest(byLang(await getCollection("trends"), lang), 1);
-const crossignal = latest(byLang(await getCollection("crossignal"), lang), 1);
-const secondOrder = latest(byLang(await getCollection("second-order"), lang), 1);
-const deepDives = latest(byLang(await getCollection("deep-dives"), lang), 5);
-
 const latestBrief = briefs[0];
 const siteCopy = SITE_COPY[lang];
-const copy = {"latestBrief":"最新簡報","daily":"每日全球市場情報","allBriefs":"全部簡報 →","readLatest":"閱讀最新簡報 →","readFull":"閱讀全文 →","signals":"訊號與研究","signalTitle":"傳導機制、資本週期與二階效應","trend":"趨勢探索","crossignal":"跨市場訊號","secondOrder":"二階效應","view":"查看 →","deep":"深度研究","deepTitle":"深度研究","allDeep":"全部深度研究 →","lede":"獨立市場研究，聚焦宏觀、利率、信用、資金流與產業基本面如何在全球市場之間互相傳導。"};
+const copy = {
+  latestBrief: "最新簡報",
+  daily: "美國、台灣、馬來西亞每日市場情報",
+  allBriefs: "全部簡報 →",
+  readLatest: "閱讀最新簡報 →",
+  readFull: "閱讀全文 →",
+  lede: "每日兩次整理美國、台灣與馬來西亞的基本面、技術面與資金訊號，提出可驗證的市場推演。"
+};
 ---
 
 <BaseLayout lang={lang} alternateUrl="/en/">
@@ -67,47 +68,4 @@ const copy = {"latestBrief":"最新簡報","daily":"每日全球市場情報","a
       </section>
     )
   }
-
-  <section class="site-shell section">
-    <div class="section-header">
-      <div>
-        <p class="eyebrow">{copy.signals}</p>
-        <h2>{copy.signalTitle}</h2>
-      </div>
-    </div>
-    <div class="editorial-grid">
-      <div class="research-column">
-        <div class="section-header">
-          <h3>{copy.trend}</h3>
-          <a class="text-link" href={withBase("/trends/")}>{copy.view}</a>
-        </div>
-        <ContentList entries={trends} collectionPath="trends" />
-      </div>
-      <div class="research-column">
-        <div class="section-header">
-          <h3>{copy.crossignal}</h3>
-          <a class="text-link" href={withBase("/crossignal/")}>{copy.view}</a>
-        </div>
-        <ContentList entries={crossignal} collectionPath="crossignal" />
-      </div>
-      <div class="research-column">
-        <div class="section-header">
-          <h3>{copy.secondOrder}</h3>
-          <a class="text-link" href={withBase("/second-order/")}>{copy.view}</a>
-        </div>
-        <ContentList entries={secondOrder} collectionPath="second-order" />
-      </div>
-    </div>
-  </section>
-
-  <section class="site-shell section">
-    <div class="section-header">
-      <div>
-        <p class="eyebrow">{copy.deep}</p>
-        <h2>{copy.deepTitle}</h2>
-      </div>
-      <a class="text-link" href={withBase("/deep-dives/")}>{copy.allDeep}</a>
-    </div>
-    <ContentList entries={deepDives} collectionPath="deep-dives" />
-  </section>
 </BaseLayout>

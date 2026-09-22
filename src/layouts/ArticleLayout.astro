@@ -12,58 +12,73 @@ interface Props {
   tags: string[];
   headings: MarkdownHeading[];
   edition?: "trading-day" | "market-closed";
+  briefFormat?: "legacy-three-panel" | "three-market-v1";
   lang?: Lang;
   alternateUrl?: string;
 }
 
-const { title, date, summary, tags, headings, edition = "trading-day", lang = "zh", alternateUrl } = Astro.props;
+const {
+  title,
+  date,
+  summary,
+  tags,
+  headings,
+  edition = "trading-day",
+  briefFormat = "legacy-three-panel",
+  lang = "zh",
+  alternateUrl,
+} = Astro.props;
 const toc = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
-const sessionTitles = lang === "zh"
+const legacySessionTitles = lang === "zh"
   ? ["台股盤前", "主要市場晚間更新"]
   : ["Taiwan Pre-Market", "Core Markets Evening Update"];
-const sessions = headings.filter(
-  (heading) => heading.depth === 2 && sessionTitles.includes(heading.text),
+const legacySessions = headings.filter(
+  (heading) => heading.depth === 2 && legacySessionTitles.includes(heading.text),
+);
+const threeMarketSessionTitles = lang === "zh"
+  ? ["早間市場推演", "晚間市場推演"]
+  : ["Morning Market Outlook", "Evening Market Outlook"];
+const threeMarketSessions = headings.filter(
+  (heading) => heading.depth === 2 && threeMarketSessionTitles.includes(heading.text),
 );
 const globalTitle = lang === "zh" ? "全球市場與研究" : "Global Markets and Research";
 const explicitGlobalHeading = headings.find(
   (heading) => heading.depth === 2 && heading.text === globalTitle,
 );
-const postSessionIndex = sessions[1]
-  ? headings.findIndex((heading) => heading.slug === sessions[1].slug)
+const postSessionIndex = legacySessions[1]
+  ? headings.findIndex((heading) => heading.slug === legacySessions[1].slug)
   : -1;
 const fallbackGlobalHeading = postSessionIndex >= 0
   ? headings.slice(postSessionIndex + 1).find((heading) => heading.depth === 2)
   : undefined;
 const globalHeading = explicitGlobalHeading ?? fallbackGlobalHeading;
-const hasBriefTabs = edition === "trading-day" && sessions.length === 2 && Boolean(globalHeading);
 const labels = lang === "zh"
   ? { toc: "章節導覽", contents: "Contents", sessions: "每日情報時段", global: "全球市場與研究", fact: "Fact", pricing: "Market Pricing", scenario: "Scenario", risk: "Risk" }
   : { toc: "Section navigation", contents: "Contents", sessions: "Daily brief sessions", global: "Global Markets and Research", fact: "Fact", pricing: "Market Pricing", scenario: "Scenario", risk: "Risk" };
-const briefTabs = hasBriefTabs
+const threeMarketTabs = threeMarketSessions.length === 2
   ? [
-      { key: "pre", text: sessions[0].text, compact: lang === "zh" ? "盤前" : "TW Pre", slug: sessions[0].slug },
-      { key: "post", text: sessions[1].text, compact: lang === "zh" ? "主要市場" : "Core Markets", slug: sessions[1].slug },
-      { key: "global", text: labels.global, compact: lang === "zh" ? "全球研究" : "Global Research", slug: globalHeading!.slug },
+      { key: "morning", text: threeMarketSessions[0].text, compact: lang === "zh" ? "早間" : "Morning", slug: threeMarketSessions[0].slug },
+      { key: "evening", text: threeMarketSessions[1].text, compact: lang === "zh" ? "晚間" : "Evening", slug: threeMarketSessions[1].slug },
     ]
   : [];
+const legacyTabs = legacySessions.length === 2 && globalHeading
+  ? [
+      { key: "pre", text: legacySessions[0].text, compact: lang === "zh" ? "盤前" : "TW Pre", slug: legacySessions[0].slug },
+      { key: "post", text: legacySessions[1].text, compact: lang === "zh" ? "主要市場" : "Core Markets", slug: legacySessions[1].slug },
+      { key: "global", text: labels.global, compact: lang === "zh" ? "全球研究" : "Global Research", slug: globalHeading.slug },
+    ]
+  : [];
+const briefTabs = briefFormat === "three-market-v1" ? threeMarketTabs : legacyTabs;
+const expectedTabCount = briefFormat === "three-market-v1" ? 2 : 3;
+const hasBriefTabs = edition === "trading-day" && briefTabs.length === expectedTabCount;
 const headingIndexes = new Map(headings.map((heading, index) => [heading.slug, index]));
-const panelStarts = hasBriefTabs
-  ? {
-      pre: headingIndexes.get(sessions[0].slug) ?? 0,
-      post: headingIndexes.get(sessions[1].slug) ?? 0,
-      global: headingIndexes.get(globalHeading!.slug) ?? 0,
-    }
-  : null;
+const tabStarts = hasBriefTabs
+  ? briefTabs.map((tab) => ({ key: tab.key, index: headingIndexes.get(tab.slug) ?? -1 }))
+  : [];
 const tocEntries = toc.map((heading) => {
   const index = headingIndexes.get(heading.slug) ?? -1;
-  const panel = !panelStarts
-    ? undefined
-    : index >= panelStarts.global
-      ? "global"
-      : index >= panelStarts.post
-        ? "post"
-        : "pre";
-  return { ...heading, panel };
+  const owner = [...tabStarts].reverse().find((start) => index >= start.index);
+  return { ...heading, panel: owner?.key };
 });
 ---
 
@@ -85,7 +100,7 @@ const tocEntries = toc.map((heading) => {
 
       {
         hasBriefTabs && (
-          <nav class="session-switcher" aria-label={labels.sessions} role="tablist">
+          <nav class="session-switcher" aria-label={labels.sessions} role="tablist" data-tab-count={briefTabs.length}>
             {briefTabs.map((tab, index) => (
               <button
                 type="button"
@@ -149,7 +164,7 @@ const tocEntries = toc.map((heading) => {
           const initializeBriefTabs = (root) => {
             const body = root.querySelector("[data-brief-body]");
             const tabs = Array.from(root.querySelectorAll('[role="tab"][data-session-key]'));
-            if (!body || tabs.length !== 3) return;
+            if (!body || tabs.length < 2) return;
 
             const boundaries = tabs.map((tab) => document.getElementById(tab.dataset.headingId));
             if (boundaries.some((heading) => !heading)) return;
@@ -211,9 +226,11 @@ const tocEntries = toc.map((heading) => {
             });
 
             const activateFromHash = () => {
+              const defaultKey = tabs[0]?.dataset.sessionKey;
+              if (!defaultKey) return;
               const rawHash = window.location.hash.slice(1);
               if (!rawHash) {
-                activate("pre", { updateUrl: false });
+                activate(defaultKey, { updateUrl: false });
                 return;
               }
               let targetId = rawHash;
@@ -221,7 +238,7 @@ const tocEntries = toc.map((heading) => {
                 targetId = decodeURIComponent(rawHash);
               } catch {}
               const target = document.getElementById(targetId);
-              activate(target ? panelForTarget(target) ?? "pre" : "pre", { updateUrl: false });
+              activate(target ? panelForTarget(target) ?? defaultKey : defaultKey, { updateUrl: false });
             };
 
             window.addEventListener("hashchange", activateFromHash);

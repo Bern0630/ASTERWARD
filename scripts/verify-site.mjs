@@ -21,6 +21,45 @@ if (missing.length > 0) {
 
 const zhArticle = readFileSync("dist/briefs/2026-09-16/index.html", "utf8");
 const enArticle = readFileSync("dist/en/briefs/2026-09-16/index.html", "utf8");
+const zhHome = readFileSync("dist/index.html", "utf8");
+const enHome = readFileSync("dist/en/index.html", "utf8");
+const zhAbout = readFileSync("dist/about/index.html", "utf8");
+const enAbout = readFileSync("dist/en/about/index.html", "utf8");
+const siteData = readFileSync("src/data/site.ts", "utf8");
+
+for (const retiredLabel of ["趨勢探索", "跨市場訊號", "二階效應", "深度研究", "Trend Explorer", "Crossignal", "Second Order", "Deep Dives"]) {
+  if (zhHome.includes(retiredLabel) || enHome.includes(retiredLabel)) {
+    console.error(`Homepage still exposes pending research: ${retiredLabel}`);
+    process.exit(1);
+  }
+}
+
+if (!siteData.includes('{ label: "每日簡報", href: "/briefs/" }') || !siteData.includes('{ label: "關於", href: "/about/" }')) {
+  console.error("Chinese primary navigation does not contain the approved two destinations.");
+  process.exit(1);
+}
+
+if (/趨勢探索|跨市場訊號|二階效應|深度研究/.test(siteData) || /Trend Explorer|Crossignal|Second Order|Deep Dives/.test(siteData)) {
+  console.error("Primary navigation still exposes pending research categories.");
+  process.exit(1);
+}
+
+if (zhAbout.includes("延伸研究範圍") || enAbout.includes("Additional coverage")) {
+  console.error("About pages still describe the retired extended-market scope.");
+  process.exit(1);
+}
+
+for (const path of [
+  "dist/trends/2026-09-18-ai-leadership-under-tightening/index.html",
+  "dist/crossignal/2026-09-18-yen-taiwan-flows/index.html",
+  "dist/second-order/2026-09-18-cash-futures-hedge/index.html",
+  "dist/deep-dives/2026-09-18-asia-ai-capital-structure/index.html",
+]) {
+  if (!existsSync(path)) {
+    console.error(`Preserved research route is missing: ${path}`);
+    process.exit(1);
+  }
+}
 
 if (!/class="session-switcher"[^>]*role="tablist"[\s\S]*role="tab"[\s\S]*台股盤前[\s\S]*主要市場晚間更新[\s\S]*全球市場與研究/.test(zhArticle)) {
   console.error("Chinese Daily Brief is missing the three-session tab list.");
@@ -161,6 +200,7 @@ const enCurrentArticle = readFileSync("dist/en/briefs/2026-09-21/index.html", "u
 const zhLatestArticle = readFileSync("dist/briefs/2026-09-22/index.html", "utf8");
 const enLatestArticle = readFileSync("dist/en/briefs/2026-09-22/index.html", "utf8");
 const articleLayout = readFileSync("src/layouts/ArticleLayout.astro", "utf8");
+const countTabs = (html) => (html.match(/<button[^>]*role="tab"/g) ?? []).length;
 
 if (!/class="session-switcher"[^>]*role="tablist"[\s\S]*台股盤前[\s\S]*主要市場晚間更新[\s\S]*全球市場與研究/.test(zhFallbackArticle)) {
   console.error("Chinese 9/18 brief does not use the fallback three-session tabs.");
@@ -206,28 +246,64 @@ if (!zhLatestArticle.includes("/en/briefs/2026-09-22/") || !enLatestArticle.incl
   process.exit(1);
 }
 
-if (!/class="session-switcher"[^>]*role="tablist"[\s\S]*台股盤前[\s\S]*主要市場晚間更新[\s\S]*全球市場與研究/.test(zhLatestArticle)) {
-  console.error("September 22 Chinese brief does not expose the completed three-session tabs.");
+if (countTabs(zhLatestArticle) !== 2 || !zhLatestArticle.includes("早間市場推演") || !zhLatestArticle.includes("晚間市場推演")) {
+  console.error("September 22 Chinese brief does not expose two three-market tabs.");
   process.exit(1);
 }
 
-if (!/class="session-switcher"[^>]*role="tablist"[\s\S]*Taiwan Pre-Market[\s\S]*Core Markets Evening Update[\s\S]*Global Markets and Research/.test(enLatestArticle)) {
-  console.error("September 22 English brief does not expose the completed three-session tabs.");
+if (countTabs(enLatestArticle) !== 2 || !enLatestArticle.includes("Morning Market Outlook") || !enLatestArticle.includes("Evening Market Outlook")) {
+  console.error("September 22 English brief does not expose two three-market tabs.");
   process.exit(1);
 }
 
-for (const heading of ["台灣市場", "馬來西亞市場", "美國市場", "盤前判斷回顧"]) {
+if (zhLatestArticle.includes('data-session-key="global"') || enLatestArticle.includes('data-session-key="global"')) {
+  console.error("September 22 brief still exposes the retired global tab.");
+  process.exit(1);
+}
+
+if (!/data-tab-count="2"/.test(zhLatestArticle) || !/data-tab-count="2"/.test(enLatestArticle)) {
+  console.error("September 22 switcher does not declare two tabs.");
+  process.exit(1);
+}
+
+if (!/aria-controls="brief-panel-morning"/.test(zhLatestArticle) || !/aria-controls="brief-panel-evening"/.test(zhLatestArticle)) {
+  console.error("September 22 tab ARIA controls are incomplete.");
+  process.exit(1);
+}
+
+for (const heading of ["台灣市場", "馬來西亞市場", "美國盤前與今夜推演", "盤前判斷回顧"]) {
   if (!zhLatestArticle.includes(heading)) {
     console.error(`Chinese 9/22 brief is missing the completed evening section: ${heading}`);
     process.exit(1);
   }
 }
 
-for (const heading of ["Taiwan Market", "Malaysia Market", "United States Market", "Pre-Market Scorecard"]) {
+for (const heading of ["Taiwan Market", "Malaysia Market", "US Pre-Market and Session Outlook", "Pre-Market Scorecard"]) {
   if (!enLatestArticle.includes(heading)) {
     console.error(`English 9/22 brief is missing the completed evening section: ${heading}`);
     process.exit(1);
   }
+}
+
+for (const heading of ["台灣市場", "馬來西亞市場", "美國盤前與今夜推演"]) {
+  const pattern = new RegExp(`data-session-panel="evening"[\\s\\S]*?href="#${heading}"`);
+  if (!pattern.test(zhLatestArticle)) {
+    console.error(`Chinese 9/22 contents do not assign ${heading} to the evening panel.`);
+    process.exit(1);
+  }
+}
+
+const thesisIndex = zhLatestArticle.indexOf("主論點");
+const morningHeadingIndex = zhLatestArticle.indexOf('<h2 id="早間市場推演"');
+if (thesisIndex < 0 || morningHeadingIndex < 0 || thesisIndex >= morningHeadingIndex) {
+  console.error("September 22 overview does not remain before the first panel boundary.");
+  process.exit(1);
+}
+
+const invalidationIds = [...zhLatestArticle.matchAll(/id="失效條件(?:-\d+)?"/g)].map((match) => match[0]);
+if (new Set(invalidationIds).size !== 2) {
+  console.error("Morning and evening invalidation headings do not have distinct IDs.");
+  process.exit(1);
 }
 
 if (existsSync("templates/weekend-brief.md")) {

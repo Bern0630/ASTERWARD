@@ -130,7 +130,7 @@ const assertGlobalMarketDepth = (content, globalHeading, transmissionHeading, la
   });
 };
 
-for (const date of ["2026-09-16", "2026-09-17", "2026-09-18", "2026-09-21", "2026-09-22"]) {
+for (const date of ["2026-09-16", "2026-09-17", "2026-09-18", "2026-09-21"]) {
   const zh = read(`src/content/briefs/${date}.md`);
   const en = read(`src/content/briefs/en/${date}.md`);
   const zhPreMarket = zh.indexOf("## 台股盤前");
@@ -189,11 +189,63 @@ for (const date of ["2026-09-16", "2026-09-17", "2026-09-18", "2026-09-21", "202
 
 const currentZh = read("src/content/briefs/2026-09-22.md");
 const currentEn = read("src/content/briefs/en/2026-09-22.md");
-if (!currentZh.includes("## 台股盤前") || !currentZh.includes("## 主要市場晚間更新") || !currentZh.includes("## 全球市場與研究") || !currentZh.includes("### 盤前判斷回顧")) {
-  fail("September 22 Chinese brief must contain the completed three-panel structure.");
+const bodyWithoutFrontmatter = (content) => content.replace(/^---[\s\S]*?---\s*/, "");
+const h2s = (content) => [...content.matchAll(/^## (.+)$/gm)].map((match) => match[1]);
+const hanCount = (content) => (bodyWithoutFrontmatter(content).match(/\p{Script=Han}/gu) ?? []).length;
+const sectionBetween = (content, start, end) => {
+  const startIndex = content.indexOf(`## ${start}`);
+  const endIndex = end ? content.indexOf(`## ${end}`, startIndex) : content.length;
+  return startIndex >= 0 ? content.slice(startIndex, endIndex >= 0 ? endIndex : content.length) : "";
+};
+const sourceListCount = (content, heading) => {
+  const start = content.indexOf(`### ${heading}`);
+  return start >= 0 ? (content.slice(start).match(/^- /gm) ?? []).length : 0;
+};
+
+const threeMarketHeadings = {
+  zh: ["早間市場推演", "晚間市場推演"],
+  en: ["Morning Market Outlook", "Evening Market Outlook"],
+};
+
+if (!currentZh.includes('briefFormat: "three-market-v1"')) fail("9/22 Chinese brief needs three-market-v1");
+if (!currentEn.includes('briefFormat: "three-market-v1"')) fail("9/22 English brief needs three-market-v1");
+if (JSON.stringify(h2s(currentZh)) !== JSON.stringify(threeMarketHeadings.zh)) fail("9/22 Chinese brief must have exactly two H2 panels");
+if (JSON.stringify(h2s(currentEn)) !== JSON.stringify(threeMarketHeadings.en)) fail("9/22 English brief must have exactly two H2 panels");
+
+for (const heading of ["### 盤前判斷回顧", "### 台灣市場", "### 馬來西亞市場", "### 美國盤前與今夜推演"]) {
+  if (!currentZh.includes(heading)) fail(`9/22 Chinese brief is missing ${heading}`);
 }
-if (!currentEn.includes("## Taiwan Pre-Market") || !currentEn.includes("## Core Markets Evening Update") || !currentEn.includes("## Global Markets and Research") || !currentEn.includes("### Pre-Market Scorecard")) {
-  fail("September 22 English brief must contain the completed three-panel structure.");
+for (const heading of ["### Pre-Market Scorecard", "### Taiwan Market", "### Malaysia Market", "### US Pre-Market and Session Outlook"]) {
+  if (!currentEn.includes(heading)) fail(`9/22 English brief is missing ${heading}`);
+}
+for (const retired of ["全球市場與研究", "全球跨市場傳導", "今日五大市場風險", "未來七天重要事件", "市場可能尚未充分注意的情報", "延伸研究"]) {
+  if (currentZh.includes(retired)) fail(`Retired 9/22 section remains: ${retired}`);
+}
+for (const retired of ["Global Markets and Research", "Cross-Market Transmission", "Top Five Market Risks", "Seven-Day Event Calendar", "What the Market May Be Missing", "Further Research"]) {
+  if (currentEn.includes(retired)) fail(`Retired English 9/22 section remains: ${retired}`);
+}
+
+const currentHanCount = hanCount(currentZh);
+if (currentHanCount < 2000 || currentHanCount > 3000) fail(`9/22 Chinese brief must contain 2,000-3,000 Han characters; received ${currentHanCount}`);
+if ((currentZh.match(/\*\*主論點：\*\*/g) ?? []).length !== 1) fail("9/22 Chinese brief needs exactly one primary thesis");
+if ((currentZh.match(/\*\*次要訊號[一二]：\*\*/g) ?? []).length > 2) fail("9/22 Chinese brief has more than two secondary signals");
+if ((currentEn.match(/\*\*Primary thesis:\*\*/g) ?? []).length !== 1) fail("9/22 English brief needs exactly one primary thesis");
+if ((currentEn.match(/\*\*Secondary signal [12]:\*\*/g) ?? []).length > 2) fail("9/22 English brief has more than two secondary signals");
+
+const currentZhMorning = sectionBetween(currentZh, "早間市場推演", "晚間市場推演");
+const currentZhEvening = sectionBetween(currentZh, "晚間市場推演");
+const currentEnMorning = sectionBetween(currentEn, "Morning Market Outlook", "Evening Market Outlook");
+const currentEnEvening = sectionBetween(currentEn, "Evening Market Outlook");
+const morningShare = hanCount(currentZhMorning) / (hanCount(currentZhMorning) + hanCount(currentZhEvening));
+if (morningShare < 0.35 || morningShare > 0.45) fail(`9/22 morning share must be 35%-45%; received ${(morningShare * 100).toFixed(1)}%`);
+for (const [section, heading, label] of [
+  [currentZhMorning, "核心資料來源", "Chinese morning"],
+  [currentZhEvening, "核心資料來源", "Chinese evening"],
+  [currentEnMorning, "Core Sources", "English morning"],
+  [currentEnEvening, "Core Sources", "English evening"],
+]) {
+  const count = sourceListCount(section, heading);
+  if (count < 1 || count > 8) fail(`${label} core sources must contain 1-8 entries; received ${count}`);
 }
 
 
@@ -276,6 +328,30 @@ for (const [path, minimum] of minimumLengths) {
   if (read(path).length < minimum) {
     fail(`Research article is too short (${read(path).length} < ${minimum}): ${path}`);
   }
+}
+
+const contentPrompt = read("docs/GPT_CONTENT_PROMPT.md");
+const promptRequirements = [
+  "只研究美國、台灣、馬來西亞",
+  "最多三批搜尋",
+  "最多八個有效來源",
+  "失敗資料只重試一次",
+  "先完成中文",
+  "英文不得重新搜尋",
+  'briefFormat: "three-market-v1"',
+  "## 早間市場推演",
+  "## 晚間市場推演",
+  "部分市場休市",
+  "暫停趨勢探索、跨市場訊號、二階效應與深度研究",
+];
+for (const requirement of promptRequirements) {
+  if (!contentPrompt.includes(requirement)) fail(`Content prompt is missing policy: ${requirement}`);
+}
+for (const retiredRequirement of [
+  "交易日版必須依序使用以下 H2，讓網站自動建立三個分頁",
+  "每週五研究包包含四個分類",
+]) {
+  if (contentPrompt.includes(retiredRequirement)) fail(`Content prompt still mandates retired workflow: ${retiredRequirement}`);
 }
 
 const fridayResearchPairs = [

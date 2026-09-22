@@ -8,11 +8,11 @@ let lang: "zh" | "en" = "en";
 const entries = sortByDateDesc(byLang(await getCollection("briefs"), lang));
 ---
 
-<BaseLayout title="Briefs" description="Daily global market intelligence built around facts, expectations, pricing, transmission, second-order effects, risks and confirmation points." lang={lang} alternateUrl="/briefs/">
+<BaseLayout title="Briefs" description="Daily market intelligence for the United States, Taiwan, and Malaysia, built from fundamentals, technicals, positioning, and explicit invalidation conditions." lang={lang} alternateUrl="/briefs/">
   <section class="site-shell archive-header">
     <p class="eyebrow">Daily Brief</p>
     <h1>Briefs</h1>
-    <p>Daily global market intelligence built around facts, expectations, pricing, transmission, second-order effects, risks and confirmation points.</p>
+    <p>Twice-daily intelligence for the United States, Taiwan, and Malaysia, with explicit evidence, outlooks, and invalidation conditions.</p>
   </section>
   <section class="site-shell archive-list">
     <ContentList entries={entries} collectionPath="briefs" />
