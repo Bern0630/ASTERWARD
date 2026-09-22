@@ -130,7 +130,7 @@ const assertGlobalMarketDepth = (content, globalHeading, transmissionHeading, la
   });
 };
 
-for (const date of ["2026-09-16", "2026-09-17", "2026-09-18", "2026-09-21"]) {
+for (const date of ["2026-09-16", "2026-09-17", "2026-09-18", "2026-09-21", "2026-09-22"]) {
   const zh = read(`src/content/briefs/${date}.md`);
   const en = read(`src/content/briefs/en/${date}.md`);
   const zhPreMarket = zh.indexOf("## 台股盤前");
@@ -187,45 +187,20 @@ for (const date of ["2026-09-16", "2026-09-17", "2026-09-18", "2026-09-21"]) {
   if (!en.includes("## Further Research")) fail(`Research links missing from English brief ${date}`);
 }
 
-const morningZh = read("src/content/briefs/2026-09-22.md");
-const morningEn = read("src/content/briefs/en/2026-09-22.md");
-const morningH2 = {
-  zh: ["台股盤前", "全球跨市場傳導", "今日五大市場風險", "未來七天重要事件", "市場可能尚未充分注意的情報", "延伸研究", "資料來源"],
-  en: ["Taiwan Pre-Market", "Cross-Market Transmission", "Top Five Market Risks", "Seven-Day Event Calendar", "What the Market May Be Missing", "Further Research", "Sources"],
-};
-assertHeadingOrder(morningZh, morningH2.zh, "src/content/briefs/2026-09-22.md");
-assertHeadingOrder(morningEn, morningH2.en, "src/content/briefs/en/2026-09-22.md");
-if (morningZh.includes("## 主要市場晚間更新") || morningZh.includes("## 全球市場與研究")) {
-  fail("September 22 Chinese morning brief must not publish evening panels before the evening update.");
-}
-if (morningEn.includes("## Core Markets Evening Update") || morningEn.includes("## Global Markets and Research")) {
-  fail("September 22 English morning brief must not publish evening panels before the evening update.");
-}
-for (const heading of ["### 已確認發展", "### 籌碼與資金流", "### 市場定價", "### 今晚美股情境", "### 市場影響", "### 下一驗證"]) {
-  if (!morningZh.includes(heading)) fail(`Fixed Chinese section heading missing from September 22 morning brief: ${heading}`);
-}
-for (const heading of ["### Confirmed Developments", "### Positioning and Flows", "### Market Pricing", "### Tonight's US Setup", "### Market Impact", "### Next Confirmation"]) {
-  if (!morningEn.includes(heading)) fail(`Fixed English section heading missing from September 22 morning brief: ${heading}`);
-}
-if (/^### .*[/／].*$/m.test(morningZh) || /^### .*[/／].*$/m.test(morningEn)) {
-  fail("Slash-separated section heading remains in September 22 morning brief.");
-}
-
-
-const currentZh = read("src/content/briefs/2026-09-21.md");
-const currentEn = read("src/content/briefs/en/2026-09-21.md");
+const currentZh = read("src/content/briefs/2026-09-22.md");
+const currentEn = read("src/content/briefs/en/2026-09-22.md");
 if (!currentZh.includes("## 台股盤前") || !currentZh.includes("## 主要市場晚間更新") || !currentZh.includes("## 全球市場與研究") || !currentZh.includes("### 盤前判斷回顧")) {
-  fail("September 21 Chinese brief must contain the completed three-panel structure.");
+  fail("September 22 Chinese brief must contain the completed three-panel structure.");
 }
 if (!currentEn.includes("## Taiwan Pre-Market") || !currentEn.includes("## Core Markets Evening Update") || !currentEn.includes("## Global Markets and Research") || !currentEn.includes("### Pre-Market Scorecard")) {
-  fail("September 21 English brief must contain the completed three-panel structure.");
+  fail("September 22 English brief must contain the completed three-panel structure.");
 }
 
 
 const datedBriefs = new Map([
   ["2026-09-22", {
-    zh: ["費城半導體指數上漲約 4.3%", "台積電 ADR 上漲 2.41%", "淨空單 74,081 口", "增加約 89.98 億元", "借券賣出餘額"],
-    en: ["Philadelphia Semiconductor Index rose about 4.3%", "TSMC ADRs increased 2.41%", "net short of 74,081 contracts", "rose about TWD 9.00 billion", "securities-borrowing short-sale balance"],
+    zh: ["費城半導體指數上漲約 4.3%", "台積電 ADR 上漲 2.41%", "淨空單 75,568 口", "外資及陸資買超 453.21 億元", "FBM KLCI 上漲 16.56 點", "投標倍數 2.17 倍", "布蘭特原油跌至 98.29 美元"],
+    en: ["Philadelphia Semiconductor Index rose about 4.3%", "TSMC ADRs increased 2.41%", "net short of 75,568", "Foreign investors bought TWD 45.32 billion", "FBM KLCI gained 16.56 points", "2.17 bid-to-cover ratio", "Brent moved near USD 98.29"],
   }],
   ["2026-09-21", {
     zh: ["加權指數上漲 538.09 點", "外資及陸資買超 203.76 億元", "淨空單 74,081 口", "FBM KLCI 上漲 1.38 點", "S&P 500 期貨上漲約 0.7%"],

@@ -158,8 +158,8 @@ const zhFallbackArticle = readFileSync("dist/briefs/2026-09-18/index.html", "utf
 const enFallbackArticle = readFileSync("dist/en/briefs/2026-09-18/index.html", "utf8");
 const zhCurrentArticle = readFileSync("dist/briefs/2026-09-21/index.html", "utf8");
 const enCurrentArticle = readFileSync("dist/en/briefs/2026-09-21/index.html", "utf8");
-const zhMorningArticle = readFileSync("dist/briefs/2026-09-22/index.html", "utf8");
-const enMorningArticle = readFileSync("dist/en/briefs/2026-09-22/index.html", "utf8");
+const zhLatestArticle = readFileSync("dist/briefs/2026-09-22/index.html", "utf8");
+const enLatestArticle = readFileSync("dist/en/briefs/2026-09-22/index.html", "utf8");
 const articleLayout = readFileSync("src/layouts/ArticleLayout.astro", "utf8");
 
 if (!/class="session-switcher"[^>]*role="tablist"[\s\S]*台股盤前[\s\S]*主要市場晚間更新[\s\S]*全球市場與研究/.test(zhFallbackArticle)) {
@@ -201,19 +201,33 @@ if (!zhCurrentArticle.includes("/en/briefs/2026-09-21/") || !enCurrentArticle.in
   process.exit(1);
 }
 
-if (!zhMorningArticle.includes("/en/briefs/2026-09-22/") || !enMorningArticle.includes("/briefs/2026-09-22/")) {
-  console.error("September 22 morning brief does not preserve reciprocal language navigation.");
+if (!zhLatestArticle.includes("/en/briefs/2026-09-22/") || !enLatestArticle.includes("/briefs/2026-09-22/")) {
+  console.error("September 22 brief does not preserve reciprocal language navigation.");
   process.exit(1);
 }
 
-if (zhMorningArticle.includes("主要市場晚間更新") || zhMorningArticle.includes("全球市場與研究")) {
-  console.error("September 22 Chinese morning brief exposes an evening panel before it is populated.");
+if (!/class="session-switcher"[^>]*role="tablist"[\s\S]*台股盤前[\s\S]*主要市場晚間更新[\s\S]*全球市場與研究/.test(zhLatestArticle)) {
+  console.error("September 22 Chinese brief does not expose the completed three-session tabs.");
   process.exit(1);
 }
 
-if (enMorningArticle.includes("Core Markets Evening Update") || enMorningArticle.includes("Global Markets and Research")) {
-  console.error("September 22 English morning brief exposes an evening panel before it is populated.");
+if (!/class="session-switcher"[^>]*role="tablist"[\s\S]*Taiwan Pre-Market[\s\S]*Core Markets Evening Update[\s\S]*Global Markets and Research/.test(enLatestArticle)) {
+  console.error("September 22 English brief does not expose the completed three-session tabs.");
   process.exit(1);
+}
+
+for (const heading of ["台灣市場", "馬來西亞市場", "美國市場", "盤前判斷回顧"]) {
+  if (!zhLatestArticle.includes(heading)) {
+    console.error(`Chinese 9/22 brief is missing the completed evening section: ${heading}`);
+    process.exit(1);
+  }
+}
+
+for (const heading of ["Taiwan Market", "Malaysia Market", "United States Market", "Pre-Market Scorecard"]) {
+  if (!enLatestArticle.includes(heading)) {
+    console.error(`English 9/22 brief is missing the completed evening section: ${heading}`);
+    process.exit(1);
+  }
 }
 
 if (existsSync("templates/weekend-brief.md")) {
