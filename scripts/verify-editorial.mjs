@@ -7,6 +7,8 @@ const fail = (message) => {
 };
 
 const pairedContent = [
+  ["src/content/briefs/2026-09-22.md", "src/content/briefs/en/2026-09-22.md"],
+  ["src/content/briefs/2026-09-21.md", "src/content/briefs/en/2026-09-21.md"],
   ["src/content/briefs/2026-09-18.md", "src/content/briefs/en/2026-09-18.md"],
   ["src/content/briefs/2026-09-16.md", "src/content/briefs/en/2026-09-16.md"],
   ["src/content/briefs/2026-09-17.md", "src/content/briefs/en/2026-09-17.md"],
@@ -128,7 +130,7 @@ const assertGlobalMarketDepth = (content, globalHeading, transmissionHeading, la
   });
 };
 
-for (const date of ["2026-09-16", "2026-09-17", "2026-09-18"]) {
+for (const date of ["2026-09-16", "2026-09-17", "2026-09-18", "2026-09-21"]) {
   const zh = read(`src/content/briefs/${date}.md`);
   const en = read(`src/content/briefs/en/${date}.md`);
   const zhPreMarket = zh.indexOf("## 台股盤前");
@@ -171,7 +173,7 @@ for (const date of ["2026-09-16", "2026-09-17", "2026-09-18"]) {
   if (/^### .*[/／].*$/m.test(zh) || /^### .*[/／].*$/m.test(en)) {
     fail(`Slash-separated section heading remains in brief ${date}`);
   }
-  if (date !== "2026-09-18") {
+  if (["2026-09-16", "2026-09-17"].includes(date)) {
     const expectedZhEmphasis = date === "2026-09-16"
       ? "**一碼升息本身已不是主要驚訝**"
       : "**這是一個「成長未斷、通膨迫使政策再收緊」的組合，而不是衰退式升息**";
@@ -185,18 +187,50 @@ for (const date of ["2026-09-16", "2026-09-17", "2026-09-18"]) {
   if (!en.includes("## Further Research")) fail(`Research links missing from English brief ${date}`);
 }
 
+const morningZh = read("src/content/briefs/2026-09-22.md");
+const morningEn = read("src/content/briefs/en/2026-09-22.md");
+const morningH2 = {
+  zh: ["台股盤前", "全球跨市場傳導", "今日五大市場風險", "未來七天重要事件", "市場可能尚未充分注意的情報", "延伸研究", "資料來源"],
+  en: ["Taiwan Pre-Market", "Cross-Market Transmission", "Top Five Market Risks", "Seven-Day Event Calendar", "What the Market May Be Missing", "Further Research", "Sources"],
+};
+assertHeadingOrder(morningZh, morningH2.zh, "src/content/briefs/2026-09-22.md");
+assertHeadingOrder(morningEn, morningH2.en, "src/content/briefs/en/2026-09-22.md");
+if (morningZh.includes("## 主要市場晚間更新") || morningZh.includes("## 全球市場與研究")) {
+  fail("September 22 Chinese morning brief must not publish evening panels before the evening update.");
+}
+if (morningEn.includes("## Core Markets Evening Update") || morningEn.includes("## Global Markets and Research")) {
+  fail("September 22 English morning brief must not publish evening panels before the evening update.");
+}
+for (const heading of ["### 已確認發展", "### 籌碼與資金流", "### 市場定價", "### 今晚美股情境", "### 市場影響", "### 下一驗證"]) {
+  if (!morningZh.includes(heading)) fail(`Fixed Chinese section heading missing from September 22 morning brief: ${heading}`);
+}
+for (const heading of ["### Confirmed Developments", "### Positioning and Flows", "### Market Pricing", "### Tonight's US Setup", "### Market Impact", "### Next Confirmation"]) {
+  if (!morningEn.includes(heading)) fail(`Fixed English section heading missing from September 22 morning brief: ${heading}`);
+}
+if (/^### .*[/／].*$/m.test(morningZh) || /^### .*[/／].*$/m.test(morningEn)) {
+  fail("Slash-separated section heading remains in September 22 morning brief.");
+}
 
-const currentZh = read("src/content/briefs/2026-09-18.md");
-const currentEn = read("src/content/briefs/en/2026-09-18.md");
+
+const currentZh = read("src/content/briefs/2026-09-21.md");
+const currentEn = read("src/content/briefs/en/2026-09-21.md");
 if (!currentZh.includes("## 台股盤前") || !currentZh.includes("## 主要市場晚間更新") || !currentZh.includes("## 全球市場與研究") || !currentZh.includes("### 盤前判斷回顧")) {
-  fail("September 18 Chinese brief must contain the completed three-panel structure.");
+  fail("September 21 Chinese brief must contain the completed three-panel structure.");
 }
 if (!currentEn.includes("## Taiwan Pre-Market") || !currentEn.includes("## Core Markets Evening Update") || !currentEn.includes("## Global Markets and Research") || !currentEn.includes("### Pre-Market Scorecard")) {
-  fail("September 18 English brief must contain the completed three-panel structure.");
+  fail("September 21 English brief must contain the completed three-panel structure.");
 }
 
 
 const datedBriefs = new Map([
+  ["2026-09-22", {
+    zh: ["費城半導體指數上漲約 4.3%", "台積電 ADR 上漲 2.41%", "淨空單 74,081 口", "增加約 89.98 億元", "借券賣出餘額"],
+    en: ["Philadelphia Semiconductor Index rose about 4.3%", "TSMC ADRs increased 2.41%", "net short of 74,081 contracts", "rose about TWD 9.00 billion", "securities-borrowing short-sale balance"],
+  }],
+  ["2026-09-21", {
+    zh: ["加權指數上漲 538.09 點", "外資及陸資買超 203.76 億元", "淨空單 74,081 口", "FBM KLCI 上漲 1.38 點", "S&P 500 期貨上漲約 0.7%"],
+    en: ["The Taiex gained 538.09 points", "TWD 20.38 billion from foreign investors", "net short of 74,081 contracts", "The FBM KLCI gained 1.38 points", "S&P 500 futures rose about 0.7%"],
+  }],
   ["2026-09-18", {
     zh: ["S&P 500 上漲 1.14%", "費城半導體指數上漲 3.12%", "台積電 ADR 上漲 2.81%", "外資台指期淨空單 78,674 口"],
     en: ["S&P 500 rose 1.14%", "Philadelphia Semiconductor Index rose 3.12%", "TSMC ADR gained 2.81%", "foreign investors held a net short of 78,674 Taiwan index futures contracts"],
