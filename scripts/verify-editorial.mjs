@@ -7,6 +7,7 @@ const fail = (message) => {
 };
 
 const pairedContent = [
+  ["src/content/briefs/2026-09-23.md", "src/content/briefs/en/2026-09-23.md"],
   ["src/content/briefs/2026-09-22.md", "src/content/briefs/en/2026-09-22.md"],
   ["src/content/briefs/2026-09-21.md", "src/content/briefs/en/2026-09-21.md"],
   ["src/content/briefs/2026-09-18.md", "src/content/briefs/en/2026-09-18.md"],
@@ -246,6 +247,63 @@ for (const [section, heading, label] of [
 ]) {
   const count = sourceListCount(section, heading);
   if (count < 1 || count > 8) fail(`${label} core sources must contain 1-8 entries; received ${count}`);
+}
+
+const morningZh = read("src/content/briefs/2026-09-23.md");
+const morningEn = read("src/content/briefs/en/2026-09-23.md");
+if (!morningZh.includes('briefFormat: "three-market-v1"')) fail("9/23 Chinese brief needs three-market-v1");
+if (!morningEn.includes('briefFormat: "three-market-v1"')) fail("9/23 English brief needs three-market-v1");
+if (JSON.stringify(h2s(morningZh)) !== JSON.stringify(threeMarketHeadings.zh)) fail("9/23 Chinese brief must expose morning and evening tabs");
+if (JSON.stringify(h2s(morningEn)) !== JSON.stringify(threeMarketHeadings.en)) fail("9/23 English brief must expose morning and evening tabs");
+for (const heading of ["### 美國前一交易日", "### 台灣前一交易日", "### 今日台股推演", "### 今日美股盤前推演", "### 失效條件", "### 核心資料來源"]) {
+  if (!morningZh.includes(heading)) fail(`9/23 Chinese morning brief is missing ${heading}`);
+}
+for (const heading of ["### Previous US Session", "### Previous Taiwan Session", "### Taiwan Session Outlook", "### US Pre-Market Outlook", "### Invalidation Conditions", "### Core Sources"]) {
+  if (!morningEn.includes(heading)) fail(`9/23 English morning brief is missing ${heading}`);
+}
+if ((morningZh.match(/\*\*主論點：\*\*/g) ?? []).length !== 1) fail("9/23 Chinese brief needs exactly one primary thesis");
+if ((morningZh.match(/\*\*次要訊號[一二]：\*\*/g) ?? []).length > 2) fail("9/23 Chinese brief has more than two secondary signals");
+if ((morningEn.match(/\*\*Primary thesis:\*\*/g) ?? []).length !== 1) fail("9/23 English brief needs exactly one primary thesis");
+if ((morningEn.match(/\*\*Secondary signal [12]:\*\*/g) ?? []).length > 2) fail("9/23 English brief has more than two secondary signals");
+for (const retired of ["全球市場與研究", "全球跨市場傳導", "今日五大市場風險", "未來七天重要事件", "市場可能尚未充分注意的情報", "延伸研究"]) {
+  if (morningZh.includes(retired)) fail(`Retired 9/23 section remains: ${retired}`);
+}
+const morningZhSection = sectionBetween(morningZh, "早間市場推演", "晚間市場推演");
+const morningEnSection = sectionBetween(morningEn, "Morning Market Outlook", "Evening Market Outlook");
+for (const [section, heading, label] of [
+  [morningZhSection, "核心資料來源", "9/23 Chinese morning"],
+  [morningEnSection, "Core Sources", "9/23 English morning"],
+]) {
+  const count = sourceListCount(section, heading);
+  if (count < 1 || count > 8) fail(`${label} core sources must contain 1-8 entries; received ${count}`);
+}
+
+const finalZhEvening = sectionBetween(morningZh, "晚間市場推演");
+const finalEnEvening = sectionBetween(morningEn, "Evening Market Outlook");
+for (const heading of ["### 盤前判斷回顧", "### 台灣市場", "### 馬來西亞市場", "### 美國盤前與今夜推演", "### 失效條件", "### 核心資料來源"]) {
+  if (!finalZhEvening.includes(heading)) fail(`9/23 Chinese evening brief is missing ${heading}`);
+}
+for (const heading of ["### Pre-Market Scorecard", "### Taiwan Market", "### Malaysia Market", "### US Pre-Market and Tonight's Outlook", "### Invalidation Conditions", "### Core Sources"]) {
+  if (!finalEnEvening.includes(heading)) fail(`9/23 English evening brief is missing ${heading}`);
+}
+
+const finalHanCount = hanCount(morningZh);
+if (finalHanCount < 2000 || finalHanCount > 3000) fail(`9/23 Chinese brief must contain 2,000-3,000 Han characters; received ${finalHanCount}`);
+const finalMorningShare = hanCount(morningZhSection) / (hanCount(morningZhSection) + hanCount(finalZhEvening));
+if (finalMorningShare < 0.35 || finalMorningShare > 0.45) fail(`9/23 morning share must be 35%-45%; received ${(finalMorningShare * 100).toFixed(1)}%`);
+for (const [section, heading, label] of [
+  [finalZhEvening, "核心資料來源", "9/23 Chinese evening"],
+  [finalEnEvening, "Core Sources", "9/23 English evening"],
+]) {
+  const count = sourceListCount(section, heading);
+  if (count < 1 || count > 8) fail(`${label} core sources must contain 1-8 entries; received ${count}`);
+}
+
+for (const phrase of ["48,157.29", "389.22 億元", "95.84%", "1,676.43", "4.0780/4.0825", "4.957%"]) {
+  if (!finalZhEvening.includes(phrase)) fail(`Required 9/23 Chinese evening data missing: ${phrase}`);
+}
+for (const phrase of ["48,157.29", "TWD 38.92 billion", "95.84%", "1,676.43", "4.0780/4.0825", "4.957%"]) {
+  if (!finalEnEvening.includes(phrase)) fail(`Required 9/23 English evening data missing: ${phrase}`);
 }
 
 

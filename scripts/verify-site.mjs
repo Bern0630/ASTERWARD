@@ -10,7 +10,9 @@ const requiredFiles = [
   "dist/briefs/2026-09-21/index.html",
   "dist/en/briefs/2026-09-21/index.html",
   "dist/briefs/2026-09-22/index.html",
-  "dist/en/briefs/2026-09-22/index.html"
+  "dist/en/briefs/2026-09-22/index.html",
+  "dist/briefs/2026-09-23/index.html",
+  "dist/en/briefs/2026-09-23/index.html"
 ];
 
 const missing = requiredFiles.filter((file) => !existsSync(file));
@@ -26,6 +28,14 @@ const enHome = readFileSync("dist/en/index.html", "utf8");
 const zhAbout = readFileSync("dist/about/index.html", "utf8");
 const enAbout = readFileSync("dist/en/about/index.html", "utf8");
 const siteData = readFileSync("src/data/site.ts", "utf8");
+
+const countHomepageBriefs = (html) =>
+  (html.match(/<article class="feature-brief/g) ?? []).length;
+
+if (countHomepageBriefs(zhHome) !== 3 || countHomepageBriefs(enHome) !== 3) {
+  console.error("Chinese and English homepages must each show the latest three briefs.");
+  process.exit(1);
+}
 
 for (const retiredLabel of ["趨勢探索", "跨市場訊號", "二階效應", "深度研究", "Trend Explorer", "Crossignal", "Second Order", "Deep Dives"]) {
   if (zhHome.includes(retiredLabel) || enHome.includes(retiredLabel)) {
@@ -128,6 +138,11 @@ if (!/:is\(\.text-link, \.content-item h3 a, \.feature-brief h3 a\)::after\s*\{[
   process.exit(1);
 }
 
+if (!/\.brief-grid \.feature-brief h3 a\s*\{[^}]*display:\s*block;[^}]*width:\s*100%;/s.test(globalCss)) {
+  console.error("Homepage brief-title hover line does not span the full title column.");
+  process.exit(1);
+}
+
 if (!/:is\(\.text-link, \.content-item h3 a, \.feature-brief h3 a\):(?:hover|focus-visible)::after[^}]*transform:\s*scaleX\(1\);/s.test(globalCss)) {
   console.error("Editorial links do not share the same center-out hover treatment.");
   process.exit(1);
@@ -197,8 +212,8 @@ const zhFallbackArticle = readFileSync("dist/briefs/2026-09-18/index.html", "utf
 const enFallbackArticle = readFileSync("dist/en/briefs/2026-09-18/index.html", "utf8");
 const zhCurrentArticle = readFileSync("dist/briefs/2026-09-21/index.html", "utf8");
 const enCurrentArticle = readFileSync("dist/en/briefs/2026-09-21/index.html", "utf8");
-const zhLatestArticle = readFileSync("dist/briefs/2026-09-22/index.html", "utf8");
-const enLatestArticle = readFileSync("dist/en/briefs/2026-09-22/index.html", "utf8");
+const zhLatestArticle = readFileSync("dist/briefs/2026-09-23/index.html", "utf8");
+const enLatestArticle = readFileSync("dist/en/briefs/2026-09-23/index.html", "utf8");
 const articleLayout = readFileSync("src/layouts/ArticleLayout.astro", "utf8");
 const countTabs = (html) => (html.match(/<button[^>]*role="tab"/g) ?? []).length;
 
@@ -241,46 +256,46 @@ if (!zhCurrentArticle.includes("/en/briefs/2026-09-21/") || !enCurrentArticle.in
   process.exit(1);
 }
 
-if (!zhLatestArticle.includes("/en/briefs/2026-09-22/") || !enLatestArticle.includes("/briefs/2026-09-22/")) {
-  console.error("September 22 brief does not preserve reciprocal language navigation.");
+if (!zhLatestArticle.includes("/en/briefs/2026-09-23/") || !enLatestArticle.includes("/briefs/2026-09-23/")) {
+  console.error("September 23 brief does not preserve reciprocal language navigation.");
   process.exit(1);
 }
 
 if (countTabs(zhLatestArticle) !== 2 || !zhLatestArticle.includes("早間市場推演") || !zhLatestArticle.includes("晚間市場推演")) {
-  console.error("September 22 Chinese brief does not expose two three-market tabs.");
+  console.error("September 23 Chinese brief does not expose two three-market tabs.");
   process.exit(1);
 }
 
 if (countTabs(enLatestArticle) !== 2 || !enLatestArticle.includes("Morning Market Outlook") || !enLatestArticle.includes("Evening Market Outlook")) {
-  console.error("September 22 English brief does not expose two three-market tabs.");
+  console.error("September 23 English brief does not expose two three-market tabs.");
   process.exit(1);
 }
 
 if (zhLatestArticle.includes('data-session-key="global"') || enLatestArticle.includes('data-session-key="global"')) {
-  console.error("September 22 brief still exposes the retired global tab.");
+  console.error("September 23 brief still exposes the retired global tab.");
   process.exit(1);
 }
 
 if (!/data-tab-count="2"/.test(zhLatestArticle) || !/data-tab-count="2"/.test(enLatestArticle)) {
-  console.error("September 22 switcher does not declare two tabs.");
+  console.error("September 23 switcher does not declare two tabs.");
   process.exit(1);
 }
 
 if (!/aria-controls="brief-panel-morning"/.test(zhLatestArticle) || !/aria-controls="brief-panel-evening"/.test(zhLatestArticle)) {
-  console.error("September 22 tab ARIA controls are incomplete.");
+  console.error("September 23 tab ARIA controls are incomplete.");
   process.exit(1);
 }
 
 for (const heading of ["台灣市場", "馬來西亞市場", "美國盤前與今夜推演", "盤前判斷回顧"]) {
   if (!zhLatestArticle.includes(heading)) {
-    console.error(`Chinese 9/22 brief is missing the completed evening section: ${heading}`);
+    console.error(`Chinese 9/23 brief is missing the completed evening section: ${heading}`);
     process.exit(1);
   }
 }
 
-for (const heading of ["Taiwan Market", "Malaysia Market", "US Pre-Market and Session Outlook", "Pre-Market Scorecard"]) {
+for (const heading of ["Taiwan Market", "Malaysia Market", "US Pre-Market and Tonight’s Outlook", "Pre-Market Scorecard"]) {
   if (!enLatestArticle.includes(heading)) {
-    console.error(`English 9/22 brief is missing the completed evening section: ${heading}`);
+    console.error(`English 9/23 brief is missing the completed evening section: ${heading}`);
     process.exit(1);
   }
 }
@@ -288,7 +303,7 @@ for (const heading of ["Taiwan Market", "Malaysia Market", "US Pre-Market and Se
 for (const heading of ["台灣市場", "馬來西亞市場", "美國盤前與今夜推演"]) {
   const pattern = new RegExp(`data-session-panel="evening"[\\s\\S]*?href="#${heading}"`);
   if (!pattern.test(zhLatestArticle)) {
-    console.error(`Chinese 9/22 contents do not assign ${heading} to the evening panel.`);
+    console.error(`Chinese 9/23 contents do not assign ${heading} to the evening panel.`);
     process.exit(1);
   }
 }
@@ -296,7 +311,7 @@ for (const heading of ["台灣市場", "馬來西亞市場", "美國盤前與今
 const thesisIndex = zhLatestArticle.indexOf("主論點");
 const morningHeadingIndex = zhLatestArticle.indexOf('<h2 id="早間市場推演"');
 if (thesisIndex < 0 || morningHeadingIndex < 0 || thesisIndex >= morningHeadingIndex) {
-  console.error("September 22 overview does not remain before the first panel boundary.");
+  console.error("September 23 overview does not remain before the first panel boundary.");
   process.exit(1);
 }
 

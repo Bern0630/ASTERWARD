@@ -9,7 +9,7 @@ const browser = await chromium.launch({
 const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
 
 try {
-  await page.goto(`${baseUrl}/briefs/2026-09-22/`, { waitUntil: "networkidle" });
+  await page.goto(`${baseUrl}/briefs/2026-09-23/`, { waitUntil: "networkidle" });
 
   const tabs = page.getByRole("tab");
   assert.equal(await tabs.count(), 2, "Three-market Daily Brief should expose two session tabs");
@@ -74,7 +74,7 @@ try {
     "Research article labels to mobile contents spacing",
   );
   await mobileGap(
-    "/briefs/2026-09-22/",
+    "/briefs/2026-09-23/",
     ".session-switcher",
     ".mobile-toc",
     20,
@@ -88,7 +88,7 @@ try {
     "Mobile contents to article spacing",
   );
 
-  await page.goto(`${baseUrl}/briefs/2026-09-22/`, { waitUntil: "networkidle" });
+  await page.goto(`${baseUrl}/briefs/2026-09-23/`, { waitUntil: "networkidle" });
   const mobileTabHeight = await page.locator(".session-switcher").evaluate((element) =>
     Math.round(element.getBoundingClientRect().height),
   );
@@ -125,7 +125,7 @@ try {
 
   for (const width of [390, 320]) {
     await page.setViewportSize({ width, height: 844 });
-    for (const route of ["/", "/briefs/", "/briefs/2026-09-22/", "/trends/ai-infrastructure-capital-cycle/", "/about/"]) {
+    for (const route of ["/", "/briefs/", "/briefs/2026-09-23/", "/trends/ai-infrastructure-capital-cycle/", "/about/"]) {
       await page.goto(`${baseUrl}${route}`, { waitUntil: "networkidle" });
       const dimensions = await page.evaluate(() => ({
         viewport: document.documentElement.clientWidth,
