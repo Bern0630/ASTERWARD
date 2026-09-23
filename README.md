@@ -1,6 +1,6 @@
-# SECURRENT
+# ASTERWARD
 
-SECURRENT is a content-first static research publication for global market intelligence.
+ASTERWARD is a content-first static research publication for global market intelligence.
 
 Brand tagline:
 
