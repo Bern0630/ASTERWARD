@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 import Tags from "@/components/Tags.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { SITE, SITE_COPY } from "@/data/site";
+import { SITE_COPY } from "@/data/site";
 import { byLang, entryUrl, formatDate, latest } from "@/lib/content";
 import { withBase } from "@/lib/paths";
 
@@ -16,16 +16,13 @@ const copy = {
   allBriefs: "全部簡報 →",
   readLatest: "閱讀最新簡報 →",
   readFull: "閱讀全文 →",
-  lede: "每日兩次整理美國、台灣與馬來西亞的基本面、技術面與資金訊號，提出可驗證的市場推演。"
+  lede: "聚焦美國、台灣與馬來西亞，從基本面、技術結構與資金流向辨識市場訊號，建立可驗證的研究判斷。"
 };
 ---
 
 <BaseLayout lang={lang} alternateUrl="/en/">
   <section class="site-shell hero">
-    <div>
-      <p class="eyebrow">{siteCopy.eyebrow}</p>
-      <h1>{SITE.name}</h1>
-    </div>
+    <p class="eyebrow">{siteCopy.eyebrow}</p>
     <p class="tagline">{siteCopy.tagline}</p>
     <p class="lede">{copy.lede}</p>
     <div class="topic-strip" aria-label={siteCopy.coverageLabel}>

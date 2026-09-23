@@ -29,6 +29,33 @@ const zhAbout = readFileSync("dist/about/index.html", "utf8");
 const enAbout = readFileSync("dist/en/about/index.html", "utf8");
 const siteData = readFileSync("src/data/site.ts", "utf8");
 
+if (!existsSync("public/brand/asterward-icon.png")) {
+  console.error("ASTERWARD brand icon is missing.");
+  process.exit(1);
+}
+
+for (const home of [zhHome, enHome]) {
+  if (!home.includes("ASTERWARD") || home.includes("SECURRENT")) {
+    console.error("Homepage brand name has not been fully replaced with ASTERWARD.");
+    process.exit(1);
+  }
+  if (!/class="brand-logo"[^>]*src="[^"]*\/brand\/asterward-icon\.png"/s.test(home)) {
+    console.error("Header does not use the ASTERWARD brand icon.");
+    process.exit(1);
+  }
+  if (home.includes("hero-wordmark") || home.includes("asterward-lockup.png")) {
+    console.error("Homepage still contains the removed ASTERWARD hero lockup.");
+    process.exit(1);
+  }
+}
+
+const baseLayoutSource = readFileSync("src/layouts/BaseLayout.astro", "utf8");
+if (!baseLayoutSource.includes("/brand/asterward-icon.png")) {
+  console.error("Favicon does not use the ASTERWARD icon preview.");
+  process.exit(1);
+}
+
+
 const countHomepageBriefs = (html) =>
   (html.match(/<article class="feature-brief/g) ?? []).length;
 
@@ -153,18 +180,18 @@ if (header.includes("brand-kicker") || header.includes("SITE_COPY")) {
   process.exit(1);
 }
 
-if (!header.includes("brandLetters.map") || !header.includes('class="brand-letter"')) {
-  console.error("SECURRENT brand is not split into letters for the current-wave interaction.");
+if (!header.includes('class="brand-logo"') || !header.includes('class="brand-name"')) {
+  console.error("ASTERWARD header does not combine the logo and wordmark.");
   process.exit(1);
 }
 
-if (!/\.brand:(?:hover|focus-visible)::after[^}]*transform:\s*scaleX\(1\);/s.test(globalCss)) {
-  console.error("Brand home link does not reveal its center-out current line.");
+if (!/\.brand::after[\s\S]*?transform-origin:\s*left;/.test(globalCss) || !/\.brand:(?:hover|focus-visible)::after[^}]*transform:\s*scaleX\(1\);/s.test(globalCss)) {
+  console.error("Brand home link does not reveal its full-width signal line.");
   process.exit(1);
 }
 
-if (!/@keyframes brand-current-wave[\s\S]*?translateY\(-3px\)/.test(globalCss)) {
-  console.error("Brand letters do not use the approved current-wave motion.");
+if (!/\.brand:hover \.brand-logo,[\s\S]*?drop-shadow\(0 0 7px rgba\(216, 201, 0, 0\.52\)\)/.test(globalCss)) {
+  console.error("ASTERWARD logo does not use the approved signal glow interaction.");
   process.exit(1);
 }
 
@@ -286,21 +313,21 @@ if (!/aria-controls="brief-panel-morning"/.test(zhLatestArticle) || !/aria-contr
   process.exit(1);
 }
 
-for (const heading of ["台灣市場", "馬來西亞市場", "美國盤前與今夜推演", "盤前判斷回顧"]) {
+for (const heading of ["早間判斷回顧", "今日台灣訊號", "台灣籌碼面收盤確認", "今日馬來西亞訊號", "美國盤前條件", "今夜美股推演"]) {
   if (!zhLatestArticle.includes(heading)) {
     console.error(`Chinese 9/23 brief is missing the completed evening section: ${heading}`);
     process.exit(1);
   }
 }
 
-for (const heading of ["Taiwan Market", "Malaysia Market", "US Pre-Market and Tonight’s Outlook", "Pre-Market Scorecard"]) {
+for (const heading of ["Pre-Market Scorecard", "Taiwan Closing Signal", "Taiwan Positioning Confirmation", "Malaysia Closing Signal", "US Pre-Market Conditions", "US Session Outlook"]) {
   if (!enLatestArticle.includes(heading)) {
     console.error(`English 9/23 brief is missing the completed evening section: ${heading}`);
     process.exit(1);
   }
 }
 
-for (const heading of ["台灣市場", "馬來西亞市場", "美國盤前與今夜推演"]) {
+for (const heading of ["今日台灣訊號", "台灣籌碼面收盤確認", "今日馬來西亞訊號", "美國盤前條件", "今夜美股推演"]) {
   const pattern = new RegExp(`data-session-panel="evening"[\\s\\S]*?href="#${heading}"`);
   if (!pattern.test(zhLatestArticle)) {
     console.error(`Chinese 9/23 contents do not assign ${heading} to the evening panel.`);
@@ -322,7 +349,7 @@ if (new Set(invalidationIds).size !== 2) {
 }
 
 if (existsSync("templates/weekend-brief.md")) {
-  console.error("Weekend brief template must not exist because SECURRENT does not publish on weekends.");
+  console.error("Weekend brief template must not exist because ASTERWARD does not publish on weekends.");
   process.exit(1);
 }
 

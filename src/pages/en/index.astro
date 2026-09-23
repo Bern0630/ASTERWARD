@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 import Tags from "@/components/Tags.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { SITE, SITE_COPY } from "@/data/site";
+import { SITE_COPY } from "@/data/site";
 import { byLang, entryUrl, formatDate, latest } from "@/lib/content";
 import { withBase } from "@/lib/paths";
 
@@ -16,16 +16,13 @@ const copy = {
   allBriefs: "All briefs →",
   readLatest: "Read latest brief →",
   readFull: "Read full brief →",
-  lede: "Daily market intelligence for the United States, Taiwan, and Malaysia, updated twice each weekday with explicit evidence and invalidation conditions."
+  lede: "Market intelligence across the United States, Taiwan, and Malaysia, integrating fundamentals, technical structure, and capital flows into testable research views."
 };
 ---
 
 <BaseLayout lang={lang} alternateUrl="/">
   <section class="site-shell hero">
-    <div>
-      <p class="eyebrow">{siteCopy.eyebrow}</p>
-      <h1>{SITE.name}</h1>
-    </div>
+    <p class="eyebrow">{siteCopy.eyebrow}</p>
     <p class="tagline">{siteCopy.tagline}</p>
     <p class="lede">{copy.lede}</p>
     <div class="topic-strip" aria-label={siteCopy.coverageLabel}>

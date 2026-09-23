@@ -1,5 +1,5 @@
 export const SITE = {
-  name: "SECURRENT",
+  name: "ASTERWARD",
   eyebrow: "Three-Market Daily Intelligence",
   tagline: "United States. Taiwan. Malaysia.",
   description:

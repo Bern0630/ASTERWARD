@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 
 const read = (path) => readFileSync(path, "utf8");
 const fail = (message) => {
@@ -208,6 +208,66 @@ const threeMarketHeadings = {
   en: ["Morning Market Outlook", "Evening Market Outlook"],
 };
 
+const latestBriefFile = readdirSync("src/content/briefs")
+  .filter((name) => /^\d{4}-\d{2}-\d{2}\.md$/.test(name))
+  .sort()
+  .at(-1);
+const latestBriefDate = latestBriefFile.replace(/\.md$/, "");
+const latestZh = read(`src/content/briefs/${latestBriefFile}`);
+const latestEn = read(`src/content/briefs/en/${latestBriefFile}`);
+const latestZhMorning = sectionBetween(latestZh, "早間市場推演", "晚間市場推演");
+const latestZhEvening = sectionBetween(latestZh, "晚間市場推演");
+const latestEnMorning = sectionBetween(latestEn, "Morning Market Outlook", "Evening Market Outlook");
+const latestEnEvening = sectionBetween(latestEn, "Evening Market Outlook");
+const h3s = (content) => [...content.matchAll(/^### (.+)$/gm)].map((match) => match[1]);
+const subsectionBetween = (content, start, end) => {
+  const startIndex = content.indexOf(`### ${start}`);
+  const endIndex = end ? content.indexOf(`### ${end}`, startIndex) : content.length;
+  return startIndex >= 0 ? content.slice(startIndex, endIndex >= 0 ? endIndex : content.length) : "";
+};
+
+const transmissionHeadings = {
+  zhMorning: ["傳導主線", "昨日美國訊號", "昨日馬來西亞訊號", "台灣基本面與技術面", "台灣籌碼面", "今日台股推演", "失效條件", "核心資料來源"],
+  enMorning: ["Transmission Thesis", "Previous US Signals", "Previous Malaysia Signals", "Taiwan Fundamentals and Technicals", "Taiwan Positioning", "Taiwan Session Outlook", "Invalidation Conditions", "Core Sources"],
+  zhEvening: ["早間判斷回顧", "今日台灣訊號", "台灣籌碼面收盤確認", "今日馬來西亞訊號", "美國盤前條件", "今夜美股推演", "失效條件", "核心資料來源"],
+  enEvening: ["Pre-Market Scorecard", "Taiwan Closing Signal", "Taiwan Positioning Confirmation", "Malaysia Closing Signal", "US Pre-Market Conditions", "US Session Outlook", "Invalidation Conditions", "Core Sources"],
+};
+
+for (const [actual, expected, label] of [
+  [h3s(latestZhMorning), transmissionHeadings.zhMorning, "Chinese morning"],
+  [h3s(latestEnMorning), transmissionHeadings.enMorning, "English morning"],
+  [h3s(latestZhEvening), transmissionHeadings.zhEvening, "Chinese evening"],
+  [h3s(latestEnEvening), transmissionHeadings.enEvening, "English evening"],
+]) {
+  if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+    fail(`${latestBriefDate} ${label} headings must follow the transmission-led structure`);
+  }
+}
+
+const morningSubstance = subsectionBetween(latestZhMorning, "傳導主線", "核心資料來源");
+const morningTaiwan = subsectionBetween(latestZhMorning, "台灣基本面與技術面", "失效條件");
+const morningTaiwanShare = hanCount(morningTaiwan) / hanCount(morningSubstance);
+if (morningTaiwanShare < 0.55) {
+  fail(`${latestBriefDate} Taiwan content must be at least 55% of substantive morning content; received ${(morningTaiwanShare * 100).toFixed(1)}%`);
+}
+
+const eveningSubstance = subsectionBetween(latestZhEvening, "早間判斷回顧", "核心資料來源");
+const eveningUnitedStates = subsectionBetween(latestZhEvening, "美國盤前條件", "失效條件");
+const eveningUnitedStatesShare = hanCount(eveningUnitedStates) / hanCount(eveningSubstance);
+if (eveningUnitedStatesShare < 0.5) {
+  fail(`${latestBriefDate} US content must be at least 50% of substantive evening content; received ${(eveningUnitedStatesShare * 100).toFixed(1)}%`);
+}
+
+const latestTaiwanPositioning = [
+  subsectionBetween(latestZhMorning, "台灣籌碼面", "今日台股推演"),
+  subsectionBetween(latestZhEvening, "台灣籌碼面收盤確認", "今日馬來西亞訊號"),
+];
+for (const [index, section] of latestTaiwanPositioning.entries()) {
+  for (const term of ["外資", "投信", "自營商", "台指期", "選擇權", "融資", "借券"]) {
+    if (!section.includes(term)) fail(`${latestBriefDate} Taiwan positioning section ${index + 1} is missing ${term}`);
+  }
+}
+
 if (!currentZh.includes('briefFormat: "three-market-v1"')) fail("9/22 Chinese brief needs three-market-v1");
 if (!currentEn.includes('briefFormat: "three-market-v1"')) fail("9/22 English brief needs three-market-v1");
 if (JSON.stringify(h2s(currentZh)) !== JSON.stringify(threeMarketHeadings.zh)) fail("9/22 Chinese brief must have exactly two H2 panels");
@@ -255,10 +315,10 @@ if (!morningZh.includes('briefFormat: "three-market-v1"')) fail("9/23 Chinese br
 if (!morningEn.includes('briefFormat: "three-market-v1"')) fail("9/23 English brief needs three-market-v1");
 if (JSON.stringify(h2s(morningZh)) !== JSON.stringify(threeMarketHeadings.zh)) fail("9/23 Chinese brief must expose morning and evening tabs");
 if (JSON.stringify(h2s(morningEn)) !== JSON.stringify(threeMarketHeadings.en)) fail("9/23 English brief must expose morning and evening tabs");
-for (const heading of ["### 美國前一交易日", "### 台灣前一交易日", "### 今日台股推演", "### 今日美股盤前推演", "### 失效條件", "### 核心資料來源"]) {
+for (const heading of ["### 傳導主線", "### 昨日美國訊號", "### 昨日馬來西亞訊號", "### 台灣基本面與技術面", "### 台灣籌碼面", "### 今日台股推演", "### 失效條件", "### 核心資料來源"]) {
   if (!morningZh.includes(heading)) fail(`9/23 Chinese morning brief is missing ${heading}`);
 }
-for (const heading of ["### Previous US Session", "### Previous Taiwan Session", "### Taiwan Session Outlook", "### US Pre-Market Outlook", "### Invalidation Conditions", "### Core Sources"]) {
+for (const heading of ["### Transmission Thesis", "### Previous US Signals", "### Previous Malaysia Signals", "### Taiwan Fundamentals and Technicals", "### Taiwan Positioning", "### Taiwan Session Outlook", "### Invalidation Conditions", "### Core Sources"]) {
   if (!morningEn.includes(heading)) fail(`9/23 English morning brief is missing ${heading}`);
 }
 if ((morningZh.match(/\*\*主論點：\*\*/g) ?? []).length !== 1) fail("9/23 Chinese brief needs exactly one primary thesis");
@@ -280,10 +340,10 @@ for (const [section, heading, label] of [
 
 const finalZhEvening = sectionBetween(morningZh, "晚間市場推演");
 const finalEnEvening = sectionBetween(morningEn, "Evening Market Outlook");
-for (const heading of ["### 盤前判斷回顧", "### 台灣市場", "### 馬來西亞市場", "### 美國盤前與今夜推演", "### 失效條件", "### 核心資料來源"]) {
+for (const heading of ["### 早間判斷回顧", "### 今日台灣訊號", "### 台灣籌碼面收盤確認", "### 今日馬來西亞訊號", "### 美國盤前條件", "### 今夜美股推演", "### 失效條件", "### 核心資料來源"]) {
   if (!finalZhEvening.includes(heading)) fail(`9/23 Chinese evening brief is missing ${heading}`);
 }
-for (const heading of ["### Pre-Market Scorecard", "### Taiwan Market", "### Malaysia Market", "### US Pre-Market and Tonight's Outlook", "### Invalidation Conditions", "### Core Sources"]) {
+for (const heading of ["### Pre-Market Scorecard", "### Taiwan Closing Signal", "### Taiwan Positioning Confirmation", "### Malaysia Closing Signal", "### US Pre-Market Conditions", "### US Session Outlook", "### Invalidation Conditions", "### Core Sources"]) {
   if (!finalEnEvening.includes(heading)) fail(`9/23 English evening brief is missing ${heading}`);
 }
 
@@ -299,10 +359,14 @@ for (const [section, heading, label] of [
   if (count < 1 || count > 8) fail(`${label} core sources must contain 1-8 entries; received ${count}`);
 }
 
-for (const phrase of ["48,157.29", "389.22 億元", "95.84%", "1,676.43", "4.0780/4.0825", "4.957%"]) {
+if (!finalZhEvening.includes("| 淨空單增加 516 口至 76,084 口 | 失效 |")) fail("9/23 Chinese scorecard must resolve the futures-hedging call");
+if (!finalEnEvening.includes("| Net short increased by 516 to 76,084 | Failed |")) fail("9/23 English scorecard must resolve the futures-hedging call");
+if (finalZhEvening.includes("尚待驗證") || finalEnEvening.includes("| Pending |")) fail("9/23 scorecard still contains a resolved pending state");
+
+for (const phrase of ["48,157.29", "389.22 億元", "10,855 口", "86,939 口", "76,084 口", "6,063.68 億元", "323.43 億股", "95.84%", "1,676.43", "4.0780/4.0825", "4.957%"]) {
   if (!finalZhEvening.includes(phrase)) fail(`Required 9/23 Chinese evening data missing: ${phrase}`);
 }
-for (const phrase of ["48,157.29", "TWD 38.92 billion", "95.84%", "1,676.43", "4.0780/4.0825", "4.957%"]) {
+for (const phrase of ["48,157.29", "TWD 38.92 billion", "10,855 long", "86,939 short", "net short of 76,084", "TWD 606.37 billion", "32.34 billion shares", "95.84%", "1,676.43", "4.0780/4.0825", "4.957%"]) {
   if (!finalEnEvening.includes(phrase)) fail(`Required 9/23 English evening data missing: ${phrase}`);
 }
 

@@ -1,8 +1,8 @@
-# SECURRENT Three-Market Daily Intelligence Implementation Plan
+# ASTERWARD Three-Market Daily Intelligence Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Replace SECURRENT's current global research-heavy daily flow with one bilingual, two-update daily product focused only on the United States, Taiwan, and Malaysia.
+**Goal:** Replace ASTERWARD's current global research-heavy daily flow with one bilingual, two-update daily product focused only on the United States, Taiwan, and Malaysia.
 
 **Architecture:** Add an explicit `briefFormat` discriminator so new two-panel briefs coexist with untouched legacy three-panel articles. Make the Chinese article the researched source of truth, translate it faithfully to English, keep complete source ledgers outside the public content collections, and update the existing paused heartbeat only after all static verification passes.
 
@@ -12,7 +12,7 @@
 
 ## Global Constraints
 
-- Work only in `/Users/bernardc/Desktop/SECURRENT`; do not create another project copy.
+- Work only in `/Users/bernardc/Desktop/ASTERWARD`; do not create another project copy.
 - Public coverage is limited to the United States, Taiwan, and Malaysia.
 - Weekday publishing uses one bilingual article and one URL per language, updated at 08:10 and 21:10 Asia/Taipei.
 - The Chinese article contains 2,000-3,000 Han characters, with morning approximately 40% and evening approximately 60%.
@@ -442,13 +442,13 @@ export const NAV_ITEMS = {
 } satisfies Record<Lang, { label: string; href: string }[]>;
 ```
 
-Change the site description and homepage copy from global transmission research to concise US/Taiwan/Malaysia daily intelligence. Keep the SECURRENT wordmark and language control unchanged.
+Change the site description and homepage copy from global transmission research to concise US/Taiwan/Malaysia daily intelligence. Keep the ASTERWARD wordmark and language control unchanged.
 
 Use the following site-level positioning:
 
 ```ts
 export const SITE = {
-  name: "SECURRENT",
+  name: "ASTERWARD",
   eyebrow: "Three-Market Daily Intelligence",
   tagline: "United States. Taiwan. Malaysia.",
   description: "Twice-daily market intelligence for the United States, Taiwan, and Malaysia, built from fundamentals, technicals, positioning, and explicit invalidation conditions.",
@@ -560,7 +560,7 @@ Expected: non-zero exit identifying the first missing policy anchor or a retired
 The document must define:
 
 ```text
-角色：SECURRENT 三市場研究編輯。
+角色：ASTERWARD 三市場研究編輯。
 範圍：只研究美國、台灣、馬來西亞；其他國際事件僅在直接改變這三個市場判斷時嵌入對應段落。
 節奏：週一至週五 08:10 建立同一日期文章，21:10 更新同一篇文章；週末不發布。
 研究上限：每次最多三批搜尋、八個有效來源、失敗資料只重試一次。官方數字取得後停止重複搜尋；缺值不得推估或用舊值冒充。
@@ -659,23 +659,23 @@ Expected: editorial and site verification success messages, Astro build with zer
 ### Task 6: Update and activate the existing heartbeat only after verification
 
 **Files:**
-- Inspect: `/Users/bernardc/.codex/automations/securrent-daily-research-publishing/automation.toml`
+- Inspect: `/Users/bernardc/.codex/automations/asterward-daily-research-publishing/automation.toml`
 - No repository file changes.
 
 **Interfaces:**
 - Consumes: The authoritative rules in `docs/GPT_CONTENT_PROMPT.md` and all green verification evidence from Task 5.
-- Produces: One active heartbeat named `SECURRENT Daily Research & Publishing`, preserving the existing weekday 08:10 and 21:10 Asia/Taipei schedule and target thread.
+- Produces: One active heartbeat named `ASTERWARD Daily Research & Publishing`, preserving the existing weekday 08:10 and 21:10 Asia/Taipei schedule and target thread.
 
 - [ ] **Step 1: Re-read the automation immediately before mutation**
 
-Use `automation_update` in view mode for ID `securrent-daily-research-publishing`, then read its `automation.toml`. Confirm it is still `PAUSED`, points to `/Users/bernardc/Desktop/SECURRENT`, and no second SECURRENT automation exists.
+Use `automation_update` in view mode for ID `asterward-daily-research-publishing`, then read its `automation.toml`. Confirm it is still `PAUSED`, points to `/Users/bernardc/Desktop/ASTERWARD`, and no second ASTERWARD automation exists.
 
 - [ ] **Step 2: Update the existing automation with the concise operating prompt**
 
 Preserve the existing name, heartbeat kind, target thread and recurrence. Replace the prompt with instructions that:
 
 ```text
-- Operate only Monday-Friday in /Users/bernardc/Desktop/SECURRENT.
+- Operate only Monday-Friday in /Users/bernardc/Desktop/ASTERWARD.
 - Never create a second project, article for the same date, commit, push or deploy.
 - At 08:10 create/update the three-market-v1 Chinese brief first: previous US fundamentals and approved technical set; previous Taiwan fundamentals, technicals and full positioning; infer Taiwan's session and the US pre-market; state invalidation conditions.
 - After Chinese is finalized, publish a faithful English translation without another research pass.
@@ -694,11 +694,11 @@ Set status to `ACTIVE` only in this same update after the Task 5 checks are gree
 
 View the automation again and inspect `automation.toml`. Confirm:
 
-- ID remains `securrent-daily-research-publishing`.
+- ID remains `asterward-daily-research-publishing`.
 - Status is `ACTIVE`.
 - Weekday 08:10 and 21:10 Asia/Taipei timing is unchanged.
 - Prompt contains the three-market, two-update, source-cap and pending-research rules.
-- No duplicate SECURRENT automation directory or task was created.
+- No duplicate ASTERWARD automation directory or task was created.
 
 - [ ] **Step 4: Final repository and product sanity check**
 

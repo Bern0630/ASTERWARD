@@ -1,6 +1,6 @@
-# SECURRENT
+# ASTERWARD
 
-SECURRENT is a content-first static research publication for global market intelligence.
+ASTERWARD is a content-first static research publication for global market intelligence.
 
 Brand tagline:
 
@@ -178,10 +178,10 @@ It runs on every push to `main`:
 
 ## Repo base path
 
-For a repository named `securrent`, GitHub Pages commonly serves the site at:
+For a repository named `asterward`, GitHub Pages commonly serves the site at:
 
 ```text
-https://username.github.io/securrent/
+https://username.github.io/asterward/
 ```
 
 The deploy workflow sets:
@@ -213,7 +213,7 @@ BASE_PATH=/
 Set the GitHub repository variable:
 
 ```text
-SITE=https://username.github.io/securrent
+SITE=https://username.github.io/asterward
 ```
 
 For local builds, the default placeholder is `https://example.com`.
@@ -226,14 +226,14 @@ When using a custom domain:
 2. Set the repository variable:
 
 ```text
-SITE=https://securrent.com
+SITE=https://asterward.com
 BASE_PATH=/
 ```
 
 3. If needed, add a `public/CNAME` file containing:
 
 ```text
-securrent.com
+asterward.com
 ```
 
 ## Edit brand tagline
@@ -292,7 +292,7 @@ The site automatically links matching translations when both versions exist.
 
 ## GPT Content Prompt
 
-Use this file to ask GPT to generate SECURRENT-ready bilingual Markdown:
+Use this file to ask GPT to generate ASTERWARD-ready bilingual Markdown:
 
 ```text
 docs/GPT_CONTENT_PROMPT.md

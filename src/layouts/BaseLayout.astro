@@ -36,8 +36,9 @@ const imageUrl = new URL(withBase(image), Astro.site ?? Astro.url.origin);
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     {alternateUrl && <link rel="alternate" hreflang={lang === "zh" ? "en" : "zh-Hant"} href={new URL(withBase(alternateUrl), Astro.site ?? Astro.url.origin)} />}
-    <link rel="icon" href={withBase("/favicon.svg")} type="image/svg+xml" />
-    <link rel="alternate" type="application/rss+xml" title="SECURRENT RSS" href={withBase("/rss.xml")} />
+    <link rel="icon" href={withBase("/brand/asterward-icon.png")} type="image/png" sizes="512x512" />
+    <link rel="apple-touch-icon" href={withBase("/brand/asterward-icon.png")} />
+    <link rel="alternate" type="application/rss+xml" title="ASTERWARD RSS" href={withBase("/rss.xml")} />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />

@@ -16,17 +16,13 @@ const currentPath = basePath && Astro.url.pathname.startsWith(basePath)
 const navItems = NAV_ITEMS[lang];
 const currentWithoutEnglishPrefix = currentPath.startsWith("/en") ? currentPath.slice(3) || "/" : currentPath;
 const languageTarget = alternateUrl ?? localizedPath(currentWithoutEnglishPrefix, lang === "zh" ? "en" : "zh");
-const brandLetters = SITE.name.split("");
 ---
 
 <header class="site-header">
   <div class="site-shell header-inner">
-    <a class="brand" href={withBase(localizedPath("/", lang))} aria-label="SECURRENT home">
-      <span class="brand-mark" aria-hidden="true">
-        {brandLetters.map((letter, index) => (
-          <span class="brand-letter" style={"--brand-letter-index: " + index}>{letter}</span>
-        ))}
-      </span>
+    <a class="brand" href={withBase(localizedPath("/", lang))} aria-label={SITE.name + " home"}>
+      <img class="brand-logo" src={withBase("/brand/asterward-icon.png")} alt="" aria-hidden="true" />
+      <span class="brand-name" aria-hidden="true">{SITE.name}</span>
     </a>
 
     <nav class="desktop-nav" aria-label="Primary navigation">

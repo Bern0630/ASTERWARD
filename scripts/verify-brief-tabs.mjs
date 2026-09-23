@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { chromium } from "/Users/bernardc/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs";
 
-const baseUrl = process.env.SECURRENT_TEST_URL ?? "http://127.0.0.1:4322";
+const baseUrl = process.env.ASTERWARD_TEST_URL ?? "http://127.0.0.1:4322";
 const browser = await chromium.launch({
   executablePath: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
   headless: true,
@@ -23,13 +23,13 @@ try {
   await tabs.nth(1).click();
   assert.equal(await panels.nth(0).isVisible(), false, "Morning panel should hide after switching tabs");
   assert.equal(await panels.nth(1).isVisible(), true, "Evening panel should become visible");
-  for (const country of ["台灣市場", "馬來西亞市場", "美國盤前與今夜推演"]) {
+  for (const country of ["今日台灣訊號", "台灣籌碼面收盤確認", "今日馬來西亞訊號", "美國盤前條件", "今夜美股推演"]) {
     assert.equal(await page.locator(".desktop-toc li:not([hidden]) a", { hasText: country }).count(), 1, `Evening navigation should expose ${country}`);
   }
   assert.equal(await page.locator(".desktop-toc li:not([hidden]) a", { hasText: "全球市場與研究" }).count(), 0);
 
-  await page.locator(".desktop-toc li:not([hidden]) a", { hasText: "馬來西亞市場" }).click();
-  const headingTop = await page.locator("#馬來西亞市場").evaluate((heading) => heading.getBoundingClientRect().top);
+  await page.locator(".desktop-toc li:not([hidden]) a", { hasText: "今日馬來西亞訊號" }).click();
+  const headingTop = await page.locator("#今日馬來西亞訊號").evaluate((heading) => heading.getBoundingClientRect().top);
   assert.ok(headingTop >= 88, `Market navigation target should remain visible below the sticky header; received ${headingTop}px`);
 
   await tabs.nth(1).press("ArrowLeft");

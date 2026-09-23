@@ -1,4 +1,4 @@
-# SECURRENT Research Notes
+# ASTERWARD Research Notes
 
 This directory is an unpublished evidence ledger. It is intentionally outside Astro Content Collections and must never receive a public route.
 
