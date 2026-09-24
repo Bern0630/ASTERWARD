@@ -6,13 +6,13 @@ const fail = (message) => {
   process.exitCode = 1;
 };
 
+const dailyBriefPairs = readdirSync("src/content/briefs")
+  .filter((name) => /^\d{4}-\d{2}-\d{2}\.md$/.test(name))
+  .sort()
+  .map((name) => [`src/content/briefs/${name}`, `src/content/briefs/en/${name}`]);
+
 const pairedContent = [
-  ["src/content/briefs/2026-09-23.md", "src/content/briefs/en/2026-09-23.md"],
-  ["src/content/briefs/2026-09-22.md", "src/content/briefs/en/2026-09-22.md"],
-  ["src/content/briefs/2026-09-21.md", "src/content/briefs/en/2026-09-21.md"],
-  ["src/content/briefs/2026-09-18.md", "src/content/briefs/en/2026-09-18.md"],
-  ["src/content/briefs/2026-09-16.md", "src/content/briefs/en/2026-09-16.md"],
-  ["src/content/briefs/2026-09-17.md", "src/content/briefs/en/2026-09-17.md"],
+  ...dailyBriefPairs,
   ["src/content/trends/ai-infrastructure-capital-cycle.md", "src/content/trends/en/ai-infrastructure-capital-cycle.md"],
   ["src/content/trends/2026-09-16-ai-capex-financing-test.md", "src/content/trends/en/2026-09-16-ai-capex-financing-test.md"],
   ["src/content/trends/2026-09-17-malaysia-data-center-power-credit.md", "src/content/trends/en/2026-09-17-malaysia-data-center-power-credit.md"],
@@ -233,12 +233,24 @@ const transmissionHeadings = {
   enEvening: ["Pre-Market Scorecard", "Taiwan Closing Signal", "Taiwan Positioning Confirmation", "Malaysia Closing Signal", "US Pre-Market Conditions", "US Session Outlook", "Invalidation Conditions", "Core Sources"],
 };
 
-for (const [actual, expected, label] of [
+const hasLatestZhEvening = latestZh.includes("## 晚間市場推演");
+const hasLatestEnEvening = latestEn.includes("## Evening Market Outlook");
+if (hasLatestZhEvening !== hasLatestEnEvening) {
+  fail(`${latestBriefDate} Chinese and English evening sections must be published together`);
+}
+
+const latestHeadingChecks = [
   [h3s(latestZhMorning), transmissionHeadings.zhMorning, "Chinese morning"],
   [h3s(latestEnMorning), transmissionHeadings.enMorning, "English morning"],
-  [h3s(latestZhEvening), transmissionHeadings.zhEvening, "Chinese evening"],
-  [h3s(latestEnEvening), transmissionHeadings.enEvening, "English evening"],
-]) {
+];
+if (hasLatestZhEvening && hasLatestEnEvening) {
+  latestHeadingChecks.push(
+    [h3s(latestZhEvening), transmissionHeadings.zhEvening, "Chinese evening"],
+    [h3s(latestEnEvening), transmissionHeadings.enEvening, "English evening"],
+  );
+}
+
+for (const [actual, expected, label] of latestHeadingChecks) {
   if (JSON.stringify(actual) !== JSON.stringify(expected)) {
     fail(`${latestBriefDate} ${label} headings must follow the transmission-led structure`);
   }
@@ -251,17 +263,21 @@ if (morningTaiwanShare < 0.55) {
   fail(`${latestBriefDate} Taiwan content must be at least 55% of substantive morning content; received ${(morningTaiwanShare * 100).toFixed(1)}%`);
 }
 
-const eveningSubstance = subsectionBetween(latestZhEvening, "早間判斷回顧", "核心資料來源");
-const eveningUnitedStates = subsectionBetween(latestZhEvening, "美國盤前條件", "失效條件");
-const eveningUnitedStatesShare = hanCount(eveningUnitedStates) / hanCount(eveningSubstance);
-if (eveningUnitedStatesShare < 0.5) {
-  fail(`${latestBriefDate} US content must be at least 50% of substantive evening content; received ${(eveningUnitedStatesShare * 100).toFixed(1)}%`);
+if (hasLatestZhEvening) {
+  const eveningSubstance = subsectionBetween(latestZhEvening, "早間判斷回顧", "核心資料來源");
+  const eveningUnitedStates = subsectionBetween(latestZhEvening, "美國盤前條件", "失效條件");
+  const eveningUnitedStatesShare = hanCount(eveningUnitedStates) / hanCount(eveningSubstance);
+  if (eveningUnitedStatesShare < 0.5) {
+    fail(`${latestBriefDate} US content must be at least 50% of substantive evening content; received ${(eveningUnitedStatesShare * 100).toFixed(1)}%`);
+  }
 }
 
 const latestTaiwanPositioning = [
   subsectionBetween(latestZhMorning, "台灣籌碼面", "今日台股推演"),
-  subsectionBetween(latestZhEvening, "台灣籌碼面收盤確認", "今日馬來西亞訊號"),
 ];
+if (hasLatestZhEvening) {
+  latestTaiwanPositioning.push(subsectionBetween(latestZhEvening, "台灣籌碼面收盤確認", "今日馬來西亞訊號"));
+}
 for (const [index, section] of latestTaiwanPositioning.entries()) {
   for (const term of ["外資", "投信", "自營商", "台指期", "選擇權", "融資", "借券"]) {
     if (!section.includes(term)) fail(`${latestBriefDate} Taiwan positioning section ${index + 1} is missing ${term}`);
