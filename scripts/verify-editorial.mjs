@@ -208,13 +208,17 @@ const threeMarketHeadings = {
   en: ["Morning Market Outlook", "Evening Market Outlook"],
 };
 
-const latestBriefFile = readdirSync("src/content/briefs")
+const datedBriefFiles = readdirSync("src/content/briefs")
   .filter((name) => /^\d{4}-\d{2}-\d{2}\.md$/.test(name))
-  .sort()
-  .at(-1);
+  .sort();
+const latestBriefFile = datedBriefFiles.at(-1);
+const previousBriefFile = datedBriefFiles.at(-2);
 const latestBriefDate = latestBriefFile.replace(/\.md$/, "");
 const latestZh = read(`src/content/briefs/${latestBriefFile}`);
 const latestEn = read(`src/content/briefs/en/${latestBriefFile}`);
+const previousZh = previousBriefFile ? read(`src/content/briefs/${previousBriefFile}`) : "";
+const previousEn = previousBriefFile ? read(`src/content/briefs/en/${previousBriefFile}`) : "";
+const previousBriefHasEvening = previousZh.includes("## 晚間市場推演") && previousEn.includes("## Evening Market Outlook");
 const latestZhMorning = sectionBetween(latestZh, "早間市場推演", "晚間市場推演");
 const latestZhEvening = sectionBetween(latestZh, "晚間市場推演");
 const latestEnMorning = sectionBetween(latestEn, "Morning Market Outlook", "Evening Market Outlook");
@@ -235,18 +239,41 @@ const transmissionHeadings = {
 
 const hasLatestZhEvening = latestZh.includes("## 晚間市場推演");
 const hasLatestEnEvening = latestEn.includes("## Evening Market Outlook");
+const hasLatestZhMorning = latestZh.includes("## 早間市場推演");
+const hasLatestEnMorning = latestEn.includes("## Morning Market Outlook");
+if (hasLatestZhMorning !== hasLatestEnMorning) {
+  fail(`${latestBriefDate} Chinese and English morning sections must be published together`);
+}
 if (hasLatestZhEvening !== hasLatestEnEvening) {
   fail(`${latestBriefDate} Chinese and English evening sections must be published together`);
 }
+if (!hasLatestZhMorning && !hasLatestZhEvening) {
+  fail(`${latestBriefDate} must publish at least one market session`);
+}
 
-const latestHeadingChecks = [
-  [h3s(latestZhMorning), transmissionHeadings.zhMorning, "Chinese morning"],
-  [h3s(latestEnMorning), transmissionHeadings.enMorning, "English morning"],
-];
-if (hasLatestZhEvening && hasLatestEnEvening) {
+const latestHeadingChecks = [];
+if (hasLatestZhMorning && hasLatestEnMorning) {
+  const zhMorningHeadings = previousBriefHasEvening
+    ? ["前次晚間推演驗證", ...transmissionHeadings.zhMorning]
+    : transmissionHeadings.zhMorning;
+  const enMorningHeadings = previousBriefHasEvening
+    ? ["Previous Evening Scorecard", ...transmissionHeadings.enMorning]
+    : transmissionHeadings.enMorning;
   latestHeadingChecks.push(
-    [h3s(latestZhEvening), transmissionHeadings.zhEvening, "Chinese evening"],
-    [h3s(latestEnEvening), transmissionHeadings.enEvening, "English evening"],
+    [h3s(latestZhMorning), zhMorningHeadings, "Chinese morning"],
+    [h3s(latestEnMorning), enMorningHeadings, "English morning"],
+  );
+}
+if (hasLatestZhEvening && hasLatestEnEvening) {
+  const zhEveningHeadings = hasLatestZhMorning
+    ? transmissionHeadings.zhEvening
+    : ["今日台灣休市狀態", "今日馬來西亞訊號", "美國盤前條件", "今夜美股推演", "失效條件", "核心資料來源"];
+  const enEveningHeadings = hasLatestEnMorning
+    ? transmissionHeadings.enEvening
+    : ["Taiwan Market-Closed State", "Malaysia Closing Signal", "US Pre-Market Conditions", "US Session Outlook", "Invalidation Conditions", "Core Sources"];
+  latestHeadingChecks.push(
+    [h3s(latestZhEvening), zhEveningHeadings, "Chinese evening"],
+    [h3s(latestEnEvening), enEveningHeadings, "English evening"],
   );
 }
 
@@ -256,15 +283,51 @@ for (const [actual, expected, label] of latestHeadingChecks) {
   }
 }
 
-const morningSubstance = subsectionBetween(latestZhMorning, "傳導主線", "核心資料來源");
-const morningTaiwan = subsectionBetween(latestZhMorning, "台灣基本面與技術面", "失效條件");
-const morningTaiwanShare = hanCount(morningTaiwan) / hanCount(morningSubstance);
-if (morningTaiwanShare < 0.55) {
-  fail(`${latestBriefDate} Taiwan content must be at least 55% of substantive morning content; received ${(morningTaiwanShare * 100).toFixed(1)}%`);
+const assertResolvedScorecard = (section, start, end, header, statePattern, unresolved, path) => {
+  const scorecard = subsectionBetween(section, start, end);
+  if (!scorecard.includes(header)) fail(`${path} is missing the scorecard table header`);
+  const rows = scorecard.split("\n").filter((line) => {
+    const trimmed = line.trim();
+    return /^\|.*\|$/.test(trimmed) && trimmed !== header && !/^\|\s*:?-+/.test(trimmed);
+  });
+  if (rows.length < 3) fail(`${path} needs at least three resolved scorecard rows; received ${rows.length}`);
+  if (rows.some((row) => !statePattern.test(row))) fail(`${path} has a row without a resolved assessment`);
+  if (unresolved.test(scorecard)) fail(`${path} still contains an unresolved scorecard state`);
+};
+
+if (hasLatestZhMorning && hasLatestEnMorning && previousBriefHasEvening) {
+  assertResolvedScorecard(
+    latestZhMorning,
+    "前次晚間推演驗證",
+    "傳導主線",
+    "| 前次晚間判斷 | 實際結果 | 評估 |",
+    /\|\s*(?:成立|部分成立|失效)\s*\|$/,
+    /尚待驗證|待確認/,
+    `${latestBriefDate} Chinese morning scorecard`,
+  );
+  assertResolvedScorecard(
+    latestEnMorning,
+    "Previous Evening Scorecard",
+    "Transmission Thesis",
+    "| Previous-evening call | Actual result | Assessment |",
+    /\|\s*(?:Confirmed|Partially confirmed|Failed)\s*\|$/,
+    /Pending|To be confirmed/i,
+    `${latestBriefDate} English morning scorecard`,
+  );
+}
+
+if (hasLatestZhMorning) {
+  const morningSubstance = subsectionBetween(latestZhMorning, "傳導主線", "核心資料來源");
+  const morningTaiwan = subsectionBetween(latestZhMorning, "台灣基本面與技術面", "失效條件");
+  const morningTaiwanShare = hanCount(morningTaiwan) / hanCount(morningSubstance);
+  if (morningTaiwanShare < 0.55) {
+    fail(`${latestBriefDate} Taiwan content must be at least 55% of substantive morning content; received ${(morningTaiwanShare * 100).toFixed(1)}%`);
+  }
 }
 
 if (hasLatestZhEvening) {
-  const eveningSubstance = subsectionBetween(latestZhEvening, "早間判斷回顧", "核心資料來源");
+  const eveningStart = hasLatestZhMorning ? "早間判斷回顧" : "今日台灣休市狀態";
+  const eveningSubstance = subsectionBetween(latestZhEvening, eveningStart, "核心資料來源");
   const eveningUnitedStates = subsectionBetween(latestZhEvening, "美國盤前條件", "失效條件");
   const eveningUnitedStatesShare = hanCount(eveningUnitedStates) / hanCount(eveningSubstance);
   if (eveningUnitedStatesShare < 0.5) {
@@ -272,10 +335,11 @@ if (hasLatestZhEvening) {
   }
 }
 
-const latestTaiwanPositioning = [
-  subsectionBetween(latestZhMorning, "台灣籌碼面", "今日台股推演"),
-];
-if (hasLatestZhEvening) {
+const latestTaiwanPositioning = [];
+if (hasLatestZhMorning) {
+  latestTaiwanPositioning.push(subsectionBetween(latestZhMorning, "台灣籌碼面", "今日台股推演"));
+}
+if (hasLatestZhEvening && hasLatestZhMorning) {
   latestTaiwanPositioning.push(subsectionBetween(latestZhEvening, "台灣籌碼面收盤確認", "今日馬來西亞訊號"));
 }
 for (const [index, section] of latestTaiwanPositioning.entries()) {
@@ -479,7 +543,9 @@ const promptRequirements = [
   'briefFormat: "three-market-v1"',
   "## 早間市場推演",
   "## 晚間市場推演",
-  "部分市場休市",
+  "台股休市、美股開盤",
+  "台股開盤、美股休市",
+  "前次晚間推演驗證",
   "暫停趨勢探索、跨市場訊號、二階效應與深度研究",
 ];
 for (const requirement of promptRequirements) {

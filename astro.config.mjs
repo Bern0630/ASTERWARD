@@ -8,6 +8,9 @@ const base = process.env.BASE_PATH ?? "/";
 export default defineConfig({
   site,
   base,
+  devToolbar: {
+    enabled: false
+  },
   integrations: [mdx(), sitemap()],
   markdown: {
     shikiConfig: {
