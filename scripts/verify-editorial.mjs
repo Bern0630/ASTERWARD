@@ -348,6 +348,33 @@ for (const [index, section] of latestTaiwanPositioning.entries()) {
   }
 }
 
+if (latestBriefDate >= "2026-09-28") {
+  const decisionSections = [];
+  if (hasLatestZhMorning && hasLatestEnMorning) {
+    decisionSections.push({
+      zh: subsectionBetween(latestZhMorning, "今日台股推演", "失效條件"),
+      en: subsectionBetween(latestEnMorning, "Taiwan Session Outlook", "Invalidation Conditions"),
+      label: "morning",
+    });
+  }
+  if (hasLatestZhEvening && hasLatestEnEvening) {
+    decisionSections.push({
+      zh: subsectionBetween(latestZhEvening, "今夜美股推演", "失效條件"),
+      en: subsectionBetween(latestEnEvening, "US Session Outlook", "Invalidation Conditions"),
+      label: "evening",
+    });
+  }
+
+  for (const { zh, en, label } of decisionSections) {
+    for (const marker of ["**建議曝險：**", "**產業偏向：**", "**有效期限：**"]) {
+      if (!zh.includes(marker)) fail(`${latestBriefDate} Chinese ${label} outlook is missing ${marker}`);
+    }
+    for (const marker of ["**Suggested exposure:**", "**Sector tilt:**", "**Validity horizon:**"]) {
+      if (!en.includes(marker)) fail(`${latestBriefDate} English ${label} outlook is missing ${marker}`);
+    }
+  }
+}
+
 if (!currentZh.includes('briefFormat: "three-market-v1"')) fail("9/22 Chinese brief needs three-market-v1");
 if (!currentEn.includes('briefFormat: "three-market-v1"')) fail("9/22 English brief needs three-market-v1");
 if (JSON.stringify(h2s(currentZh)) !== JSON.stringify(threeMarketHeadings.zh)) fail("9/22 Chinese brief must have exactly two H2 panels");
