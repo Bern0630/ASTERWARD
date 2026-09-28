@@ -807,6 +807,12 @@ p {
   line-height: 1.78;
 }
 
+@media (min-width: 760px) {
+  .article-grid:not([data-brief-tabs]) .article-body {
+    margin-top: 40px;
+  }
+}
+
 .article-body > * + * {
   margin-top: 1.05em;
 }

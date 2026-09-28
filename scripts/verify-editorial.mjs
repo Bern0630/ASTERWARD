@@ -348,6 +348,15 @@ for (const [index, section] of latestTaiwanPositioning.entries()) {
   }
 }
 
+if (latestZhEvening.includes("### 今日台灣休市狀態")) {
+  if (!latestZhEvening.includes("富台指")) {
+    fail(`${latestBriefDate} Chinese market-closed section must include the FTSE Taiwan futures proxy`);
+  }
+  if (!latestEnEvening.includes("FTSE Taiwan")) {
+    fail(`${latestBriefDate} English market-closed section must include the FTSE Taiwan futures proxy`);
+  }
+}
+
 if (latestBriefDate >= "2026-09-28") {
   const decisionSections = [];
   if (hasLatestZhMorning && hasLatestEnMorning) {
@@ -572,6 +581,9 @@ const promptRequirements = [
   "## 晚間市場推演",
   "台股休市、美股開盤",
   "台股開盤、美股休市",
+  "富台指",
+  "yyyy-mm-dd-morning-補充.md",
+  "yyyy-mm-dd-evening-補充.md",
   "前次晚間推演驗證",
   "暫停趨勢探索、跨市場訊號、二階效應與深度研究",
 ];
