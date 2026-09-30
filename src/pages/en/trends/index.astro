@@ -8,11 +8,11 @@ let lang: "zh" | "en" = "en";
 const entries = sortByDateDesc(byLang(await getCollection("trends"), lang));
 ---
 
-<BaseLayout title="Trend Explorer" description="Research on forming, accelerating or underpriced market themes across industry fundamentals, capital cycles and credit structures." lang={lang} alternateUrl="/trends/">
+<BaseLayout title="Research" description="Research that begins with an interesting question and tests the technology, supply chain, commercialization milestones, and invalidation conditions." lang={lang} alternateUrl="/trends/">
   <section class="site-shell archive-header">
-    <p class="eyebrow">Trends</p>
-    <h1>Trend Explorer</h1>
-    <p>Research on forming, accelerating or underpriced market themes across industry fundamentals, capital cycles and credit structures.</p>
+    <p class="eyebrow">Question-led</p>
+    <h1>Research</h1>
+    <p>Research that begins with an interesting question and tests the technology, supply chain, commercialization milestones, and invalidation conditions.</p>
   </section>
   <section class="site-shell archive-list">
     <ContentList entries={entries} collectionPath="trends" />

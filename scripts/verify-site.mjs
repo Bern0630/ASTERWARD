@@ -1,13 +1,18 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join, relative } from "node:path";
 
+const articleSlug = "2026-10-01-ai-glass-core-material-opportunity";
 const requiredFiles = [
   "dist/index.html",
   "dist/en/index.html",
   "dist/about/index.html",
   "dist/en/about/index.html",
   "dist/briefs/index.html",
-  "dist/en/briefs/index.html"
+  "dist/en/briefs/index.html",
+  "dist/trends/index.html",
+  "dist/en/trends/index.html",
+  `dist/trends/${articleSlug}/index.html`,
+  `dist/en/trends/${articleSlug}/index.html`
 ];
 
 const missing = requiredFiles.filter((file) => !existsSync(file));
@@ -26,8 +31,10 @@ const filesUnder = (root) => {
 
 const zhHome = readFileSync("dist/index.html", "utf8");
 const enHome = readFileSync("dist/en/index.html", "utf8");
-const zhResearch = readFileSync("dist/briefs/index.html", "utf8");
-const enResearch = readFileSync("dist/en/briefs/index.html", "utf8");
+const zhResearch = readFileSync("dist/trends/index.html", "utf8");
+const enResearch = readFileSync("dist/en/trends/index.html", "utf8");
+const zhArticle = readFileSync(`dist/trends/${articleSlug}/index.html`, "utf8");
+const enArticle = readFileSync(`dist/en/trends/${articleSlug}/index.html`, "utf8");
 const siteData = readFileSync("src/data/site.ts", "utf8");
 const header = readFileSync("src/components/Header.astro", "utf8");
 const baseLayout = readFileSync("src/layouts/BaseLayout.astro", "utf8");
@@ -37,34 +44,46 @@ for (const home of [zhHome, enHome]) {
     console.error("Homepage brand is invalid.");
     process.exit(1);
   }
-  if ((home.match(/<article class="feature-brief/g) ?? []).length !== 0) {
-    console.error("Archived research is still visible on a homepage.");
+  if ((home.match(/<article class="feature-brief/g) ?? []).length !== 1) {
+    console.error("Homepage does not feature exactly one current research article.");
     process.exit(1);
   }
 }
 
-if (!zhHome.includes("目前沒有公開研究") || !enHome.includes("No research is currently public")) {
-  console.error("Public reset state is missing from a homepage.");
+if (!zhHome.includes("從 AI 晶片，看見玻璃與化工公司的機會")) {
+  console.error("Chinese homepage does not feature the new research.");
+  process.exit(1);
+}
+if (!enHome.includes("From AI Chips to Opportunities in Glass and Specialty Materials")) {
+  console.error("English homepage does not feature the new research.");
+  process.exit(1);
+}
+if (!zhResearch.includes("從 AI 晶片，看見玻璃與化工公司的機會") || !enResearch.includes("From AI Chips to Opportunities in Glass and Specialty Materials")) {
+  console.error("Research index is missing a translation of the new article.");
   process.exit(1);
 }
 
-if (!zhResearch.includes("目前沒有公開研究") || !enResearch.includes("No research is currently public")) {
-  console.error("Public reset state is missing from a research index.");
+if (!zhArticle.includes("接下來，我會先追三件事") || !enArticle.includes("The Three Things I Will Track Next")) {
+  console.error("A published article is incomplete.");
+  process.exit(1);
+}
+if (zhArticle.includes('class="label-row"') || enArticle.includes('class="label-row"')) {
+  console.error("Daily market labels are visible on a long-form research article.");
   process.exit(1);
 }
 
-const forbiddenPublicRoutes = filesUnder("dist/briefs")
+const forbiddenBriefRoutes = filesUnder("dist/briefs")
   .filter((path) => relative("dist/briefs", path).split("/").length > 1)
   .concat(
     filesUnder("dist/en/briefs")
       .filter((path) => relative("dist/en/briefs", path).split("/").length > 1)
   );
-if (forbiddenPublicRoutes.length > 0) {
-  console.error("Archived brief routes are still public:\n" + forbiddenPublicRoutes.join("\n"));
+if (forbiddenBriefRoutes.length > 0) {
+  console.error("Archived brief routes are still public:\n" + forbiddenBriefRoutes.join("\n"));
   process.exit(1);
 }
 
-for (const collection of ["trends", "crossignal", "second-order", "deep-dives"]) {
+for (const collection of ["crossignal", "second-order", "deep-dives"]) {
   const articleFiles = filesUnder(`dist/${collection}`).filter((path) => relative(`dist/${collection}`, path).split("/").length > 1);
   const englishArticleFiles = filesUnder(`dist/en/${collection}`).filter((path) => relative(`dist/en/${collection}`, path).split("/").length > 1);
   if (articleFiles.length > 0 || englishArticleFiles.length > 0) {
@@ -78,8 +97,8 @@ if (!existsSync("OLD_VERSION/README.md") || filesUnder("OLD_VERSION/src/content"
   process.exit(1);
 }
 
-if (!siteData.includes('{ label: "研究", href: "/briefs/" }') || !siteData.includes('{ label: "Research", href: "/briefs/" }')) {
-  console.error("Primary navigation does not use the reset research labels.");
+if (!siteData.includes('{ label: "研究", href: "/trends/" }') || !siteData.includes('{ label: "Research", href: "/trends/" }')) {
+  console.error("Primary navigation does not point to the current research index.");
   process.exit(1);
 }
 
@@ -93,4 +112,4 @@ if (!baseLayout.includes("/brand/asterward-icon.png") || !existsSync("public/bra
   process.exit(1);
 }
 
-console.log("Public reset verified: archived articles are preserved and no longer published.");
+console.log("Current bilingual research publication verified; archived articles remain private.");

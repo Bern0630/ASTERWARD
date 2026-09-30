@@ -7,16 +7,16 @@ import { byLang, entryUrl, formatDate, latest } from "@/lib/content";
 import { withBase } from "@/lib/paths";
 
 let lang: "zh" | "en" = "en";
-const briefs = latest(byLang(await getCollection("briefs"), lang), 3);
-const latestBrief = briefs[0];
+const research = latest(byLang(await getCollection("trends"), lang), 3);
+const latestResearch = research[0];
 const siteCopy = SITE_COPY[lang];
 const copy = {
   latestResearch: "Latest Research",
-  research: "Question-led cross-market research",
+  research: "Starting with a question worth understanding",
   allResearch: "All research →",
   readLatest: "Read latest research →",
   readFull: "Read full research →",
-  lede: "Research begins with a market question worth understanding, then uses prices and evidence from the United States, Taiwan, and Malaysia to build a testable view. Nothing is published merely to fill a schedule."
+  lede: "Research begins with a market question worth understanding, then uses public evidence to examine the technology, supply chain, commercialization milestones, and invalidation conditions. Nothing is published merely to fill a schedule."
 };
 ---
 
@@ -29,8 +29,8 @@ const copy = {
       {siteCopy.topics.map((topic) => <span>{topic}</span>)}
     </div>
     {
-      latestBrief && (
-        <a class="text-link" href={withBase(entryUrl("briefs", latestBrief.id, lang))}>
+      latestResearch && (
+        <a class="text-link" href={withBase(entryUrl("trends", latestResearch.id, lang))}>
           {copy.readLatest}
         </a>
       )
@@ -38,29 +38,29 @@ const copy = {
   </section>
 
   {
-    latestBrief ? (
+    latestResearch ? (
       <section class="site-shell section">
         <div class="section-header">
           <div>
             <p class="eyebrow">{copy.latestResearch}</p>
             <h2>{copy.research}</h2>
           </div>
-          <a class="text-link" href={withBase("/en/briefs/")}>{copy.allResearch}</a>
+          <a class="text-link" href={withBase("/en/trends/")}>{copy.allResearch}</a>
         </div>
         <div class="brief-grid">
-          {briefs.map((brief, index) => (
+          {research.map((entry, index) => (
             <article class:list={["feature-brief", { "is-latest": index === 0 }]}>
-              <time class="meta-line" datetime={brief.data.date.toISOString()}>
-                {formatDate(brief.data.date, "short", lang)}
+              <time class="meta-line" datetime={entry.data.date.toISOString()}>
+                {formatDate(entry.data.date, "short", lang)}
               </time>
               <h3>
-                <a href={withBase(entryUrl("briefs", brief.id, lang))}>
-                  {brief.data.title}
+                <a href={withBase(entryUrl("trends", entry.id, lang))}>
+                  {entry.data.title}
                 </a>
               </h3>
-              <p>{brief.data.summary}</p>
-              <Tags tags={brief.data.tags} />
-              <a class="text-link" href={withBase(entryUrl("briefs", brief.id, lang))}>
+              <p>{entry.data.summary}</p>
+              <Tags tags={entry.data.tags} />
+              <a class="text-link" href={withBase(entryUrl("trends", entry.id, lang))}>
                 {copy.readFull}
               </a>
             </article>
@@ -71,7 +71,7 @@ const copy = {
       <section class="site-shell section">
         <p class="eyebrow">Research status</p>
         <h2>No research is currently public</h2>
-        <p>The previous library is fully archived. New research will be published only after an interesting question has been tested against the evidence.</p>
+        <p>New research begins with a question worth investigating and is published only after the evidence has been tested.</p>
       </section>
     )
   }

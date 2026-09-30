@@ -15,6 +15,7 @@ interface Props {
   briefFormat?: "legacy-three-panel" | "three-market-v1";
   lang?: Lang;
   alternateUrl?: string;
+  showResearchLabels?: boolean;
 }
 
 const {
@@ -27,6 +28,7 @@ const {
   briefFormat = "legacy-three-panel",
   lang = "zh",
   alternateUrl,
+  showResearchLabels = false,
 } = Astro.props;
 const toc = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
 const legacySessionTitles = lang === "zh"
@@ -90,12 +92,16 @@ const tocEntries = toc.map((heading) => {
         <h1>{title}</h1>
         <p class="article-summary">{summary}</p>
         <Tags tags={tags} />
-        <div class="label-row" aria-label="Research labels">
-          <span class="research-label">{labels.fact}</span>
-          <span class="research-label">{labels.pricing}</span>
-          <span class="research-label">{labels.scenario}</span>
-          <span class="research-label">{labels.risk}</span>
-        </div>
+        {
+          showResearchLabels && (
+            <div class="label-row" aria-label="Research labels">
+              <span class="research-label">{labels.fact}</span>
+              <span class="research-label">{labels.pricing}</span>
+              <span class="research-label">{labels.scenario}</span>
+              <span class="research-label">{labels.risk}</span>
+            </div>
+          )
+        }
       </header>
 
       {

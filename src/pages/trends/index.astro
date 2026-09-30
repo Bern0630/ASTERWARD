@@ -8,11 +8,11 @@ let lang: "zh" | "en" = "zh";
 const entries = sortByDateDesc(byLang(await getCollection("trends"), lang));
 ---
 
-<BaseLayout title="趨勢探索" description="研究正在形成、加速或尚未被充分定價的產業主線、資本週期與信用結構。" lang={lang} alternateUrl="/en/trends/">
+<BaseLayout title="研究" description="從感興趣的問題開始，拆解技術、供應鏈、商業化進度與可能失效的條件。" lang={lang} alternateUrl="/en/trends/">
   <section class="site-shell archive-header">
-    <p class="eyebrow">趨勢研究</p>
-    <h1>趨勢探索</h1>
-    <p>研究正在形成、加速或尚未被充分定價的產業主線、資本週期與信用結構。</p>
+    <p class="eyebrow">問題驅動</p>
+    <h1>研究</h1>
+    <p>從感興趣的問題開始，拆解技術、供應鏈、商業化進度與可能失效的條件。</p>
   </section>
   <section class="site-shell archive-list">
     <ContentList entries={entries} collectionPath="trends" />
