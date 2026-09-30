@@ -1,0 +1,20 @@
+---
+import { getCollection } from "astro:content";
+import ContentList from "@/components/ContentList.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { byLang, sortByDateDesc } from "@/lib/content";
+
+let lang: "zh" | "en" = "zh";
+const entries = sortByDateDesc(byLang(await getCollection("briefs"), lang));
+---
+
+<BaseLayout title="每日簡報" description="美國、台灣與馬來西亞的每日市場情報，以基本面、技術面、籌碼與失效條件建立可驗證推演。" lang={lang} alternateUrl="/en/briefs/">
+  <section class="site-shell archive-header">
+    <p class="eyebrow">三市場每日情報</p>
+    <h1>每日簡報</h1>
+    <p>每個交易日早晚更新美國、台灣與馬來西亞的基本面、技術面、籌碼與可驗證市場推演。</p>
+  </section>
+  <section class="site-shell archive-list">
+    <ContentList entries={entries} collectionPath="briefs" />
+  </section>
+</BaseLayout>

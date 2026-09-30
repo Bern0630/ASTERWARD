@@ -8,13 +8,20 @@ let lang: "zh" | "en" = "en";
 const entries = sortByDateDesc(byLang(await getCollection("briefs"), lang));
 ---
 
-<BaseLayout title="Briefs" description="Daily market intelligence for the United States, Taiwan, and Malaysia, built from fundamentals, technicals, positioning, and explicit invalidation conditions." lang={lang} alternateUrl="/briefs/">
+<BaseLayout title="Research" description="Question-led cross-market research built from testable evidence." lang={lang} alternateUrl="/briefs/">
   <section class="site-shell archive-header">
-    <p class="eyebrow">Daily Brief</p>
-    <h1>Briefs</h1>
-    <p>Twice-daily intelligence for the United States, Taiwan, and Malaysia, with explicit evidence, outlooks, and invalidation conditions.</p>
+    <p class="eyebrow">ASTERWARD Research</p>
+    <h1>Research</h1>
+    <p>Each piece answers one market question worth understanding. Nothing is published without sufficient evidence and a meaningful information edge.</p>
   </section>
   <section class="site-shell archive-list">
-    <ContentList entries={entries} collectionPath="briefs" />
+    {entries.length > 0 ? (
+      <ContentList entries={entries} collectionPath="briefs" />
+    ) : (
+      <div class="article-body">
+        <h2>No research is currently public</h2>
+        <p>The previous library is fully preserved in a private archive. New research will appear here after topic selection and evidence review.</p>
+      </div>
+    )}
   </section>
 </BaseLayout>

@@ -1,35 +1,7 @@
 # ASTERWARD Research Notes
 
-This directory is an unpublished evidence ledger. It is intentionally outside Astro Content Collections and must never receive a public route.
+This directory remains the unpublished evidence ledger for future research. It is outside Astro Content Collections and must never receive a public route.
 
-Create one file per publishing date: `research-notes/YYYY-MM-DD.md`.
+A new ledger should be created only after a research topic has been selected. Record the original source, supported claim, publication date, verification status, and whether the evidence was used publicly.
 
-## Required Structure
-
-```md
-# YYYY-MM-DD Research Ledger
-
-## Morning Run
-
-| Source | URL | Market | Claim supported | Published/fetched date | Status | Used publicly |
-| --- | --- | --- | --- | --- | --- | --- |
-
-## Evening Run
-
-| Source | URL | Market | Claim supported | Published/fetched date | Status | Used publicly |
-| --- | --- | --- | --- | --- | --- | --- |
-
-## Excluded Material
-
-- Record duplicate confirmations, irrelevant facts, and unavailable fields that were intentionally excluded.
-```
-
-## Status Values
-
-- `Official`: exchange, regulator, central bank, government agency, or company filing.
-- `Secondary`: credible reporting used when a primary source is unavailable or for market context.
-- `Unconfirmed`: one credible secondary source exists, but official confirmation is unavailable after one retry.
-- `Unavailable`: the field could not be retrieved after one retry and was not inferred.
-
-Each run may contain no more than eight effective sources. Once an official figure is recorded, do not add duplicate confirmations of the same figure. `Used publicly` is `Yes` only when the source supports a conclusion that appears in the public article.
-
+The previous daily-run ledger format and all historical notes are preserved under `OLD_VERSION/research-notes/`.

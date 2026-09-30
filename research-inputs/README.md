@@ -1,30 +1,7 @@
-# ASTERWARD 補充研究輸入
+# ASTERWARD Research Inputs
 
-把個人觀點、外部資料或希望驗證的問題放在本資料夾。檔名必須使用報告日期與時段：
+This directory is reserved for future question-led research inputs. The previous morning/evening automation is paused, so no filename currently triggers automatic publication.
 
-- `yyyy-mm-dd-morning-補充.md`
-- `yyyy-mm-dd-evening-補充.md`
+Keep personal observations, charts, source links, and questions here rather than in `src/content`. Material in this directory is never published directly; it must first be verified and incorporated into a reviewed article.
 
-早報只讀取同日 morning 檔，晚報只讀取同日 evening 檔。內容會先查證，不會直接照抄到公開文章。
-
-建議格式：
-
-```md
-# 補充研究資料
-
-## 已確認事實
-- 事件或數據：
-- 發布日期：
-- 原始來源：
-- 連結：
-
-## 我的觀點
-- 我認為：
-- 可能影響：
-
-## 希望驗證
-- 問題一：
-- 問題二：
-```
-
-請盡量保留原始連結、數字單位與發布日期；沒有來源的內容會視為研究假設。
+The former input instructions are preserved at `OLD_VERSION/research-inputs/README.md`.

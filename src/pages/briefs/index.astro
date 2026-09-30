@@ -8,13 +8,20 @@ let lang: "zh" | "en" = "zh";
 const entries = sortByDateDesc(byLang(await getCollection("briefs"), lang));
 ---
 
-<BaseLayout title="每日簡報" description="美國、台灣與馬來西亞的每日市場情報，以基本面、技術面、籌碼與失效條件建立可驗證推演。" lang={lang} alternateUrl="/en/briefs/">
+<BaseLayout title="研究" description="從市場問題出發，以跨市場證據形成可驗證的研究判斷。" lang={lang} alternateUrl="/en/briefs/">
   <section class="site-shell archive-header">
-    <p class="eyebrow">三市場每日情報</p>
-    <h1>每日簡報</h1>
-    <p>每個交易日早晚更新美國、台灣與馬來西亞的基本面、技術面、籌碼與可驗證市場推演。</p>
+    <p class="eyebrow">ASTERWARD Research</p>
+    <h1>研究</h1>
+    <p>每篇研究只回答一個真正值得理解的市場問題。沒有足夠證據與資訊優勢時，不為發布而發布。</p>
   </section>
   <section class="site-shell archive-list">
-    <ContentList entries={entries} collectionPath="briefs" />
+    {entries.length > 0 ? (
+      <ContentList entries={entries} collectionPath="briefs" />
+    ) : (
+      <div class="article-body">
+        <h2>目前沒有公開研究</h2>
+        <p>舊版內容已完整移入非公開封存區；新的研究將在完成選題與證據驗證後出現在這裡。</p>
+      </div>
+    )}
   </section>
 </BaseLayout>

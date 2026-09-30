@@ -1,9 +1,9 @@
 export const SITE = {
   name: "ASTERWARD",
-  eyebrow: "Question-Led Market Research",
+  eyebrow: "Three-Market Daily Intelligence",
   tagline: "United States. Taiwan. Malaysia.",
   description:
-    "Independent market research built around questions, evidence, market pricing, and explicit invalidation conditions.",
+    "Twice-daily market intelligence for the United States, Taiwan, and Malaysia, built from fundamentals, technicals, positioning, and explicit invalidation conditions.",
   url: "https://example.com",
   socialImage: "/social-card.svg",
   accent: "steel blue"
@@ -13,16 +13,16 @@ export type Lang = "zh" | "en";
 
 export const SITE_COPY = {
   zh: {
-    eyebrow: "問題驅動的市場研究",
+    eyebrow: "三市場每日情報",
     tagline: "美國、台灣、馬來西亞。",
-    coverageLabel: "研究範圍",
-    topics: ["美國", "台灣", "馬來西亞", "問題驅動", "證據驗證"]
+    coverageLabel: "分析維度",
+    topics: ["美國", "台灣", "馬來西亞", "基本面", "技術面", "籌碼"]
   },
   en: {
-    eyebrow: "Question-Led Market Research",
+    eyebrow: "Three-Market Daily Intelligence",
     tagline: "United States. Taiwan. Malaysia.",
-    coverageLabel: "Research scope",
-    topics: ["United States", "Taiwan", "Malaysia", "Questions", "Evidence"]
+    coverageLabel: "Analysis dimensions",
+    topics: ["United States", "Taiwan", "Malaysia", "Fundamentals", "Technicals", "Positioning"]
   }
 } satisfies Record<Lang, {
   eyebrow: string;
@@ -33,11 +33,11 @@ export const SITE_COPY = {
 
 export const NAV_ITEMS = {
   zh: [
-    { label: "研究", href: "/briefs/" },
+    { label: "每日簡報", href: "/briefs/" },
     { label: "關於", href: "/about/" }
   ],
   en: [
-    { label: "Research", href: "/briefs/" },
+    { label: "Briefs", href: "/briefs/" },
     { label: "About", href: "/about/" }
   ]
 } satisfies Record<Lang, { label: string; href: string }[]>;
