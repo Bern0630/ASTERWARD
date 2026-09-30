@@ -38,16 +38,39 @@ const enArticle = readFileSync(`dist/en/trends/${articleSlug}/index.html`, "utf8
 const siteData = readFileSync("src/data/site.ts", "utf8");
 const header = readFileSync("src/components/Header.astro", "utf8");
 const baseLayout = readFileSync("src/layouts/BaseLayout.astro", "utf8");
+const globalStyles = readFileSync("src/styles/global.css", "utf8");
 
 for (const home of [zhHome, enHome]) {
   if (!home.includes("ASTERWARD") || home.includes("SECURRENT")) {
     console.error("Homepage brand is invalid.");
     process.exit(1);
   }
-  if ((home.match(/<article class="feature-brief/g) ?? []).length !== 1) {
-    console.error("Homepage does not feature exactly one current research article.");
+  if ((home.match(/<article class="hero-feature/g) ?? []).length !== 1) {
+    console.error("Homepage does not contain exactly one editorial hero feature.");
     process.exit(1);
   }
+  if ((home.match(/<article class="feature-brief/g) ?? []).length !== 0) {
+    console.error("Homepage repeats the latest research below the hero.");
+    process.exit(1);
+  }
+  if (!home.includes('class="hero-intro"')) {
+    console.error("Homepage editorial hero introduction is missing.");
+    process.exit(1);
+  }
+  if (!home.includes("fonts.googleapis.com/css2?family=Noto+Sans+TC")) {
+    console.error("Homepage does not load Noto Sans TC.");
+    process.exit(1);
+  }
+}
+
+if (!/font-family:\s*"Noto Sans TC"/.test(globalStyles) || globalStyles.includes('"Noto Serif TC"')) {
+  console.error("Site typography is not consistently based on Noto Sans TC.");
+  process.exit(1);
+}
+
+if (!/\.hero-feature h2 a\s*\{[^}]*display:\s*block;[^}]*width:\s*100%;/s.test(globalStyles)) {
+  console.error("Homepage feature title hover line does not span the full column width.");
+  process.exit(1);
 }
 
 if (!zhHome.includes("從 AI 晶片，看見玻璃與化工公司的機會")) {

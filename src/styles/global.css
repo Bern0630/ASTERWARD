@@ -15,14 +15,13 @@
   --article: 820px;
   --radius: 8px;
   font-family:
-    ui-sans-serif,
+    "Noto Sans TC",
+    "PingFang TC",
+    "Microsoft JhengHei",
     system-ui,
     -apple-system,
     BlinkMacSystemFont,
     "Segoe UI",
-    "Noto Sans TC",
-    "PingFang TC",
-    "Microsoft JhengHei",
     sans-serif;
 }
 
@@ -411,9 +410,65 @@ svg {
 
 .hero {
   display: grid;
-  gap: 30px;
+  gap: 40px;
   padding: 68px 0 54px;
   border-bottom: 1px solid var(--border);
+}
+
+.hero-intro,
+.hero-feature {
+  display: grid;
+  min-width: 0;
+  align-content: start;
+}
+
+.hero-intro {
+  gap: 24px;
+}
+
+.hero-intro .eyebrow {
+  margin-bottom: 0;
+}
+
+.hero-feature {
+  gap: 16px;
+  border-top: 1px solid var(--border-strong);
+  padding-top: 32px;
+}
+
+.hero-feature-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.hero-feature-header .eyebrow {
+  margin: 0;
+}
+
+.hero-feature time {
+  flex: none;
+  color: var(--muted-2);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.hero-feature h2 {
+  margin: 0;
+  font-size: clamp(1.55rem, 4vw, 2.25rem);
+  line-height: 1.25;
+}
+
+.hero-feature h2 a {
+  display: block;
+  width: 100%;
+}
+
+.hero-feature > p {
+  color: #d6d8dc;
 }
 
 .eyebrow {
@@ -436,14 +491,12 @@ h4 {
 
 h1 {
   margin: 0;
-  font-family: Georgia, "Times New Roman", "Noto Serif TC", serif;
   font-size: clamp(2.3rem, 7vw, 4.4rem);
   letter-spacing: 0.08em;
 }
 
 h2 {
   margin: 0 0 18px;
-  font-family: Georgia, "Times New Roman", "Noto Serif TC", serif;
   font-size: 1.65rem;
 }
 
@@ -466,6 +519,8 @@ p {
   color: var(--text);
   font-size: 1.08rem;
   font-weight: 650;
+  line-height: 1.45;
+  letter-spacing: 0;
 }
 
 .topic-strip {
@@ -497,13 +552,13 @@ p {
   font-weight: 650;
 }
 
-:is(.text-link, .content-item h3 a, .feature-brief h3 a) {
+:is(.text-link, .content-item h3 a, .feature-brief h3 a, .hero-feature h2 a) {
   position: relative;
   text-decoration: none;
   transition: color 180ms ease;
 }
 
-:is(.text-link, .content-item h3 a, .feature-brief h3 a)::after {
+:is(.text-link, .content-item h3 a, .feature-brief h3 a, .hero-feature h2 a)::after {
   position: absolute;
   right: 0;
   bottom: -5px;
@@ -518,13 +573,13 @@ p {
   transition: opacity 180ms ease, transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-:is(.text-link, .content-item h3 a, .feature-brief h3 a):hover,
-:is(.text-link, .content-item h3 a, .feature-brief h3 a):focus-visible {
+:is(.text-link, .content-item h3 a, .feature-brief h3 a, .hero-feature h2 a):hover,
+:is(.text-link, .content-item h3 a, .feature-brief h3 a, .hero-feature h2 a):focus-visible {
   color: var(--accent);
 }
 
-:is(.text-link, .content-item h3 a, .feature-brief h3 a):hover::after,
-:is(.text-link, .content-item h3 a, .feature-brief h3 a):focus-visible::after {
+:is(.text-link, .content-item h3 a, .feature-brief h3 a, .hero-feature h2 a):hover::after,
+:is(.text-link, .content-item h3 a, .feature-brief h3 a, .hero-feature h2 a):focus-visible::after {
   opacity: 1;
   transform: scaleX(1);
 }
@@ -882,7 +937,6 @@ p {
   background: var(--accent-soft);
   padding: 16px 18px;
   color: #f1f5f8;
-  font-family: Georgia, "Times New Roman", "Noto Serif TC", serif;
   font-size: 1.06rem;
 }
 
@@ -1167,7 +1221,17 @@ p {
   }
 
   .hero {
+    grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+    align-items: start;
+    column-gap: clamp(52px, 7vw, 96px);
     padding: 86px 0 62px;
+  }
+
+  .hero-feature {
+    min-height: 100%;
+    border-top: 0;
+    border-left: 1px solid var(--border-strong);
+    padding: 0 0 0 clamp(36px, 5vw, 64px);
   }
 
   .editorial-grid {
@@ -1192,7 +1256,7 @@ p {
   }
 
   .brief-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
     align-items: stretch;
   }
 
