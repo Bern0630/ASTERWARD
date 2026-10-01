@@ -1,6 +1,6 @@
 ---
 title: "From AI Chips to Opportunities in Glass and Specialty Materials"
-date: 2026-10-01
+date: 2026-09-30
 type: "trend"
 lang: "en"
 translationKey: "2026-10-01-ai-glass-core-material-opportunity"

@@ -1,7 +1,8 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join, relative } from "node:path";
 
-const articleSlug = "2026-10-01-ai-glass-core-material-opportunity";
+const articleSlug = "2026-10-01-ai-demand-stock-price-investment-return";
+const previousArticleSlug = "2026-10-01-ai-glass-core-material-opportunity";
 const requiredFiles = [
   "dist/index.html",
   "dist/en/index.html",
@@ -12,7 +13,9 @@ const requiredFiles = [
   "dist/trends/index.html",
   "dist/en/trends/index.html",
   `dist/trends/${articleSlug}/index.html`,
-  `dist/en/trends/${articleSlug}/index.html`
+  `dist/en/trends/${articleSlug}/index.html`,
+  `dist/trends/${previousArticleSlug}/index.html`,
+  `dist/en/trends/${previousArticleSlug}/index.html`
 ];
 
 const missing = requiredFiles.filter((file) => !existsSync(file));
@@ -40,7 +43,10 @@ const header = readFileSync("src/components/Header.astro", "utf8");
 const baseLayout = readFileSync("src/layouts/BaseLayout.astro", "utf8");
 const globalStyles = readFileSync("src/styles/global.css", "utf8");
 
-for (const home of [zhHome, enHome]) {
+for (const [home, latestTitle, previousTitle, previousDate] of [
+  [zhHome, "AI 需求這麼強，股價為什麼可能下跌？", "從 AI 晶片，看見玻璃與化工公司的機會", "SEP 30, 2026"],
+  [enHome, "AI Demand Is Strong. Why Can Stock Prices Still Fall?", "From AI Chips to Opportunities in Glass and Specialty Materials", "SEP 30, 2026"]
+]) {
   if (!home.includes("ASTERWARD") || home.includes("SECURRENT")) {
     console.error("Homepage brand is invalid.");
     process.exit(1);
@@ -49,8 +55,13 @@ for (const home of [zhHome, enHome]) {
     console.error("Homepage does not contain exactly one editorial hero feature.");
     process.exit(1);
   }
-  if ((home.match(/<article class="feature-brief/g) ?? []).length !== 0) {
-    console.error("Homepage repeats the latest research below the hero.");
+  if ((home.match(/<article class="feature-brief/g) ?? []).length !== 1) {
+    console.error("Homepage does not contain exactly one previous research card.");
+    process.exit(1);
+  }
+  const previousCard = home.match(/<article class="feature-brief">([\s\S]*?)<\/article>/)?.[1] ?? "";
+  if (!previousCard.includes(previousTitle) || !previousCard.includes(previousDate) || previousCard.includes(latestTitle)) {
+    console.error("Homepage does not separate the latest and previous research articles.");
     process.exit(1);
   }
   if (!home.includes('class="hero-intro"')) {
@@ -73,20 +84,25 @@ if (!/\.hero-feature h2 a\s*\{[^}]*display:\s*block;[^}]*width:\s*100%;/s.test(g
   process.exit(1);
 }
 
-if (!zhHome.includes("從 AI 晶片，看見玻璃與化工公司的機會")) {
+if (!zhHome.includes("AI 需求這麼強，股價為什麼可能下跌？")) {
   console.error("Chinese homepage does not feature the new research.");
   process.exit(1);
 }
-if (!enHome.includes("From AI Chips to Opportunities in Glass and Specialty Materials")) {
+if (!enHome.includes("AI Demand Is Strong. Why Can Stock Prices Still Fall?")) {
   console.error("English homepage does not feature the new research.");
   process.exit(1);
 }
-if (!zhResearch.includes("從 AI 晶片，看見玻璃與化工公司的機會") || !enResearch.includes("From AI Chips to Opportunities in Glass and Specialty Materials")) {
+if (!zhResearch.includes("AI 需求這麼強，股價為什麼可能下跌？") || !enResearch.includes("AI Demand Is Strong. Why Can Stock Prices Still Fall?")) {
   console.error("Research index is missing a translation of the new article.");
   process.exit(1);
 }
 
-if (!zhArticle.includes("接下來，我會先追三件事") || !enArticle.includes("The Three Things I Will Track Next")) {
+if (
+  !zhArticle.includes("公司賺更多，不代表股票一定更貴。") ||
+  !zhArticle.includes("現在就能追蹤，不必等到 2027 年中。") ||
+  !enArticle.includes("A company can earn more without its stock becoming more expensive.") ||
+  !enArticle.includes("These signals can be tracked now; investors do not need to wait until mid-2027.")
+) {
   console.error("A published article is incomplete.");
   process.exit(1);
 }

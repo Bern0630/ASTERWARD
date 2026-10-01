@@ -1,6 +1,6 @@
 ---
 title: "從 AI 晶片，看見玻璃與化工公司的機會"
-date: 2026-10-01
+date: 2026-09-30
 type: "trend"
 lang: "zh"
 translationKey: "2026-10-01-ai-glass-core-material-opportunity"
