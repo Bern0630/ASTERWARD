@@ -1,8 +1,11 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join, relative } from "node:path";
 
-const articleSlug = "2026-10-01-ai-demand-stock-price-investment-return";
-const previousArticleSlug = "2026-10-01-ai-glass-core-material-opportunity";
+const articleSlug = "2026-10-02-ai-optics-cpo-network-power";
+const previousArticleSlugs = [
+  "2026-10-01-ai-demand-stock-price-investment-return",
+  "2026-10-01-ai-glass-core-material-opportunity"
+];
 const requiredFiles = [
   "dist/index.html",
   "dist/en/index.html",
@@ -14,8 +17,10 @@ const requiredFiles = [
   "dist/en/trends/index.html",
   `dist/trends/${articleSlug}/index.html`,
   `dist/en/trends/${articleSlug}/index.html`,
-  `dist/trends/${previousArticleSlug}/index.html`,
-  `dist/en/trends/${previousArticleSlug}/index.html`
+  ...previousArticleSlugs.flatMap((slug) => [
+    `dist/trends/${slug}/index.html`,
+    `dist/en/trends/${slug}/index.html`
+  ])
 ];
 
 const missing = requiredFiles.filter((file) => !existsSync(file));
@@ -43,9 +48,23 @@ const header = readFileSync("src/components/Header.astro", "utf8");
 const baseLayout = readFileSync("src/layouts/BaseLayout.astro", "utf8");
 const globalStyles = readFileSync("src/styles/global.css", "utf8");
 
-for (const [home, latestTitle, previousTitle, previousDate] of [
-  [zhHome, "AI 需求這麼強，股價為什麼可能下跌？", "從 AI 晶片，看見玻璃與化工公司的機會", "SEP 30, 2026"],
-  [enHome, "AI Demand Is Strong. Why Can Stock Prices Still Fall?", "From AI Chips to Opportunities in Glass and Specialty Materials", "SEP 30, 2026"]
+for (const [home, latestTitle, previousArticles] of [
+  [
+    zhHome,
+    "AI 不只需要算得快，也需要傳得動",
+    [
+      ["AI 需求這麼強，股價為什麼可能下跌？", "OCT 01, 2026"],
+      ["從 AI 晶片，看見玻璃與化工公司的機會", "SEP 30, 2026"]
+    ]
+  ],
+  [
+    enHome,
+    "AI Must Move Data, Not Just Compute Faster",
+    [
+      ["AI Demand Is Strong. Why Can Stock Prices Still Fall?", "OCT 01, 2026"],
+      ["From AI Chips to Opportunities in Glass and Specialty Materials", "SEP 30, 2026"]
+    ]
+  ]
 ]) {
   if (!home.includes("ASTERWARD") || home.includes("SECURRENT")) {
     console.error("Homepage brand is invalid.");
@@ -55,12 +74,17 @@ for (const [home, latestTitle, previousTitle, previousDate] of [
     console.error("Homepage does not contain exactly one editorial hero feature.");
     process.exit(1);
   }
-  if ((home.match(/<article class="feature-brief/g) ?? []).length !== 1) {
-    console.error("Homepage does not contain exactly one previous research card.");
+  if ((home.match(/<article class="feature-brief/g) ?? []).length !== 2) {
+    console.error("Homepage does not contain exactly two previous research cards.");
     process.exit(1);
   }
-  const previousCard = home.match(/<article class="feature-brief">([\s\S]*?)<\/article>/)?.[1] ?? "";
-  if (!previousCard.includes(previousTitle) || !previousCard.includes(previousDate) || previousCard.includes(latestTitle)) {
+  const previousCards = Array.from(home.matchAll(/<article class="feature-brief">([\s\S]*?)<\/article>/g))
+    .map((match) => match[1])
+    .join("\n");
+  if (
+    previousCards.includes(latestTitle) ||
+    previousArticles.some(([title, date]) => !previousCards.includes(title) || !previousCards.includes(date))
+  ) {
     console.error("Homepage does not separate the latest and previous research articles.");
     process.exit(1);
   }
@@ -84,24 +108,24 @@ if (!/\.hero-feature h2 a\s*\{[^}]*display:\s*block;[^}]*width:\s*100%;/s.test(g
   process.exit(1);
 }
 
-if (!zhHome.includes("AI 需求這麼強，股價為什麼可能下跌？")) {
+if (!zhHome.includes("AI 不只需要算得快，也需要傳得動")) {
   console.error("Chinese homepage does not feature the new research.");
   process.exit(1);
 }
-if (!enHome.includes("AI Demand Is Strong. Why Can Stock Prices Still Fall?")) {
+if (!enHome.includes("AI Must Move Data, Not Just Compute Faster")) {
   console.error("English homepage does not feature the new research.");
   process.exit(1);
 }
-if (!zhResearch.includes("AI 需求這麼強，股價為什麼可能下跌？") || !enResearch.includes("AI Demand Is Strong. Why Can Stock Prices Still Fall?")) {
+if (!zhResearch.includes("AI 不只需要算得快，也需要傳得動") || !enResearch.includes("AI Must Move Data, Not Just Compute Faster")) {
   console.error("Research index is missing a translation of the new article.");
   process.exit(1);
 }
 
 if (
-  !zhArticle.includes("公司賺更多，不代表股票一定更貴。") ||
-  !zhArticle.includes("現在就能追蹤，不必等到 2027 年中。") ||
-  !enArticle.includes("A company can earn more without its stock becoming more expensive.") ||
-  !enArticle.includes("These signals can be tracked now; investors do not need to wait until mid-2027.")
+  !zhArticle.includes("更省電，不等於總用電一定下降。") ||
+  !zhArticle.includes("公司可能已受惠於高速光通訊，但 CPO 新增營收仍待驗證。") ||
+  !enArticle.includes("Better efficiency does not guarantee lower total power consumption.") ||
+  !enArticle.includes("A company may already benefit from high-speed optical networking while its incremental CPO revenue remains unproven.")
 ) {
   console.error("A published article is incomplete.");
   process.exit(1);
