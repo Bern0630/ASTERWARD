@@ -1,12 +1,7 @@
 import type { CollectionEntry } from "astro:content";
 import type { Lang } from "@/data/site";
 
-type AnyEntry =
-  | CollectionEntry<"briefs">
-  | CollectionEntry<"trends">
-  | CollectionEntry<"crossignal">
-  | CollectionEntry<"second-order">
-  | CollectionEntry<"deep-dives">;
+type AnyEntry = CollectionEntry<"trends">;
 
 type TranslationEntry = {
   id: string;

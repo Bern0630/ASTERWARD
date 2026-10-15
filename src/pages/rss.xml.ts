@@ -4,15 +4,7 @@ import { SITE } from "@/data/site";
 import { entryUrl, sortByDateDesc } from "@/lib/content";
 
 export async function GET(context: { site: URL }) {
-  const collections = await Promise.all([
-    getCollection("briefs"),
-    getCollection("trends"),
-    getCollection("crossignal"),
-    getCollection("second-order"),
-    getCollection("deep-dives")
-  ]);
-
-  const entries = sortByDateDesc(collections.flat()).slice(0, 25);
+  const entries = sortByDateDesc(await getCollection("trends")).slice(0, 25);
 
   return rss({
     title: SITE.name,

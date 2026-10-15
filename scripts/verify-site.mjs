@@ -1,5 +1,5 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
-import { join, relative } from "node:path";
+import { join } from "node:path";
 
 const articleSlug = "2026-10-16-us-taiwan-market-q4-outlook";
 const previousArticleSlugs = [
@@ -12,8 +12,6 @@ const requiredFiles = [
   "dist/en/index.html",
   "dist/about/index.html",
   "dist/en/about/index.html",
-  "dist/briefs/index.html",
-  "dist/en/briefs/index.html",
   "dist/trends/index.html",
   "dist/en/trends/index.html",
   `dist/trends/${articleSlug}/index.html`,
@@ -139,22 +137,10 @@ if (zhArticle.includes('class="label-row"') || enArticle.includes('class="label-
   process.exit(1);
 }
 
-const forbiddenBriefRoutes = filesUnder("dist/briefs")
-  .filter((path) => relative("dist/briefs", path).split("/").length > 1)
-  .concat(
-    filesUnder("dist/en/briefs")
-      .filter((path) => relative("dist/en/briefs", path).split("/").length > 1)
-  );
-if (forbiddenBriefRoutes.length > 0) {
-  console.error("Archived brief routes are still public:\n" + forbiddenBriefRoutes.join("\n"));
-  process.exit(1);
-}
-
-for (const collection of ["crossignal", "second-order", "deep-dives"]) {
-  const articleFiles = filesUnder(`dist/${collection}`).filter((path) => relative(`dist/${collection}`, path).split("/").length > 1);
-  const englishArticleFiles = filesUnder(`dist/en/${collection}`).filter((path) => relative(`dist/en/${collection}`, path).split("/").length > 1);
-  if (articleFiles.length > 0 || englishArticleFiles.length > 0) {
-    console.error(`Archived ${collection} routes are still public.`);
+for (const collection of ["briefs", "crossignal", "second-order", "deep-dives"]) {
+  const publicFiles = filesUnder(`dist/${collection}`).concat(filesUnder(`dist/en/${collection}`));
+  if (publicFiles.length > 0) {
+    console.error(`Paused ${collection} routes are still public:\n` + publicFiles.join("\n"));
     process.exit(1);
   }
 }

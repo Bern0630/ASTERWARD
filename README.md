@@ -10,17 +10,13 @@ The original daily intelligence library has been removed from the public build w
 OLD_VERSION/
 ```
 
-New public research continues to use the existing Astro Content Collection structure:
+New public research uses the active Astro Content Collection:
 
 ```text
-src/content/briefs/
 src/content/trends/
-src/content/crossignal/
-src/content/second-order/
-src/content/deep-dives/
 ```
 
-Do not move files from `OLD_VERSION` back into `src/content` unless an archived article is intentionally republished after editorial review.
+The previous `briefs`, `crossignal`, `second-order`, and `deep-dives` collections and routes are paused. Their source files remain under `OLD_VERSION/`; do not move them back into the active site unless an archived article is intentionally republished after editorial review.
 
 ## Architecture
 
