@@ -1,8 +1,9 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join, relative } from "node:path";
 
-const articleSlug = "2026-10-02-ai-optics-cpo-network-power";
+const articleSlug = "2026-10-16-us-taiwan-market-q4-outlook";
 const previousArticleSlugs = [
+  "2026-10-02-ai-optics-cpo-network-power",
   "2026-10-01-ai-demand-stock-price-investment-return",
   "2026-10-01-ai-glass-core-material-opportunity"
 ];
@@ -51,18 +52,18 @@ const globalStyles = readFileSync("src/styles/global.css", "utf8");
 for (const [home, latestTitle, previousArticles] of [
   [
     zhHome,
-    "AI 不只需要算得快，也需要傳得動",
+    "前三季成長仍在，第四季市場為什麼開始重估風險？",
     [
+      ["AI 不只需要算得快，也需要傳得動", "OCT 02, 2026"],
       ["AI 需求這麼強，股價為什麼可能下跌？", "OCT 01, 2026"],
-      ["從 AI 晶片，看見玻璃與化工公司的機會", "SEP 30, 2026"]
     ]
   ],
   [
     enHome,
-    "AI Must Move Data, Not Just Compute Faster",
+    "Growth Held Through Q3. Why Is the Market Repricing Risk in Q4?",
     [
+      ["AI Must Move Data, Not Just Compute Faster", "OCT 02, 2026"],
       ["AI Demand Is Strong. Why Can Stock Prices Still Fall?", "OCT 01, 2026"],
-      ["From AI Chips to Opportunities in Glass and Specialty Materials", "SEP 30, 2026"]
     ]
   ]
 ]) {
@@ -108,24 +109,27 @@ if (!/\.hero-feature h2 a\s*\{[^}]*display:\s*block;[^}]*width:\s*100%;/s.test(g
   process.exit(1);
 }
 
-if (!zhHome.includes("AI 不只需要算得快，也需要傳得動")) {
+if (!zhHome.includes("前三季成長仍在，第四季市場為什麼開始重估風險？")) {
   console.error("Chinese homepage does not feature the new research.");
   process.exit(1);
 }
-if (!enHome.includes("AI Must Move Data, Not Just Compute Faster")) {
+if (!enHome.includes("Growth Held Through Q3. Why Is the Market Repricing Risk in Q4?")) {
   console.error("English homepage does not feature the new research.");
   process.exit(1);
 }
-if (!zhResearch.includes("AI 不只需要算得快，也需要傳得動") || !enResearch.includes("AI Must Move Data, Not Just Compute Faster")) {
+if (
+  !zhResearch.includes("前三季成長仍在，第四季市場為什麼開始重估風險？") ||
+  !enResearch.includes("Growth Held Through Q3. Why Is the Market Repricing Risk in Q4?")
+) {
   console.error("Research index is missing a translation of the new article.");
   process.exit(1);
 }
 
 if (
-  !zhArticle.includes("更省電，不等於總用電一定下降。") ||
-  !zhArticle.includes("公司可能已受惠於高速光通訊，但 CPO 新增營收仍待驗證。") ||
-  !enArticle.includes("Better efficiency does not guarantee lower total power consumption.") ||
-  !enArticle.includes("A company may already benefit from high-speed optical networking while its incremental CPO revenue remains unproven.")
+  !zhArticle.includes("單日大跌不是需求反轉的證明，卻是一場估值壓力測試。") ||
+  !zhArticle.includes("成長仍在，但市場不再只為成長本身付錢。") ||
+  !enArticle.includes("A one-day selloff does not prove that demand has reversed. It does, however, reveal how sensitive valuations have become.") ||
+  !enArticle.includes("Growth remains intact, but the market is no longer paying for growth alone.")
 ) {
   console.error("A published article is incomplete.");
   process.exit(1);
