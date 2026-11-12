@@ -750,7 +750,7 @@ p {
 
 .article-header h1 {
   margin-top: 12px;
-  font-size: clamp(2rem, 7vw, 3.6rem);
+  font-size: clamp(2rem, 5vw, 3.1rem);
   letter-spacing: 0;
 }
 

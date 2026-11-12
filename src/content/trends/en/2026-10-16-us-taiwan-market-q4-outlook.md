@@ -9,13 +9,11 @@ tags: ["U.S. Market", "Taiwan Market", "AI Infrastructure", "Interest Rates", "C
 author: "ASTERWARD"
 ---
 
-Through the first three quarters of 2026, two questions largely determined the direction of U.S. and Taiwanese technology stocks: How much were American companies willing to invest, and how much demand reached Taiwan's supply chain?
+As September drew to a close, I wanted to stop and review how the market had performed over the first three quarters. AI had run through much of the year's technology trade, but after nine months I wanted to know how far that trend had actually progressed.
 
-Spending on AI, data centers, and computing equipment lifted demand for chips, servers, optical networking, and related materials. That demand did not remain a market narrative. It appeared in Taiwan's exports, TSMC's results, and revenue at parts of the supply chain.
+Earlier in the year, the market focused on how much companies were willing to invest and how many orders reached the supply chain. By the fourth quarter, the questions had moved further down the chain. Was the equipment producing real revenue? Were supplier sales and margins rising with demand? Could the investment eventually generate enough cash?
 
-The question changed in the fourth quarter. Once the equipment has been purchased, how much revenue, cash flow, and return on investment can it produce?
-
-Inflation has risen again and the Federal Reserve has raised rates. Companies can keep growing while investors become less willing to pay the same valuation. The more defensible base case for Q4 is therefore greater volatility and wider gaps between companies, not a synchronized move across all growth stocks.
+I therefore looked at U.S. corporate capital spending alongside Taiwan's exports, TSMC's results, and the performance of its wider supply chain. The first three quarters produced real evidence of growth, but inflation, interest rates, and investment payback were again shaping valuations. This article is both a review of the first nine months and a fresh look at where the AI cycle could go next.
 
 > Data in this article is current through 3:54 a.m. on October 16, 2026, Taiwan time. The review period covers January through September 2026 and includes financial results and market changes reported early in Q4.
 >

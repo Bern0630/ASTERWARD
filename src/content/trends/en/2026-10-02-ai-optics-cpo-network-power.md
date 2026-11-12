@@ -9,11 +9,11 @@ tags: ["AI", "Optical Networking", "CPO", "Silicon Photonics", "Data Centers", "
 author: "ASTERWARD"
 ---
 
-As AI systems grow, the question is no longer only whether an individual GPU can compute fast enough. Thousands of GPUs must also exchange data on time.
+I originally wanted to understand why Malaysia and Southeast Asia were attracting so many new data-center projects. Why were global companies building there? Beyond land and public policy, how much did power, cooling, and network infrastructure influence the choice of location?
 
-When networking falls behind, expensive processors can sit idle. When transmission power and heat keep rising, a data center cannot solve the problem simply by installing more equipment. The AI infrastructure upgrade is therefore spreading from compute chips into switches, optical modules, lasers, fiber, connectors, packaging, and power systems.
+As I looked into data centers, I became more interested in the infrastructure demands created by GPU computing. Adding GPUs does more than raise electricity consumption. The chips must exchange enormous amounts of data, and if the network cannot keep up, more computing power may not be used efficiently.
 
-That does not mean every link will immediately become optical, or that every company associated with co-packaged optics already earns CPO revenue. The useful questions are narrower: What problem does the technology solve? What stage has the product reached? Have the revenue and profit appeared in reported results?
+My question gradually shifted from “Why are data centers being built in Southeast Asia?” to “How do large numbers of GPUs communicate with one another?” That led to switches, optical modules, silicon photonics, and CPO, as well as the power and cooling needed to move more data. This article focuses on that part of the story: why the bottleneck moves from the individual chip into the network and power infrastructure as AI systems grow.
 
 > Data in this article is current through October 2, 2026, Taiwan time. Companies are discussed as research examples, not investment recommendations or stock-price forecasts.
 

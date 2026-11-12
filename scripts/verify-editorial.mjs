@@ -1,8 +1,8 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { basename, dirname, join } from "node:path";
 
-const collections = ["briefs", "trends", "crossignal", "second-order", "deep-dives"];
-const requiredFields = ["title", "date", "type", "summary", "lang", "translationKey"];
+const collections = ["trends"];
+const requiredFields = ["title", "date", "type", "summary", "lang"];
 let failed = false;
 
 const fail = (message) => {
@@ -44,6 +44,9 @@ for (const path of activeFiles) {
     fail(`Chinese characters found in English article: ${path}`);
   }
 
+  const translationKey = frontmatterValue(content, "translationKey");
+  if (!translationKey) continue;
+
   const translationPath = path.includes("/en/")
     ? join(dirname(dirname(path)), basename(path))
     : join(dirname(path), "en", basename(path));
@@ -52,7 +55,7 @@ for (const path of activeFiles) {
     continue;
   }
   const translation = readFileSync(translationPath, "utf8");
-  if (frontmatterValue(content, "translationKey") !== frontmatterValue(translation, "translationKey")) {
+  if (translationKey !== frontmatterValue(translation, "translationKey")) {
     fail(`Translation key mismatch: ${path} <-> ${translationPath}`);
   }
 }

@@ -16,6 +16,8 @@ const currentPath = basePath && Astro.url.pathname.startsWith(basePath)
 const navItems = NAV_ITEMS[lang];
 const currentWithoutEnglishPrefix = currentPath.startsWith("/en") ? currentPath.slice(3) || "/" : currentPath;
 const languageTarget = alternateUrl ?? localizedPath(currentWithoutEnglishPrefix, lang === "zh" ? "en" : "zh");
+const isArticlePath = /^\/(?:en\/)?trends\/[^/]+\/?$/.test(currentPath);
+const showLanguageLink = Boolean(alternateUrl) || !isArticlePath;
 ---
 
 <header class="site-header">
@@ -39,9 +41,13 @@ const languageTarget = alternateUrl ?? localizedPath(currentWithoutEnglishPrefix
           );
         })
       }
-      <a class="language-link" href={withBase(languageTarget)} aria-label="Switch language">
-        {lang === "zh" ? "EN" : "中文"}
-      </a>
+      {
+        showLanguageLink && (
+          <a class="language-link" href={withBase(languageTarget)} aria-label="Switch language">
+            {lang === "zh" ? "EN" : "中文"}
+          </a>
+        )
+      }
     </nav>
 
     <details class="mobile-nav">
@@ -59,9 +65,13 @@ const languageTarget = alternateUrl ?? localizedPath(currentWithoutEnglishPrefix
             <a href={withBase(localizedPath(item.href, lang))}>{item.label}</a>
           ))
         }
-        <a class="language-link" href={withBase(languageTarget)}>
-          {lang === "zh" ? "EN" : "中文"}
-        </a>
+        {
+          showLanguageLink && (
+            <a class="language-link" href={withBase(languageTarget)}>
+              {lang === "zh" ? "EN" : "中文"}
+            </a>
+          )
+        }
       </nav>
     </details>
   </div>

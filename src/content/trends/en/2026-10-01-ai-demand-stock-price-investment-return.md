@@ -9,11 +9,11 @@ tags: ["AI", "Micron", "Interest Rates", "AI Infrastructure", "Cash Flow", "Inve
 author: "ASTERWARD"
 ---
 
-Micron's results shift the question from “How many orders are there?” to “How much will these investments ultimately earn?”
+During earnings season, I tend to watch technology companies closely, and TSMC is naturally one of the companies I follow. Beyond revenue and profit, I want to know how much of the AI demand companies keep discussing has actually turned into orders.
 
-Results from Micron, SK hynix, and Samsung all indicate that AI servers are lifting demand for high-bandwidth memory, enterprise storage, and related products. Supplier orders prove that the industry is expanding. They do not prove that every company will earn the same return, or that every AI infrastructure project will recover its investment.
+The results from Micron, SK hynix, and Samsung showed that AI servers were indeed lifting memory demand, pricing, and profit. But that raised another question: if demand is this strong, why can the share prices of related companies still fall?
 
-The market is answering three questions at once: how much companies earn today, what price investors will pay for those earnings, and whether downstream customers can convert equipment into recurring revenue and cash flow.
+The further I looked, the clearer it became that reported results, corporate earnings, and investment returns are different things. Winning an order does not guarantee that every project will pay for itself. Earning more does not mean the market will keep assigning a higher valuation. This article examines the gap between demand, profit, valuation, and the eventual return on AI infrastructure spending.
 
 > Data in this article are current through October 1, 2026, Taiwan time. Companies are discussed as research cases, not as investment recommendations or stock-price forecasts.
 

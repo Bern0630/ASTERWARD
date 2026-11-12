@@ -36,6 +36,21 @@ const filesUnder = (root) => {
   });
 };
 
+const chineseArticleFiles = filesUnder("src/content/trends")
+  .filter((path) => path.endsWith(".md") && !path.includes("/en/"));
+for (const sourcePath of chineseArticleFiles) {
+  const slug = sourcePath.split("/").at(-1).replace(/\.md$/, "");
+  const generatedPath = `dist/trends/${slug}/index.html`;
+  if (!existsSync(generatedPath)) continue;
+  const html = readFileSync(generatedPath, "utf8");
+  const hasEnglishSource = existsSync(`src/content/trends/en/${slug}.md`);
+  const hasEnglishLink = html.includes(`/en/trends/${slug}/`);
+  if (hasEnglishSource !== hasEnglishLink) {
+    console.error(`Language switch does not match translation availability: ${slug}`);
+    process.exit(1);
+  }
+}
+
 const zhHome = readFileSync("dist/index.html", "utf8");
 const enHome = readFileSync("dist/en/index.html", "utf8");
 const zhResearch = readFileSync("dist/trends/index.html", "utf8");
@@ -50,18 +65,18 @@ const globalStyles = readFileSync("src/styles/global.css", "utf8");
 for (const [home, latestTitle, previousArticles] of [
   [
     zhHome,
-    "前三季成長仍在，第四季市場為什麼開始重估風險？",
+    "2008 全球金融風暴：從房貸泡沫到全球銀行救援的完整歷史",
     [
-      ["AI 不只需要算得快，也需要傳得動", "OCT 02, 2026"],
-      ["AI 需求這麼強，股價為什麼可能下跌？", "OCT 01, 2026"],
+      ["當加密交易所也能買美股：RWA、百倍槓桿如何牽動華爾街？", "NOV 12, 2026"],
+      ["前三季成長仍在，第四季市場為什麼開始重估風險？", "OCT 16, 2026"],
     ]
   ],
   [
     enHome,
-    "Growth Held Through Q3. Why Is the Market Repricing Risk in Q4?",
+    "The 2008 Global Financial Crisis: From the Housing Bubble to a Worldwide Bank Rescue",
     [
-      ["AI Must Move Data, Not Just Compute Faster", "OCT 02, 2026"],
-      ["AI Demand Is Strong. Why Can Stock Prices Still Fall?", "OCT 01, 2026"],
+      ["When Crypto Exchanges Offer U.S. Stocks: How RWAs and 100x Leverage Reach Wall Street", "NOV 12, 2026"],
+      ["Growth Held Through Q3. Why Is the Market Repricing Risk in Q4?", "OCT 16, 2026"],
     ]
   ]
 ]) {
@@ -102,22 +117,27 @@ if (!/font-family:\s*"Noto Sans TC"/.test(globalStyles) || globalStyles.includes
   process.exit(1);
 }
 
+if (!/\.article-header h1\s*\{[^}]*font-size:\s*clamp\(2rem,\s*5vw,\s*3\.1rem\);/s.test(globalStyles)) {
+  console.error("Article title sizing does not prevent orphaned final words.");
+  process.exit(1);
+}
+
 if (!/\.hero-feature h2 a\s*\{[^}]*display:\s*block;[^}]*width:\s*100%;/s.test(globalStyles)) {
   console.error("Homepage feature title hover line does not span the full column width.");
   process.exit(1);
 }
 
-if (!zhHome.includes("前三季成長仍在，第四季市場為什麼開始重估風險？")) {
+if (!zhHome.includes("2008 全球金融風暴：從房貸泡沫到全球銀行救援的完整歷史")) {
   console.error("Chinese homepage does not feature the new research.");
   process.exit(1);
 }
-if (!enHome.includes("Growth Held Through Q3. Why Is the Market Repricing Risk in Q4?")) {
+if (!enHome.includes("The 2008 Global Financial Crisis: From the Housing Bubble to a Worldwide Bank Rescue")) {
   console.error("English homepage does not feature the new research.");
   process.exit(1);
 }
 if (
-  !zhResearch.includes("前三季成長仍在，第四季市場為什麼開始重估風險？") ||
-  !enResearch.includes("Growth Held Through Q3. Why Is the Market Repricing Risk in Q4?")
+  !zhResearch.includes("2008 全球金融風暴：從房貸泡沫到全球銀行救援的完整歷史") ||
+  !enResearch.includes("The 2008 Global Financial Crisis: From the Housing Bubble to a Worldwide Bank Rescue")
 ) {
   console.error("Research index is missing a translation of the new article.");
   process.exit(1);
