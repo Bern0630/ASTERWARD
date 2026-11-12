@@ -62,7 +62,7 @@ $$
 });
 
 test("derives required metadata from a Chinese article", () => {
-  const source = "# 當加密交易所也能買美股\n\n第一段是摘要來源，說明文章真正研究的市場問題與交易結構。\n\n## 下一節\n";
+  const source = "# 當加密交易所也能買美股\n\n第一段是摘要來源，說明 RWA、股票代幣與永續合約的市場結構。\n\n## 下一節\n\n文章比較美股、選擇權與不同交易場所的訂單流向。\n";
   const parsed = parseArticle(source);
   const metadata = deriveDefaults(
     parsed,
@@ -74,8 +74,34 @@ test("derives required metadata from a Chinese article", () => {
   assert.equal(metadata.date, "2026-11-12");
   assert.equal(metadata.type, "trend");
   assert.equal(metadata.lang, "zh");
-  assert.equal(metadata.summary, "第一段是摘要來源，說明文章真正研究的市場問題與交易結構。");
-  assert.deepEqual(metadata.tags, []);
+  assert.equal(metadata.summary, "第一段是摘要來源，說明 RWA、股票代幣與永續合約的市場結構。");
+  assert.deepEqual(metadata.tags, ["RWA", "美股", "股票代幣", "永續合約", "選擇權", "市場微結構"]);
+});
+
+test("keeps supplied tags instead of replacing them with suggestions", () => {
+  const parsed = parseArticle(`---
+tags: ["自訂標籤", "研究筆記"]
+---
+
+# 美股與 RWA
+
+本文討論股票代幣與永續合約。
+`);
+  const metadata = deriveDefaults(parsed, "/tmp/article.md", new Date("2026-11-12T08:00:00+08:00"));
+
+  assert.deepEqual(metadata.tags, ["自訂標籤", "研究筆記"]);
+});
+
+test("stores suggested tags only in frontmatter and leaves the article body unchanged", () => {
+  const source = "# 美股與 RWA\n\n本文討論股票代幣、永續合約、選擇權與交易市場。\n";
+  const parsed = parseArticle(source);
+  const metadata = deriveDefaults(parsed, "/tmp/article.md", new Date("2026-11-12T08:00:00+08:00"));
+  const output = serializeArticle({ ...metadata, translationKey: "2026-11-12-rwa" }, parsed.body);
+  const reparsed = parseArticle(output);
+
+  assert.deepEqual(reparsed.frontmatter.tags, ["RWA", "美股", "股票代幣", "永續合約", "選擇權", "市場微結構"]);
+  assert.equal(reparsed.body, "本文討論股票代幣、永續合約、選擇權與交易市場。\n");
+  assert.doesNotMatch(reparsed.body, /建議標籤|suggested tags/i);
 });
 
 test("creates stable ASCII slugs for Chinese and English titles", () => {

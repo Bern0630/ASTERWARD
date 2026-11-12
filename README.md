@@ -120,7 +120,7 @@ cd ~/Desktop/ASTERWARD
 ./匯入文章到ASTERWARD.command
 ```
 
-若 macOS 第一次阻擋執行，請在 Finder 對該檔案按右鍵，選擇「打開」，再確認一次。工具會讓你選擇 Markdown、確認文章資料、執行網站建置，最後自動開啟本機文章頁面。它不會執行 Git commit 或 push。
+若 macOS 第一次阻擋執行，請在 Finder 對該檔案按右鍵，選擇「打開」，再確認一次。工具會讓你選擇 Markdown、確認文章資料、執行網站建置，最後自動開啟本機文章頁面。匯入時會根據標題、摘要與正文提供 4–6 個標籤建議；直接按 Enter 即可採用，也可以用逗號分隔自行修改。標籤只會寫入文章最上方的 `tags` metadata，不會加入文章正文。工具不會執行 Git commit 或 push。
 
 匯入器會為中文版建立 `translationKey`，但不會直接呼叫翻譯 API。匯入完成後，Terminal 會顯示中文檔案路徑；將該檔交給 Codex 並指定 `$humanwriting:human-writing`，即可依英文讀者的語氣建立：
 

@@ -49,7 +49,7 @@ async function askMetadata(defaults) {
     const title = await ask("標題", defaults.title);
     const date = await ask("日期", defaults.date);
     const summary = await ask("摘要", defaults.summary);
-    const tagsText = await ask("標籤（逗號分隔）", defaults.tags.join(", "));
+    const tagsText = await ask("標籤建議（逗號分隔，可直接按 Enter 採用）", defaults.tags.join(", "));
     const slug = await ask("網址", slugifyArticle(title, date));
     return {
       ...defaults,

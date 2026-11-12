@@ -31,7 +31,7 @@ test("dry run prints metadata and writes nothing for a path with spaces", async 
   assert.match(result.stdout, /標題：市場結構測試/);
   assert.match(result.stdout, /日期：\d{4}-\d{2}-\d{2}/);
   assert.match(result.stdout, /摘要：這是摘要段落。/);
-  assert.match(result.stdout, /標籤：（無）/);
+  assert.match(result.stdout, /標籤：市場微結構、市場研究、產業分析、投資研究/);
   assert.match(result.stdout, /網址：\d{4}-\d{2}-\d{2}-article/);
   await assert.rejects(readFile(join(contentDir, result.stdout.match(/網址：(\S+)/)[1] + ".md")));
 });
@@ -66,8 +66,10 @@ test("writes a transformed article atomically when build succeeds", async () => 
   assert.ok(destination);
   const output = await readFile(destination, "utf8");
   assert.match(output, /^---\ntitle: "市場結構測試"/);
+  assert.match(output, /tags: \["市場微結構", "市場研究", "產業分析", "投資研究"\]/);
   assert.match(output, /translationKey: "\d{4}-\d{2}-\d{2}-article"/);
   assert.equal((output.match(/這是摘要段落。/g) ?? []).length, 2);
+  assert.doesNotMatch(output.split(/^---$/m).slice(2).join("---"), /建議標籤|suggested tags/i);
   assert.match(result.stdout, /英文版尚未建立/);
   assert.match(result.stdout, /Codex.*HumanWriting/);
 });
