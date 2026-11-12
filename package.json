@@ -9,7 +9,7 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "verify": "node scripts/verify-site.mjs",
-    "test:importer": "node --test scripts/article-importer.test.mjs scripts/import-markdown.integration.test.mjs scripts/math-render.test.mjs scripts/local-preview.test.mjs",
+    "test:importer": "node --test scripts/article-importer.test.mjs scripts/import-markdown.integration.test.mjs scripts/math-render.test.mjs scripts/local-preview.test.mjs scripts/content-order.test.mjs",
     "import:article": "node scripts/import-markdown.mjs"
   },
   "dependencies": {
