@@ -14,7 +14,9 @@ type TranslationEntry = {
 
 export function sortByDateDesc<T extends AnyEntry>(entries: T[]) {
   return entries.sort(
-    (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+    (a, b) =>
+      b.data.date.valueOf() - a.data.date.valueOf() ||
+      a.id.localeCompare(b.id)
   );
 }
 
