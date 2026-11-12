@@ -37,14 +37,16 @@ export function formatDate(date: Date, style: "short" | "long" = "short", lang: 
     return new Intl.DateTimeFormat(lang === "zh" ? "zh-TW" : "en", {
       day: "2-digit",
       month: "long",
-      year: "numeric"
+      year: "numeric",
+      timeZone: "Asia/Taipei"
     }).format(date);
   }
 
   return new Intl.DateTimeFormat("en", {
     day: "2-digit",
     month: "short",
-    year: "numeric"
+    year: "numeric",
+    timeZone: "Asia/Taipei"
   })
     .format(date)
     .toUpperCase();
