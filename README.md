@@ -26,6 +26,48 @@ The previous `briefs`, `crossignal`, `second-order`, and `deep-dives` collection
 - Markdown / MDX-ready
 - Static GitHub Pages deployment
 
+## 在多台 Mac 之間同步
+
+專案透過 GitHub 在 MacBook 與 iMac 之間同步。不要用 iCloud、AirDrop 或 Finder 複製整個專案資料夾來代替 GitHub；檔案看起來相同，不代表兩台電腦的 Git 歷史相同。
+
+每次換到另一台裝置工作時，順序都一樣：
+
+1. 在 GitHub Desktop 開啟 `ASTERWARD`。
+2. 確認目前分支是 `main`。
+3. 點選 `Fetch origin`。
+4. 如果按鈕變成 `Pull origin`，再點一次並等待同步完成。
+5. 確認沒有尚未提交的異常變更，再開始修改文章。
+6. 工作完成後，依序執行 `Commit to main` 和 `Push origin`。
+7. 確認 push 完成後，才換到另一台裝置繼續工作。
+
+簡單記法是：
+
+```text
+先 Pull → 工作 → Commit → Push → 再換裝置
+```
+
+### 回到 iMac 時
+
+如果 iMac 上的專案一直是從 GitHub clone 下來，而且 GitHub Desktop 能正常顯示 `main`，先執行 `Fetch origin` 和 `Pull origin` 即可。網站套件若尚未安裝，或 `package.json`、`pnpm-lock.yaml` 最近有更新，再到 Terminal 執行：
+
+```bash
+cd ~/Desktop/ASTERWARD
+pnpm install --frozen-lockfile
+```
+
+`node_modules` 和 `dist` 都是每台電腦自行產生的資料，不需要跨裝置同步；`.git` 則由 Git 管理，也不要交給 iCloud 同步。
+
+### iMac 無法正常 pull 時
+
+如果 GitHub Desktop 顯示大量不明變更、分叉、無法 pull，或要求建立新的 repository，先不要 commit，也不要強制 push。
+
+1. 把 iMac 上尚未提交的文章另外備份。
+2. 在 GitHub Desktop 將舊的本機 repository 從清單中移除，但不要刪除 GitHub 上的 `Bern0630/ASTERWARD`。
+3. 從 GitHub 重新 clone `Bern0630/ASTERWARD`。
+4. 確認新版專案可正常 pull 後，再把尚未提交的文章放回正確位置。
+
+同一時間盡量只在一台裝置上修改專案。如果兩台電腦都改了同一個檔案，先停止 push，確認要保留哪一份內容，再處理衝突。
+
 ## Local development
 
 ### macOS：第一次安裝

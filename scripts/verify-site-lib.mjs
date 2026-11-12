@@ -73,12 +73,12 @@ export function verifyGeneratedSite(rootDir) {
   const globalStyles = read("src/styles/global.css");
 
   for (const [lang, home, latestTitle, previousArticles] of [
-    ["zh", zhHome, "2008 全球金融風暴：從房貸泡沫到全球銀行救援的完整歷史", [
-      ["當加密交易所也能買美股：RWA、百倍槓桿如何牽動華爾街？", "NOV 12, 2026"],
+    ["zh", zhHome, "當加密交易所也能買美股：RWA、百倍槓桿如何牽動華爾街？", [
+      ["2008 全球金融風暴：從房貸泡沫到全球銀行救援的完整歷史", "NOV 08, 2026"],
       ["前三季成長仍在，第四季市場為什麼開始重估風險？", "OCT 16, 2026"]
     ]],
-    ["en", enHome, "The 2008 Global Financial Crisis: From the Housing Bubble to a Worldwide Bank Rescue", [
-      ["When Crypto Exchanges Offer U.S. Stocks: How RWAs and 100x Leverage Reach Wall Street", "NOV 12, 2026"],
+    ["en", enHome, "When Crypto Exchanges Offer U.S. Stocks: How RWAs and 100x Leverage Reach Wall Street", [
+      ["The 2008 Global Financial Crisis: From the Housing Bubble to a Worldwide Bank Rescue", "NOV 08, 2026"],
       ["Growth Held Through Q3. Why Is the Market Repricing Risk in Q4?", "OCT 16, 2026"]
     ]]
   ]) {
@@ -106,8 +106,8 @@ export function verifyGeneratedSite(rootDir) {
     if (!/\.hero-feature h2 a\s*\{[^}]*display:\s*block;[^}]*width:\s*100%;/s.test(globalStyles)) fail("homepage-hover-line", "feature title hover line does not span the full column width");
   }
 
-  if (zhHome !== undefined && !zhHome.includes("2008 全球金融風暴：從房貸泡沫到全球銀行救援的完整歷史")) fail("homepage-zh-feature", "new research title is missing");
-  if (enHome !== undefined && !enHome.includes("The 2008 Global Financial Crisis: From the Housing Bubble to a Worldwide Bank Rescue")) fail("homepage-en-feature", "new research title is missing");
+  if (zhHome !== undefined && !zhHome.includes("當加密交易所也能買美股：RWA、百倍槓桿如何牽動華爾街？")) fail("homepage-zh-feature", "latest research title is missing");
+  if (enHome !== undefined && !enHome.includes("When Crypto Exchanges Offer U.S. Stocks: How RWAs and 100x Leverage Reach Wall Street")) fail("homepage-en-feature", "latest research title is missing");
   if (zhResearch !== undefined && !zhResearch.includes("2008 全球金融風暴：從房貸泡沫到全球銀行救援的完整歷史")) fail("research-index-zh", "new research title is missing");
   if (enResearch !== undefined && !enResearch.includes("The 2008 Global Financial Crisis: From the Housing Bubble to a Worldwide Bank Rescue")) fail("research-index-en", "new research title is missing");
 
