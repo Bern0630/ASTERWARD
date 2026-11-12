@@ -169,9 +169,9 @@ Public information on private companies is limited. Formal disclosures, press re
 
 Strong AI demand and falling share prices are not contradictory. Supplier results answer whether orders, prices, and profits exist today. Equity valuation asks what investors will pay for future profit. Downstream investment recovery asks whether equipment can ultimately generate sustainable cash flow.
 
-Current evidence supports continued AI infrastructure demand and shows that profitable suppliers and capital-intensive operators occupy different stages of the cycle. The next step is not simply to find a larger order number. It is to follow the chain: whether capacity comes online, customers use it, invoices are collected, and cash flow covers depreciation, interest, and the next replacement cycle.
+Current evidence supports continued AI infrastructure demand and shows that profitable suppliers and capital-intensive operators occupy different stages of the cycle. Large order announcements are no longer enough. I want to see whether capacity comes online, customers use it, invoices are collected, and cash flow covers depreciation, interest, and the next replacement cycle.
 
-Only when that chain holds does demand become a durable business.
+That is the point at which strong demand becomes a durable business.
 
 ## Sources
 

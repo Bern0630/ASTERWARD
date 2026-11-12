@@ -13,7 +13,7 @@ When I began researching the AI supply chain, most of my attention was on chips,
 
 That made me curious. These businesses seemed far removed from GPUs, so why were they being included in the AI supply chain? Had existing packaging materials reached their limits, or was glass really about to replace today's substrates?
 
-The answer was not a simple material substitution. As AI processors and memory are placed inside larger, denser packages, warpage, heat, alignment, and yield all become harder to control. The materials and processes underneath the chips must advance as well. The real questions are which technologies pass customer qualification, reach volume production, and eventually generate meaningful revenue.
+I found that the issue was not as simple as replacing one material with another. As AI processors and memory are placed inside larger, denser packages, warpage, heat, alignment, and yield all become harder to control. The materials and processes underneath the chips must advance as well. What matters is which technologies pass customer qualification, reach volume production, and eventually generate meaningful revenue.
 
 ## Stronger AI Chips Require the Substrate to Keep Up
 
@@ -172,7 +172,7 @@ I currently treat glass-core and related materials as a long-term industrial the
 
 Glass gaining share would not automatically mean that incumbent materials suppliers decline. If the AI packaging market continues to expand, an older material could lose share while still increasing absolute shipment volume.
 
-That is why I do not only ask which material will win. Market size, product mix, and actual financial contribution matter at the same time.
+So I am not only asking which material will win. Market size, product mix, and actual financial contribution matter at the same time.
 
 ## The Three Things I Will Track Next
 

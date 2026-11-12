@@ -199,7 +199,7 @@ U.S. business investment and Taiwan's supply chain both produced verifiable grow
 
 Stock prices, however, rose first. The Q4 question has moved beyond order volume. Investors now need to see whether customers can turn equipment into revenue, whether suppliers can defend margins, and whether cash flow can cover interest, depreciation, and the next round of investment.
 
-**Growth remains intact, but the market is no longer paying for growth alone.** The ability to turn demand into profit and cash flow will determine which valuations can hold.
+**Growth remains intact, but growth alone is no longer enough to support every valuation.** I will be watching which companies can turn demand into profit and cash flow without weakening their balance sheets.
 
 ---
 

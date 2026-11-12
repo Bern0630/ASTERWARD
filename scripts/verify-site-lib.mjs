@@ -116,7 +116,7 @@ export function verifyGeneratedSite(rootDir) {
     if (zhArticle.includes('class="label-row"')) fail("article-zh-labels", "daily market labels are visible on long-form research");
   }
   if (enArticle !== undefined) {
-    if (!enArticle.includes("A one-day selloff does not prove that demand has reversed. It does, however, reveal how sensitive valuations have become.") || !enArticle.includes("Growth remains intact, but the market is no longer paying for growth alone.")) fail("article-en-content", `${articleSlug} is incomplete`);
+    if (!enArticle.includes("A one-day selloff does not prove that demand has reversed. It does, however, reveal how sensitive valuations have become.") || !enArticle.includes("Growth remains intact, but growth alone is no longer enough to support every valuation.")) fail("article-en-content", `${articleSlug} is incomplete`);
     if (enArticle.includes('class="label-row"')) fail("article-en-labels", "daily market labels are visible on long-form research");
   }
 

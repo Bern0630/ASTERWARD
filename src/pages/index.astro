@@ -13,6 +13,7 @@ const additionalResearch = research.slice(1);
 const siteCopy = SITE_COPY[lang];
 const copy = {
   latestResearch: "最新研究",
+  researchArticles: "研究文章",
   research: "從一個真正想理解的問題開始",
   allResearch: "全部研究 →",
   readLatest: "閱讀最新研究 →",
@@ -60,7 +61,7 @@ const copy = {
       <section class="site-shell section">
         <div class="section-header">
           <div>
-            <p class="eyebrow">{copy.latestResearch}</p>
+            <p class="eyebrow">{copy.researchArticles}</p>
             <h2>{copy.research}</h2>
           </div>
           <a class="text-link" href={withBase("/trends/")}>{copy.allResearch}</a>

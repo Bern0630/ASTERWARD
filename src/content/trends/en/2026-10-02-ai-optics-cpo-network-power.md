@@ -142,7 +142,7 @@ AI needs more compute, but it also needs faster, denser, and more power-efficien
 
 The industry direction is real, but commercial results will not be evenly distributed. Network platforms, lasers, optical components, fiber interconnects, advanced packaging, and system integration may all be affected, yet they have different production timelines, bargaining power, capital requirements, and profit models.
 
-The next step is not to collect more concept stocks. It is to track whether a product is in production, who purchases it, whether revenue is recognized, and whether margin and cash flow follow. Only as that evidence accumulates does a technology trend become a sustainable business.
+For me, a list of concept stocks is not enough. I want to know whether a product is in production, who buys it, whether the company recognizes revenue, and whether margin and cash flow follow. A technology trend becomes a sustainable business only when those results begin to appear.
 
 ## Sources
 

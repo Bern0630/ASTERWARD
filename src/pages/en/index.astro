@@ -13,11 +13,12 @@ const additionalResearch = research.slice(1);
 const siteCopy = SITE_COPY[lang];
 const copy = {
   latestResearch: "Latest Research",
+  researchArticles: "Research Articles",
   research: "Starting with a question worth understanding",
   allResearch: "All research →",
   readLatest: "Read latest research →",
   readFull: "Read full research →",
-  lede: "Research begins with a market question worth understanding, then uses public evidence to examine the technology, supply chain, commercialization milestones, and invalidation conditions. Nothing is published merely to fill a schedule."
+  lede: "Research starts with a market question I genuinely want to understand. I use public evidence to examine the technology, supply chain, path to commercialization, and facts that could change the conclusion. I publish when the evidence has something useful to say, not simply to fill a schedule."
 };
 ---
 
@@ -60,7 +61,7 @@ const copy = {
       <section class="site-shell section">
         <div class="section-header">
           <div>
-            <p class="eyebrow">{copy.latestResearch}</p>
+            <p class="eyebrow">{copy.researchArticles}</p>
             <h2>{copy.research}</h2>
           </div>
           <a class="text-link" href={withBase("/en/trends/")}>{copy.allResearch}</a>
